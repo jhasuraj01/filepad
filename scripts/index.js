@@ -8,7 +8,6 @@ function popupHandler(trigger, popup) {
         popup.classList.add("active-popup-menu")
         var tempTimeOut = setTimeout(function () {
             function handle(e) {
-                console.log(e);
                 if (e.target !== trigger) {
                     popup.classList.remove("active-popup-menu");
                     document.removeEventListener("mousedown", handle);
