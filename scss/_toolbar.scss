@@ -1,0 +1,16 @@
+.toolbar {
+    display: flex;
+    align-content: stretch;
+    justify-content: stretch;
+    align-items: stretch;
+    padding: 0 12px;
+    border-bottom: 1px solid $gray2;
+    button {
+        font-size: 16px;
+        line-height: 24px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 12px;
+    }
+}
