@@ -12,7 +12,13 @@
             <button id="toolbar-file-btn">File</button>
             <button id="toolbar-share-btn">Share</button>
         </div>
-        <div class="editor" contenteditable="true">Notes...</div>
+        <div class="editor" id="editor" contenteditable="true">Notes...</div>
+        <script>
+            (function () {
+                var editor = document.getElementById("editor");
+                editor.style.minHeight = window.innerHeight - 100 + "px";
+            })()
+        </script>
     </main>
     <div class="file" id="file-popup">
         <div class="option">
