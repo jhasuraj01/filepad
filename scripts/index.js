@@ -6,14 +6,17 @@ var sharePopup = document.getElementById("share-popup");
 function popupHandler(trigger, popup) {
     trigger.addEventListener("mousedown", function () {
         popup.classList.add("active-popup-menu")
-        function handle(e) {
-            console.log(e);
-            if (e.target !== trigger) {
-                popup.classList.remove("active-popup-menu");
-                document.removeEventListener("mousedown", handle);
+        const tempTimeOut = setTimeout(() => {
+            function handle(e) {
+                console.log(e);
+                if (e.target !== trigger) {
+                    popup.classList.remove("active-popup-menu");
+                    document.removeEventListener("mousedown", handle);
+                    clearTimeout(tempTimeOut);
+                }
             }
-        }
-        document.addEventListener("mousedown", handle)
+            document.addEventListener("mousedown", handle)
+        }, 150);
     })
 }
 
