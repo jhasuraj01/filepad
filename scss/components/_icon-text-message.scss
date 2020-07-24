@@ -10,6 +10,7 @@
     cursor: pointer;
     .left {
         display: flex;
+        align-items: center;
         color: $gray2;
         * {
             padding: 12px 0 12px 24px;

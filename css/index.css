@@ -41,6 +41,7 @@ html, body, :root {
 
 .option .left {
   display: flex;
+  align-items: center;
   color: #4f4f4f;
 }
 
