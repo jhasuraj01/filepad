@@ -6,7 +6,7 @@ var sharePopup = document.getElementById("share-popup");
 function popupHandler(trigger, popup) {
     trigger.addEventListener("mousedown", function () {
         popup.classList.add("active-popup-menu")
-        const tempTimeOut = setTimeout(() => {
+        var tempTimeOut = setTimeout(function () {
             function handle(e) {
                 console.log(e);
                 if (e.target !== trigger) {
