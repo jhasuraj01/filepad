@@ -3,8 +3,8 @@ import popupHandler from "./popupHandler.js";
 // Import File Popup Buttons Click Event Handler Class
 import FileHandler from "./file/file.js"
 
-const toolbarFileBtn = document.getElementById("toolbar-file-btn");
-const toolbarShareBtn = document.getElementById("toolbar-share-btn");
+var toolbarFileBtn = document.getElementById("toolbar-file-btn");
+var toolbarShareBtn = document.getElementById("toolbar-share-btn");
 var filePopup = document.getElementById("file-popup");
 var sharePopup = document.getElementById("share-popup");
 
@@ -26,7 +26,7 @@ var closeFilePopUp = popupHandler(toolbarFileBtn, filePopup);
 var closeSharePopUp = popupHandler(toolbarShareBtn, sharePopup);
 
 // File Pupup Button Click Handlers
-fileNewBtn.addEventListener("click", function (event) {FileHandler.new(event, closeFilePopUp)});
+fileNewBtn.addEventListener("click", FileHandler.new);
 fileOpenBtn.addEventListener("click", FileHandler.open.bind(this, closeFilePopUp));
 fileSaveBtn.addEventListener("click", FileHandler.save);
 fileSaveAsBtn.addEventListener("click", FileHandler.saveAs);

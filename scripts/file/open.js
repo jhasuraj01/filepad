@@ -10,7 +10,7 @@ var fileInput = document.createElement("input");
 fileInput.type = "file";
 fileInput.style.display = "none";
 fileInput.multiple = false;
-document.body.append(fileInput);
+document.body.appendChild(fileInput);
 
 fileInput.addEventListener("change", function(event) {
     var file = event.target.files[0];
