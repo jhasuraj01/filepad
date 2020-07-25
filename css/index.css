@@ -15,7 +15,7 @@
       -ms-flex-align: stretch;
           align-items: stretch;
   padding: 0 12px;
-  border-bottom: 1px solid #4f4f4f;
+  outline: 1px solid #4f4f4f;
 }
 
 .toolbar button {
