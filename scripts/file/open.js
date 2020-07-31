@@ -8,6 +8,7 @@ export default function (closeFilePopUp) {
 
 var fileInput = document.createElement("input");
 fileInput.type = "file";
+fileInput.accept = "text/*";
 fileInput.style.display = "none";
 fileInput.multiple = false;
 document.body.appendChild(fileInput);

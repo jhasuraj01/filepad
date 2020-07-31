@@ -12,11 +12,11 @@ var sharePopup = document.getElementById("share-popup");
 var editor = document.getElementById("editor");
 
 // File Popup Buttons
-var fileNewBtn    = document.getElementById("file-new-btn");
+// var fileNewBtn    = document.getElementById("file-new-btn");
 var fileOpenBtn   = document.getElementById("file-open-btn");
-var fileSaveBtn   = document.getElementById("file-save-btn");
-var fileSaveAsBtn = document.getElementById("file-save-as-btn");
-var fileCloseBtn  = document.getElementById("file-close-btn");
+// var fileSaveBtn   = document.getElementById("file-save-btn");
+// var fileSaveAsBtn = document.getElementById("file-save-as-btn");
+// var fileCloseBtn  = document.getElementById("file-close-btn");
 
 // Share Popup Buttons
 var shareOnWhatsAppBtn = document.getElementById("share-on-whatsapp-btn");
@@ -28,11 +28,11 @@ var closeFilePopUp = popupHandler(toolbarFileBtn, filePopup);
 var closeSharePopUp = popupHandler(toolbarShareBtn, sharePopup);
 
 // File Pupup Button Click Handlers
-fileNewBtn.addEventListener("click", FileHandler.new);
+// fileNewBtn.addEventListener("click", FileHandler.new);
 fileOpenBtn.addEventListener("click", FileHandler.open.bind(this, closeFilePopUp));
-fileSaveBtn.addEventListener("click", FileHandler.save);
-fileSaveAsBtn.addEventListener("click", FileHandler.saveAs);
-fileCloseBtn.addEventListener("click", FileHandler.close);
+// fileSaveBtn.addEventListener("click", FileHandler.save);
+// fileSaveAsBtn.addEventListener("click", FileHandler.saveAs);
+// fileCloseBtn.addEventListener("click", FileHandler.close);
 
 // Share Pupup Button Click Handlers
 var shareHandler = new SocialShareHandler(editor);
