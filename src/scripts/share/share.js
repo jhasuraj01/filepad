@@ -8,6 +8,14 @@ function SocialShareHandler(editor) {
     return this;
 }
 
+SocialShareHandler.prototype.onNative = function () {
+    const shareData = {
+        title: "My Notes",
+        text: textEditor.innerText,
+        url: 'https://jhasuraj.com/notepad/',
+    }
+    navigator.share(shareData)
+}
 SocialShareHandler.prototype.onWhatsApp = function () {
     shareAnchor.href = 'https://api.whatsapp.com/send?phone&text=' +
                         encodeURIComponent(textEditor.innerText) +

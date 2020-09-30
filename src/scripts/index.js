@@ -21,11 +21,6 @@ var shareOnWhatsAppBtn = document.getElementById("share-on-whatsapp-btn");
 var shareOnTwitterBtn = document.getElementById("share-on-twitter-btn");
 var shareOnEmailBtn = document.getElementById("share-on-email-btn");
 
-// Menu Popups
-var closeFilePopUp = popupHandler(toolbarFileBtn, filePopup);
-var closeSharePopUp = popupHandler(toolbarShareBtn, sharePopup);
-
-
 // Import File Popup Buttons Click Event Handler Class
 if ("chooseFileSystemEntries" in window) {
     loadJSFile("scripts/file-handler.js", function () {
@@ -61,3 +56,11 @@ var shareHandler = new SocialShareHandler(editor);
 shareOnWhatsAppBtn.addEventListener("click", shareHandler.onWhatsApp);
 shareOnTwitterBtn.addEventListener("click", shareHandler.onTwitter);
 shareOnEmailBtn.addEventListener("click", shareHandler.onEmail);
+
+// Menu Popups
+var closeFilePopUp = popupHandler(toolbarFileBtn, filePopup);
+if ("share" in window.navigator) {
+    toolbarShareBtn.addEventListener("click", shareHandler.onNative);
+} else {
+    var closeSharePopUp = popupHandler(toolbarShareBtn, sharePopup);
+}
