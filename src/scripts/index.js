@@ -64,3 +64,16 @@ if ("share" in window.navigator) {
 } else {
     var closeSharePopUp = popupHandler(toolbarShareBtn, sharePopup);
 }
+
+editor.addEventListener("focus", function() {
+    console.log("focus")
+    if (editor.innerText === "Notes...") {
+        editor.innerText = ""
+    }
+})
+editor.addEventListener("blur", function() {
+    console.log("blur")
+    if (editor.innerText === "") {
+        editor.innerText = "Notes..."
+    }
+})
