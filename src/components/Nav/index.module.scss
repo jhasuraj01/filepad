@@ -1,6 +1,5 @@
 .container {
-  background-color: blue;
-  color: white;
+  background-color: hsl(0, 0%, 18%);;
 
   .option {
     box-sizing: border-box;
@@ -9,5 +8,11 @@
     align-items: center;
     width: 100%;
     aspect-ratio: 1 / 1;
+    cursor: pointer;
+    color: white;
+
+    &:hover {
+      color: hsl(0, 0%, 95%);
+    }
   }
 }
