@@ -1,0 +1,14 @@
+.container {
+  .header {
+    cursor: pointer;
+  }
+
+  .body {
+    padding-left: 16px;
+    box-shadow: inset 1px 0 gray;
+
+    &:hover {
+      box-shadow: inset 1px 0 purple;
+    }
+  }
+}
