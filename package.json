@@ -1,25 +1,55 @@
 {
   "name": "notepad",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.6",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^17.0.45",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.4",
+    "react-router-dom": "^6.4.2",
+    "react-scripts": "^5.0.1",
+    "sass": "^1.55.0",
+    "typescript": "^4.8.4",
+    "web-vitals": "^2.1.4"
+  },
   "scripts": {
-    "test": "webpack --watch",
-    "build": "webpack"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.ts,.jsx,.tsx",
+    "lint:fix": "eslint src --fix --ext .js,.ts,.jsx,.tsx"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jhasuraj01/notepad.git"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jhasuraj01/notepad/issues"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
-  "homepage": "https://github.com/jhasuraj01/notepad#readme",
   "devDependencies": {
-    "webpack": "^4.44.0",
-    "webpack-cli": "^3.3.12"
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
+    "eslint-plugin-react": "^7.31.10"
   }
 }

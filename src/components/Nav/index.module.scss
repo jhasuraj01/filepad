@@ -1,0 +1,13 @@
+.container {
+  background-color: blue;
+  color: white;
+
+  .option {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+}
