@@ -1,9 +1,15 @@
 .container {
+  display: flex;
+  flex-direction: column;
   padding: 16px;
+  gap: 16px;
   background-color: hsl(0, 0%, 15%);
   color: hsl(0, 0%, 75%);
 }
 
 .header {
   font-size: 20px;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
