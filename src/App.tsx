@@ -4,7 +4,7 @@ import { EditorArea } from './components/EditorArea'
 import style from './App.module.scss'
 import { FolderInterface } from './interfaces/Folder'
 import { Folder } from './features/folder/Folder'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 
 const folder: FolderInterface = {
   type: 'folder',
@@ -58,10 +58,10 @@ function App() {
     <div className={style.container}>
       <Nav />
       <Routes>
-        <Route path='/' element={<SubNav><Folder folder={folder} /></SubNav>} />
-        <Route path='/search' element={<SubNav>Search</SubNav>} />
-        <Route path='/settings' element={<SubNav>Settings</SubNav>} />
-        <Route path='*' element={<SubNav> </SubNav>} />
+        <Route path='/' element={<Navigate to="/files" />} />
+        <Route path='/files' element={<SubNav title='Files'><Folder folder={folder} /></SubNav>} />
+        <Route path='/search' element={<SubNav title='Search'>Search</SubNav>} />
+        <Route path='/settings' element={<SubNav title='Settings'>Settings</SubNav>} />
       </Routes>
       <EditorArea />
     </div>

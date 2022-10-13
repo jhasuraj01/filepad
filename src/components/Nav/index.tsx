@@ -7,9 +7,9 @@ import { NavLinkPersist } from '../../supports/Persistence'
 export function Nav() {
   return (
     <div className={style.container}>
-      <NavLinkPersist to='/' className={style.option}><FilesIcon /></NavLinkPersist>
-      <NavLinkPersist to='/search' className={style.option}><SearchIcon /></NavLinkPersist>
-      <NavLinkPersist to='/settings' className={style.option}><SettingsGearIcon /></NavLinkPersist>
+      <NavLinkPersist to='/files' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><FilesIcon /></NavLinkPersist>
+      <NavLinkPersist to='/search' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><SearchIcon /></NavLinkPersist>
+      <NavLinkPersist to='/settings' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><SettingsGearIcon /></NavLinkPersist>
     </div>
   )
 }
