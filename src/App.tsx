@@ -67,7 +67,7 @@ function App() {
       <Nav />
       <Routes>
         <Route path='/' element={<Navigate to="/files" />} />
-        <Route path='/files' element={<SubNav title={'WorkSpace: ' + folder.name}><Explorer filesAndFolders={folder.child} /></SubNav>} />
+        <Route path='/files' element={<SubNav title={'Explorer: ' + folder.name}><Explorer filesAndFolders={folder.child} /></SubNav>} />
         <Route path='/search' element={<SubNav title='Search'>Search</SubNav>} />
         <Route path='/settings' element={<SubNav title='Settings'>Settings</SubNav>} />
       </Routes>
