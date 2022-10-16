@@ -1,6 +1,6 @@
 import { Nav } from './components/Nav'
 import { SubNav } from './components/SubNav'
-import { Explorer } from './components/explorer'
+import { Explorer } from './components/Explorer'
 import { EditorArea } from './components/EditorArea'
 import style from './App.module.scss'
 import { FolderInterface } from './interfaces/Folder'
@@ -18,7 +18,7 @@ const folder: FolderInterface = {
     },
     {
       type: 'folder',
-      name: 'projects',
+      name: 'Projects',
       id: '2',
       child: [
         {
