@@ -21,7 +21,7 @@ interface ExplorerItemsProps {
 
 export function Explorer({ workspace }: ExplorerProps) {
   return <>
-    <h1>{workspace.name}</h1>
+    <div className={style.workspaceName}>{workspace.name}</div>
     <ExplorerItems items={workspace.items}/>
   </>
 }
