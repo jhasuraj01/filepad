@@ -3,7 +3,8 @@ import { FolderInterface } from '../../interfaces/Folder'
 import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.svg'
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import style from './index.module.scss'
-import { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { selectFolderExpansionState, toggleExpansion } from './explorerSlice'
 
 interface FolderProps {
   folder: FolderInterface
@@ -37,10 +38,12 @@ export function File({ file }: FileProps) {
 
 export function Folder({ folder }: FolderProps) {
 
-  const [isExpanded, toggleExpansion] = useState(false)
+  // const [isExpanded, toggleExpansion] = useState(false)
+  const isExpanded = useAppSelector(selectFolderExpansionState(folder.id))
+  const dispatch = useAppDispatch()
 
   const handleFolderClick = () => {
-    toggleExpansion(!isExpanded)
+    dispatch(toggleExpansion(folder.id))
   }
 
   return (

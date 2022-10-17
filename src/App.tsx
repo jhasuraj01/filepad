@@ -1,6 +1,6 @@
 import { Nav } from './components/Nav'
 import { SubNav } from './components/SubNav'
-import { Explorer } from './components/Explorer'
+import { Explorer } from './features/Explorer'
 import { EditorArea } from './components/EditorArea'
 import style from './App.module.scss'
 import { FolderInterface } from './interfaces/Folder'
