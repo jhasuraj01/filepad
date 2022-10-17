@@ -17,8 +17,24 @@
       &:first-child {
         margin-top: 4px;
       }
+
+      @for $i from 1 through 20 {
+        &:nth-child(#{$i}n) {
+          animation: fadein #{$i * 100}ms ease-out forwards;
+        }
+      }
     }
-    
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateX(5%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

@@ -58,6 +58,53 @@ const folder: FolderInterface = {
         },
       ],
     },
+    {
+      type: 'file',
+      name: 'suraj2.txt',
+      id: '10',
+    },
+    {
+      type: 'folder',
+      name: 'Projects 2',
+      id: '20',
+      child: [
+        {
+          type: 'file',
+          name: 'suraj.txt',
+          id: '30',
+        },
+        {
+          type: 'folder',
+          name: 'personal-projects',
+          id: '40',
+          child: [
+            {
+              type: 'file',
+              name: 'suraj.txt',
+              id: '50',
+            },
+            {
+              type: 'folder',
+              name: 'projects',
+              id: '60',
+              child: [
+                {
+                  type: 'file',
+                  name: 'suraj.txt',
+                  id: '70',
+                },
+                {
+                  type: 'folder',
+                  name: 'personal-projects',
+                  id: '80',
+                  child: []
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }
 
