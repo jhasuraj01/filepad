@@ -1,5 +1,5 @@
-import { FileInterface } from '../../interfaces/File'
-import { FolderInterface } from '../../interfaces/Folder'
+import { FileNode } from '../../libs/FileNode'
+import { FolderNode } from '../../libs/FolderNode'
 import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.svg'
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import style from './index.module.scss'
@@ -7,22 +7,32 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { selectFolderExpansionState, toggleExpansion } from './explorerSlice'
 
 interface FolderProps {
-  folder: FolderInterface
+  folder: FolderNode
 }
 interface FileProps {
-  file: FileInterface
+  file: FileNode
 }
 interface ExplorerProps {
-  filesAndFolders: (FileInterface | FolderInterface)[]
+  workspace: FolderNode
+}
+interface ExplorerItemsProps {
+  items: (FolderNode | FileNode)[]
 }
 
-export function Explorer({ filesAndFolders }: ExplorerProps) {
+export function Explorer({ workspace }: ExplorerProps) {
+  return <>
+    <h1>{workspace.name}</h1>
+    <ExplorerItems items={workspace.items}/>
+  </>
+}
+
+export function ExplorerItems({ items }: ExplorerItemsProps) {
   return <>{
-    filesAndFolders.map(f => {
-      if(f.type == 'file')
-        return <File key={f.id} file={f} />
+    items.map(item => {
+      if(item instanceof FileNode)
+        return <File key={item.id} file={item} />
       else
-        return <Folder key={f.id} folder={f}/>
+        return <Folder key={item.id} folder={item}/>
     })
   }</>
 }
@@ -53,7 +63,7 @@ export function Folder({ folder }: FolderProps) {
         <span>{folder.name}</span>
       </div>
       <div className={style.child}>
-        { isExpanded ? <Explorer filesAndFolders={folder.child} /> : <></>}
+        { isExpanded ? <ExplorerItems items={folder.items} /> : <></>}
       </div>
     </div>
   )

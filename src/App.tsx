@@ -3,8 +3,9 @@ import { SubNav } from './components/SubNav'
 import { Explorer } from './features/Explorer'
 import { EditorArea } from './components/EditorArea'
 import style from './App.module.scss'
-import { FolderInterface } from './interfaces/Folder'
+import { FolderInterface } from './libs/FolderNode'
 import { Route, Routes, Navigate } from 'react-router-dom'
+import { DirectoryTree } from './libs/DirectoryTree'
 
 const folder: FolderInterface = {
   type: 'folder',
@@ -108,13 +109,15 @@ const folder: FolderInterface = {
   ],
 }
 
+const tree = new DirectoryTree(folder).tree
+
 function App() {
   return (
     <div className={style.container}>
       <Nav />
       <Routes>
         <Route path='/' element={<Navigate to="/files" />} />
-        <Route path='/files' element={<SubNav title={'Explorer: ' + folder.name}><Explorer filesAndFolders={folder.child} /></SubNav>} />
+        <Route path='/files' element={<SubNav title={'Explorer: ' + folder.name}><Explorer workspace={tree} /></SubNav>} />
         <Route path='/search' element={<SubNav title='Search'>Search</SubNav>} />
         <Route path='/settings' element={<SubNav title='Settings'>Settings</SubNav>} />
       </Routes>
