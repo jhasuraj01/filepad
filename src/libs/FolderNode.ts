@@ -18,9 +18,12 @@ export class FolderNode extends ExplorerItemNode {
   public insert(item: FolderNode | FileNode): FolderNode {
     this.ITEMS.push(item)
     this.ITEMS.sort((a, b) => {
+      if(a instanceof FolderNode === b instanceof FolderNode) {
+        return a.name.localeCompare(b.name)
+      }
       if(a instanceof FolderNode) return -1
-      if(b instanceof FolderNode) return -1
-      return a.name.localeCompare(b.name)
+      if(b instanceof FolderNode) return 1
+      return 0
     })
     return this
   }
