@@ -9,8 +9,8 @@ const initialState: ExplorerState = {
   expanded: {}
 }
 
-export const explorerSlice = createSlice({
-  name: 'explorer',
+export const sideExplorerSlice = createSlice({
+  name: 'sideExplorer',
   initialState,
   reducers: {
     toggleExpansion(state, { payload }: PayloadAction<string>) {
@@ -28,8 +28,8 @@ export const explorerSlice = createSlice({
   },
 })
 
-export const { expand, collapse, toggleExpansion } = explorerSlice.actions
+export const { expand, collapse, toggleExpansion } = sideExplorerSlice.actions
 
-export const selectFolderExpansionState = (id: string) => (state: RootState) => Boolean(state.explorer.expanded[id])
+export const selectFolderExpansionState = (id: string) => (state: RootState) => Boolean(state.sideExplorer.expanded[id])
 
-export default explorerSlice.reducer
+export default sideExplorerSlice.reducer

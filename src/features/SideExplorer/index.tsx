@@ -4,7 +4,7 @@ import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.sv
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import style from './index.module.scss'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectFolderExpansionState, toggleExpansion } from './explorerSlice'
+import { selectFolderExpansionState, toggleExpansion } from './sideExplorerSlice'
 
 interface FolderProps {
   folder: FolderNode
@@ -12,14 +12,14 @@ interface FolderProps {
 interface FileProps {
   file: FileNode
 }
-interface ExplorerProps {
+interface SideExplorerProps {
   workspace: FolderNode
 }
 interface ExplorerItemsProps {
   items: (FolderNode | FileNode)[]
 }
 
-export function Explorer({ workspace }: ExplorerProps) {
+export function SideExplorer({ workspace }: SideExplorerProps) {
   return <>
     <div className={style.workspaceName}>{workspace.name}</div>
     <ExplorerItems items={workspace.items}/>

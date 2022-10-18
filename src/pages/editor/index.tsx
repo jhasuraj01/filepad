@@ -1,6 +1,6 @@
 import { AppSection } from '../../components/AppSection'
 import { EditorArea } from '../../components/EditorArea'
-import { Explorer } from '../../features/Explorer'
+import { SideExplorer } from '../../features/SideExplorer'
 import { FolderNode } from '../../libs/FolderNode'
 
 export interface EditorPageProps {
@@ -9,7 +9,7 @@ export interface EditorPageProps {
 export function EditorPage({ workspace }: EditorPageProps) {
   return (
     <AppSection title='Editor'>
-      <Explorer workspace={workspace} />
+      <SideExplorer workspace={workspace} />
       <EditorArea />
     </AppSection>
   )

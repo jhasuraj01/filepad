@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  color: hsl(0, 0%, 75%);
+  background-color: hsl(0, 0%, 15%);
+
+  .items {
+    display: grid;
+    text-align: center;
+    align-self: stretch;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .item {
+    display: flex;
+    padding: 16px;
+    gap: 16px;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid hsl(0, 0%, 20%);
+
+    &:hover {
+      background-color: hsl(0, 0%, 20%);
+    }
+
+    &:active {
+      background-color: hsl(0, 0%, 25%);
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+
+    .breadcrumb {
+      user-select: none;
+      padding: 8px 16px;
+      white-space: nowrap;
+
+      &:not(:last-child) {
+        cursor: pointer;
+      }
+
+      &:hover:not(:last-child) {
+        background-color: hsl(0, 0%, 20%);
+      }
+
+      &:active:not(:last-child) {
+        background-color: hsl(0, 0%, 25%);
+      }
+    }
+  }
+}
+
+.emptyFolderShowCase {
+  align-self: center;
+  justify-self: center;
+}
