@@ -7,4 +7,18 @@
   color: hsl(0, 0%, 85%);
   border-radius: 6px;
   user-select: none;
+  animation: bringin 150ms ease-out forwards;
+}
+
+@keyframes bringin {
+  from {
+    transform-origin: top left;
+    transform: scale3d(0.5, 0.5, 0.5) translateY(10%);
+    opacity: 0;
+  }
+  to {
+    transform-origin: top left;
+    transform: scale3d(1, 1, 1) translateY(0);
+    opacity: 1;
+  }
 }

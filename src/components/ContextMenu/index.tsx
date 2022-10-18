@@ -27,7 +27,7 @@ export function ContextMenu({ children, event, hide, className }: ContextMenuPro
   }, [])
 
   return (
-    <div onContextMenu={(event) => event.preventDefault()} className={`${className} ${styles.contextMenu}`} style={style} onClick={hide}>
+    <div key={event.timeStamp} onContextMenu={(event) => event.preventDefault()} className={`${className} ${styles.contextMenu}`} style={style} onClick={hide}>
       {children}
     </div>
   )

@@ -6,10 +6,11 @@ import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.sv
 import { ReactComponent as TrashIcon } from '../../icons/trash.svg'
 import { ReactComponent as RenameIcon } from '../../icons/rename.svg'
 import { ReactComponent as FolderOpenIcon } from '../../icons/folder-open.svg'
-import { ReactComponent as NewFileIcon } from '../../icons/new-file.svg' 
-import { ReactComponent as NewFolderIcon } from '../../icons/new-folder.svg' 
+import { ReactComponent as NewFileIcon } from '../../icons/new-file.svg'
+import { ReactComponent as NewFolderIcon } from '../../icons/new-folder.svg'
+import { ReactComponent as DesktopDownloadIcon } from '../../icons/desktop-download.svg'
 import { FileNode } from '../../libs/FileNode'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuProps } from '../ContextMenu'
 
 export interface ExplorerProps {
@@ -28,12 +29,16 @@ function FileContextMenu(props: ContextMenuProps) {
     <ContextMenu {...props} className={styles.contextMenu}>
       <button className={styles.contextMenuOptions}>
         <RenameIcon className={styles.icon}/>
-        <span className={styles.text}>Rename</span>
+        <span className={styles.text}>Rename File</span>
+      </button>
+      <button className={styles.contextMenuOptions}>
+        <TrashIcon className={styles.icon}/>
+        <span className={styles.text}>Delete File</span>
       </button>
       <hr />
       <button className={styles.contextMenuOptions}>
-        <TrashIcon className={styles.icon}/>
-        <span className={styles.text}>Delete</span>
+        <DesktopDownloadIcon className={styles.icon}/>
+        <span className={styles.text}>Download File</span>
       </button>
     </ContextMenu>
   )
@@ -44,12 +49,13 @@ function FolderContextMenu(props: ContextMenuProps) {
     <ContextMenu {...props} className={styles.contextMenu}>
       <button className={styles.contextMenuOptions}>
         <RenameIcon className={styles.icon}/>
-        <span className={styles.text}>Rename</span>
+        <span className={styles.text}>Rename Folder</span>
       </button>
       <button className={styles.contextMenuOptions}>
         <TrashIcon className={styles.icon}/>
-        <span className={styles.text}>Delete</span>
+        <span className={styles.text}>Delete Folder</span>
       </button>
+      <hr />
       <button className={styles.contextMenuOptions}>
         <FolderOpenIcon className={styles.icon}/>
         <span className={styles.text}>Open in Editor</span>
@@ -76,6 +82,8 @@ function ExplorerContextMenu(props: ContextMenuProps) {
 export function Explorer({ folder, parents, setFolder, setParents }: ExplorerProps) {
 
   const [ contextMenu, setContextMenu ] = useState<ReactNode>()
+  const containerRef = useRef(null)
+  const itemsRef = useRef(null)
 
   const handleBreakCrumbClick = (item: FolderNode | FileNode) => {
     while(parents[parents.length - 1] != item) parents.pop()
@@ -94,15 +102,17 @@ export function Explorer({ folder, parents, setFolder, setParents }: ExplorerPro
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     item: FolderNode | FileNode | string
   ) => {
-    if(typeof item == 'string' && item === 'items') {
+    if(item === 'items') {
       event.stopPropagation()
-      setContextMenu(<ExplorerContextMenu hide={hideContextMenu} event={event} />)
+      const itemsElm: HTMLDivElement = itemsRef.current!
+      if(event.pageY >= itemsElm.offsetTop)
+        setContextMenu(<ExplorerContextMenu hide={hideContextMenu} event={event} />)
     }
     else if(item instanceof FileNode) {
       event.stopPropagation()
       setContextMenu(<FileContextMenu hide={hideContextMenu} event={event} />)
     }
-    else {
+    else if(item instanceof FolderNode) {
       event.stopPropagation()
       setContextMenu(<FolderContextMenu hide={hideContextMenu} event={event} />)
     }
@@ -114,7 +124,7 @@ export function Explorer({ folder, parents, setFolder, setParents }: ExplorerPro
 
   return (<>
     { contextMenu }
-    <div className={styles.container} onContextMenu={(event) => showContextMenu(event, 'items')}>
+    <div ref={containerRef} className={styles.container} onContextMenu={(event) => showContextMenu(event, 'items')}>
       <div className={styles.toolbar}>
         <button>Create New File</button>
         <button>Create New Folder</button>
@@ -131,7 +141,7 @@ export function Explorer({ folder, parents, setFolder, setParents }: ExplorerPro
           </>)
         }
       </div>
-      <div className={styles.items}>
+      <div className={styles.items} ref={itemsRef}>
         {
           folder.items.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
         }
