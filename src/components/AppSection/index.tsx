@@ -2,16 +2,20 @@
 // import { SubNav, SubNavProps } from '../../components/SubNav'
 // import { NavigatePersist } from '../../supports/Persistence'
 
+import { SubNav } from '../SubNav'
+
 interface AppSectionProps {
-  subnav: React.ReactNode
-  main: React.ReactNode
+  children: React.ReactNode[]
+  title: string
 }
 
-export function AppSection({ subnav, main }: AppSectionProps) {
+export function AppSection({ children, title }: AppSectionProps) {
+  const subnavChild = children[0]
+  const mainChild = children[1]
   return (
     <>
-      {subnav}
-      {main}
+      <SubNav title={title}>{subnavChild}</SubNav>
+      {mainChild}
     </>
   )
 }

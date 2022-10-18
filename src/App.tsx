@@ -1,5 +1,4 @@
 import { Nav } from './components/Nav'
-import { EditorArea } from './components/EditorArea'
 import style from './App.module.scss'
 import { FolderInterface } from './libs/FolderNode'
 import { Route, Routes } from 'react-router-dom'
@@ -121,7 +120,7 @@ function App() {
       <Routes>
         <Route path='/' element={<NavigatePersist to="/editor" />} />
         <Route path='/editor' element={<FilesPage workspace={workspace} />} />
-        <Route path='/drive' element={<FoldersPage workspace={workspace} />} />
+        <Route path='/explorer' element={<FoldersPage workspace={workspace} />} />
         <Route path='/search' element={<SearchPage />} />
         <Route path='/settings' element={<SettingsPage />} />
       </Routes>
