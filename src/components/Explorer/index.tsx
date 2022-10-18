@@ -6,6 +6,8 @@ import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.sv
 import { ReactComponent as TrashIcon } from '../../icons/trash.svg'
 import { ReactComponent as RenameIcon } from '../../icons/rename.svg'
 import { ReactComponent as FolderOpenIcon } from '../../icons/folder-open.svg'
+import { ReactComponent as NewFileIcon } from '../../icons/new-file.svg' 
+import { ReactComponent as NewFolderIcon } from '../../icons/new-folder.svg' 
 import { FileNode } from '../../libs/FileNode'
 import { ReactNode, useState } from 'react'
 import { ContextMenu, ContextMenuProps } from '../ContextMenu'
@@ -56,6 +58,21 @@ function FolderContextMenu(props: ContextMenuProps) {
   )
 }
 
+function ExplorerContextMenu(props: ContextMenuProps) {
+  return (
+    <ContextMenu {...props} className={styles.contextMenu}>
+      <button className={styles.contextMenuOptions}>
+        <NewFileIcon className={styles.icon}/>
+        <span className={styles.text}>New File</span>
+      </button>
+      <button className={styles.contextMenuOptions}>
+        <NewFolderIcon className={styles.icon}/>
+        <span className={styles.text}>New Folder</span>
+      </button>
+    </ContextMenu>
+  )
+}
+
 export function Explorer({ folder, parents, setFolder, setParents }: ExplorerProps) {
 
   const [ contextMenu, setContextMenu ] = useState<ReactNode>()
@@ -75,12 +92,18 @@ export function Explorer({ folder, parents, setFolder, setParents }: ExplorerPro
 
   const showContextMenu = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    item: FolderNode | FileNode
+    item: FolderNode | FileNode | string
   ) => {
-    if(item instanceof FileNode) {
+    if(typeof item == 'string' && item === 'items') {
+      event.stopPropagation()
+      setContextMenu(<ExplorerContextMenu hide={hideContextMenu} event={event} />)
+    }
+    else if(item instanceof FileNode) {
+      event.stopPropagation()
       setContextMenu(<FileContextMenu hide={hideContextMenu} event={event} />)
     }
     else {
+      event.stopPropagation()
       setContextMenu(<FolderContextMenu hide={hideContextMenu} event={event} />)
     }
   }
@@ -91,7 +114,7 @@ export function Explorer({ folder, parents, setFolder, setParents }: ExplorerPro
 
   return (<>
     { contextMenu }
-    <div className={styles.container}>
+    <div className={styles.container} onContextMenu={(event) => showContextMenu(event, 'items')}>
       <div className={styles.toolbar}>
         <button>Create New File</button>
         <button>Create New Folder</button>
