@@ -4,8 +4,8 @@ import { FolderInterface } from './libs/FolderNode'
 import { Route, Routes } from 'react-router-dom'
 import { DirectoryTree } from './libs/DirectoryTree'
 import { NavigatePersist } from './supports/Persistence'
-import { FilesPage } from './pages/files'
-import { FoldersPage } from './pages/folders'
+import { EditorPage } from './pages/editor'
+import { ExplorerPage } from './pages/explorer'
 import { SearchPage } from './pages/search'
 import { SettingsPage } from './pages/settings'
 
@@ -119,8 +119,8 @@ function App() {
       <Nav />
       <Routes>
         <Route path='/' element={<NavigatePersist to="/editor" />} />
-        <Route path='/editor' element={<FilesPage workspace={workspace} />} />
-        <Route path='/explorer' element={<FoldersPage workspace={workspace} />} />
+        <Route path='/editor' element={<EditorPage workspace={workspace} />} />
+        <Route path='/explorer' element={<ExplorerPage workspace={workspace} />} />
         <Route path='/search' element={<SearchPage />} />
         <Route path='/settings' element={<SettingsPage />} />
       </Routes>

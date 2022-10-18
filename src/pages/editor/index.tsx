@@ -3,10 +3,10 @@ import { EditorArea } from '../../components/EditorArea'
 import { Explorer } from '../../features/Explorer'
 import { FolderNode } from '../../libs/FolderNode'
 
-export interface FilesPageProps {
+export interface EditorPageProps {
   workspace: FolderNode
 }
-export function FilesPage({ workspace }: FilesPageProps) {
+export function EditorPage({ workspace }: EditorPageProps) {
   return (
     <AppSection title='Editor'>
       <Explorer workspace={workspace} />
