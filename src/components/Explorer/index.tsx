@@ -3,20 +3,66 @@ import styles from './index.module.scss'
 import { ReactComponent as FolderIcon } from '../../icons/folder.svg'
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.svg'
-import { useState } from 'react'
+import { ReactComponent as TrashIcon } from '../../icons/trash.svg'
+import { ReactComponent as RenameIcon } from '../../icons/rename.svg'
+import { ReactComponent as FolderOpenIcon } from '../../icons/folder-open.svg'
 import { FileNode } from '../../libs/FileNode'
+import { ReactNode, useState } from 'react'
+import { ContextMenu, ContextMenuProps } from '../ContextMenu'
 
 export interface ExplorerProps {
-  workspace: FolderNode
+  folder: FolderNode
+  setFolder: React.Dispatch<React.SetStateAction<FolderNode>>
+  setParents: React.Dispatch<React.SetStateAction<FolderNode[]>>
   parents: FolderNode[]
 }
 
-export function Explorer({ workspace, parents }: ExplorerProps) {
+// interface ContextMenuItem {
 
-  const [folder, setFolder] = useState(workspace)
+// }
+
+function FileContextMenu(props: ContextMenuProps) {
+  return (
+    <ContextMenu {...props} className={styles.contextMenu}>
+      <button className={styles.contextMenuOptions}>
+        <RenameIcon className={styles.icon}/>
+        <span className={styles.text}>Rename</span>
+      </button>
+      <hr />
+      <button className={styles.contextMenuOptions}>
+        <TrashIcon className={styles.icon}/>
+        <span className={styles.text}>Delete</span>
+      </button>
+    </ContextMenu>
+  )
+}
+
+function FolderContextMenu(props: ContextMenuProps) {
+  return (
+    <ContextMenu {...props} className={styles.contextMenu}>
+      <button className={styles.contextMenuOptions}>
+        <RenameIcon className={styles.icon}/>
+        <span className={styles.text}>Rename</span>
+      </button>
+      <button className={styles.contextMenuOptions}>
+        <TrashIcon className={styles.icon}/>
+        <span className={styles.text}>Delete</span>
+      </button>
+      <button className={styles.contextMenuOptions}>
+        <FolderOpenIcon className={styles.icon}/>
+        <span className={styles.text}>Open in Editor</span>
+      </button>
+    </ContextMenu>
+  )
+}
+
+export function Explorer({ folder, parents, setFolder, setParents }: ExplorerProps) {
+
+  const [ contextMenu, setContextMenu ] = useState<ReactNode>()
 
   const handleBreakCrumbClick = (item: FolderNode | FileNode) => {
     while(parents[parents.length - 1] != item) parents.pop()
+    setParents(parents)
     setFolder(item)
   }
 
@@ -27,14 +73,35 @@ export function Explorer({ workspace, parents }: ExplorerProps) {
     }
   }
 
-  return (
+  const showContextMenu = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    item: FolderNode | FileNode
+  ) => {
+    if(item instanceof FileNode) {
+      setContextMenu(<FileContextMenu hide={hideContextMenu} event={event} />)
+    }
+    else {
+      setContextMenu(<FolderContextMenu hide={hideContextMenu} event={event} />)
+    }
+  }
+
+  const hideContextMenu = () => {
+    setContextMenu(<></>)
+  } 
+
+  return (<>
+    { contextMenu }
     <div className={styles.container}>
+      <div className={styles.toolbar}>
+        <button>Create New File</button>
+        <button>Create New Folder</button>
+      </div>
       <div className={styles.breadcrumbs}>
         {
           parents.map((parent, index) => <>
             <div
               className={styles.breadcrumb}
-              key={parent.id}
+              key={`bread-${parent.id}`}
               onClick={() => handleBreakCrumbClick(parent)}
             >{parent.name}</div>
             {index != parents.length - 1 ? <ChevronRightIcon key={`icon-${parent.id}`} /> : null}
@@ -46,12 +113,19 @@ export function Explorer({ workspace, parents }: ExplorerProps) {
           folder.items.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
         }
         {
-          folder.items.map(item => <div onClick={() => handleItemClick(item)} className={styles.item} key={item.id}>
-            {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
-            {item.name}
-          </div>)
+          folder.items.map(item =>
+            <div
+              onClick={() => handleItemClick(item)}
+              className={styles.item}
+              key={item.id}
+              onContextMenu={(event) => showContextMenu(event, item)}
+            >
+              {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
+              {item.name}
+            </div>
+          )
         }
       </div>
     </div>
-  )
+  </>)
 }
