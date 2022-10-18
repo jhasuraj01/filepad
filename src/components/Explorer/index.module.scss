@@ -23,6 +23,8 @@
     align-items: center;
     cursor: pointer;
     user-select: none;
+    color: hsl(0, 0%, 80%);
+    text-decoration: none;
     border: 1px solid hsl(0, 0%, 20%);
     border-radius: 6px;
 
@@ -50,16 +52,19 @@
       user-select: none;
       padding: 8px 16px;
       white-space: nowrap;
+      color: hsl(0, 0%, 80%);
+      text-decoration: none;
+      cursor: pointer;
 
-      &:not(:last-child) {
-        cursor: pointer;
+      &:last-child {
+        pointer-events: none;
       }
 
-      &:hover:not(:last-child) {
+      &:hover {
         color: hsl(0, 0%, 90%);
       }
 
-      &:active:not(:last-child) {
+      &:active {
         background-color: hsl(0, 0%, 20%);
       }
     }
@@ -95,7 +100,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 12px 24px;
 
     background: none;
     border: none;

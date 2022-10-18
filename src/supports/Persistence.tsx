@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Navigate, NavigateProps, NavLink, NavLinkProps, useLocation, useSearchParams } from 'react-router-dom'
+import { Navigate, NavigateOptions, NavigateProps, NavLink, NavLinkProps, To, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppSelector } from '../app/hooks'
 import { RootState } from '../app/store'
 
@@ -38,4 +38,32 @@ export function NavigatePersist(props: NavigateProps) {
   return (<>
     <Navigate {...{...props, to: `${props.to}${search}`}} />
   </>)
+}
+
+
+export function useNavigatePersist() {
+  const navigate = useNavigate()
+  const { search: oldSearch, hash: oldHash } = useLocation()
+
+  const navigateProxy = (to: To, options?: NavigateOptions | undefined) => {
+
+    let pathname: string | undefined = ''
+    let search: string | undefined = ''
+    let hash: string | undefined = ''
+
+    if(typeof to == 'string') {
+      pathname = to
+      search = oldSearch
+      hash = oldHash
+    }
+    else {
+      pathname = to.pathname
+      search = to.search || oldSearch
+      hash = to.hash || oldHash
+    }
+
+    navigate({ pathname, search, hash }, options)
+  }
+
+  return navigateProxy
 }

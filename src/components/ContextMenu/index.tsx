@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 
 export interface ContextMenuProps {
   children?: ReactNode
-  event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  event: React.MouseEvent<Element, MouseEvent>
   hide: () => void
   className?: string
 }

@@ -14,8 +14,12 @@ export class DirectoryTree {
     return this.root
   }
 
+  private id(item: FileInterface | FolderInterface) {
+    return item.name.split(' ').join('-').toLocaleLowerCase()
+  }
+
   private folder(folder: FolderInterface, parent: FolderNode | null) {
-    const node = new FolderNode(folder.name).setID(folder.id).setParent(parent)
+    const node = new FolderNode(folder.name).setID(this.id(folder)).setParent(parent)
     folder.child.forEach(item => {
       if(item.type == 'file') {
         node.insert(this.file(item, parent))
@@ -29,7 +33,7 @@ export class DirectoryTree {
   }
 
   private file(file: FileInterface, parent: FolderNode | null) {
-    const root = new FileNode(file.name).setID(file.id).setParent(parent)
+    const root = new FileNode(file.name).setID(this.id(file)).setParent(parent)
     return root
   }
 }

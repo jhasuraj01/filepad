@@ -12,12 +12,15 @@ import { ReactComponent as DesktopDownloadIcon } from '../../icons/desktop-downl
 import { FileNode } from '../../libs/FileNode'
 import { ReactNode, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuProps } from '../ContextMenu'
+import React from 'react'
+import { NavLinkPersist } from '../../supports/Persistence'
 
 export interface ExplorerProps {
-  folder: FolderNode
-  setFolder: React.Dispatch<React.SetStateAction<FolderNode>>
-  setParents: React.Dispatch<React.SetStateAction<FolderNode[]>>
-  parents: FolderNode[]
+  workspace: (FolderNode | FileNode)[]
+  directory: {
+    name: string,
+    path: string
+  }[]
 }
 
 // interface ContextMenuItem {
@@ -79,27 +82,21 @@ function ExplorerContextMenu(props: ContextMenuProps) {
   )
 }
 
-export function Explorer({ folder, parents, setFolder, setParents }: ExplorerProps) {
+export function Explorer({ workspace, directory }: ExplorerProps) {
 
   const [ contextMenu, setContextMenu ] = useState<ReactNode>()
   const containerRef = useRef(null)
   const itemsRef = useRef(null)
 
-  const handleBreakCrumbClick = (item: FolderNode | FileNode) => {
-    while(parents[parents.length - 1] != item) parents.pop()
-    setParents(parents)
-    setFolder(item)
-  }
-
   const handleItemClick = (item: FolderNode | FileNode) => {
     if(item instanceof FolderNode) {
-      parents.push(item)
-      setFolder(item)
+      // parents.push(item)
+      // setFolder(item)
     }
   }
 
   const showContextMenu = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    event: React.MouseEvent<Element, MouseEvent>,
     item: FolderNode | FileNode | string
   ) => {
     if(item === 'items') {
@@ -120,7 +117,11 @@ export function Explorer({ folder, parents, setFolder, setParents }: ExplorerPro
 
   const hideContextMenu = () => {
     setContextMenu(<></>)
-  } 
+  }
+
+  let currentPath = directory[directory.length - 1].path
+  if(currentPath === '/') currentPath = ''
+  else currentPath += '/'
 
   return (<>
     { contextMenu }
@@ -131,32 +132,45 @@ export function Explorer({ folder, parents, setFolder, setParents }: ExplorerPro
       </div>
       <div className={styles.breadcrumbs}>
         {
-          parents.map((parent, index) => <>
-            <div
-              className={styles.breadcrumb}
-              key={`bread-${parent.id}`}
-              onClick={() => handleBreakCrumbClick(parent)}
-            >{parent.name}</div>
-            {index != parents.length - 1 ? <ChevronRightIcon key={`icon-${parent.id}`} /> : null}
-          </>)
+          directory.map((folder, index) =><React.Fragment key={folder.path + index}>
+            <NavLinkPersist
+              to={folder.path}
+              className={styles.breadcrumb}>
+              {folder.name}
+            </NavLinkPersist>
+            {index != directory.length - 1 ? <ChevronRightIcon /> : null}
+          </React.Fragment>)
         }
       </div>
       <div className={styles.items} ref={itemsRef}>
         {
-          folder.items.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
+          workspace.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
         }
         {
-          folder.items.map(item =>
-            <div
-              onClick={() => handleItemClick(item)}
-              className={styles.item}
-              key={item.id}
-              onContextMenu={(event) => showContextMenu(event, item)}
-            >
-              {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
-              {item.name}
-            </div>
-          )
+          workspace.map(item => {
+            if(item instanceof FolderNode) {
+              return <NavLinkPersist
+                to={currentPath + item.id}
+                onClick={() => handleItemClick(item)}
+                className={styles.item}
+                key={currentPath + item.id}
+                onContextMenu={(event) => showContextMenu(event, item)}>
+                {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
+                {item.name}
+              </NavLinkPersist>
+            }
+            else {
+              return <div
+                // to={ [...directory, item.id].join('/') }
+                onClick={() => handleItemClick(item)}
+                className={styles.item}
+                key={currentPath + item.id}
+                onContextMenu={(event) => showContextMenu(event, item)}>
+                {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
+                {item.name}
+              </div>
+            }
+          })
         }
       </div>
     </div>
