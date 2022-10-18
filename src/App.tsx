@@ -11,7 +11,7 @@ import { SettingsPage } from './pages/settings'
 
 const folder: FolderInterface = {
   type: 'folder',
-  name: 'My Personal Folder',
+  name: 'My Folder',
   id: '0',
   child: [
     {
