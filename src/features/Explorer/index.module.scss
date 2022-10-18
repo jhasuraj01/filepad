@@ -19,7 +19,7 @@
 
       @for $i from 1 through 20 {
         &:nth-child(#{$i}n) {
-          animation: fadein #{$i * 100}ms ease-out forwards;
+          animation: bringin #{$i * 100}ms ease-out forwards;
         }
       }
     }
@@ -30,7 +30,7 @@
   cursor: pointer;
 }
 
-@keyframes fadein {
+@keyframes bringin {
   from {
     opacity: 0;
     transform: translateX(5%);
