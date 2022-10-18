@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import style from './index.module.scss'
 
-interface SubNavProps {
+export interface SubNavProps {
   children: ReactNode
   title: string
 }

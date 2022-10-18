@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { NavLink, NavLinkProps, useLocation, useSearchParams } from 'react-router-dom'
+import { Navigate, NavigateProps, NavLink, NavLinkProps, useLocation, useSearchParams } from 'react-router-dom'
 import { useAppSelector } from '../app/hooks'
 import { RootState } from '../app/store'
 
@@ -29,5 +29,13 @@ export function NavLinkPersist(props: NavLinkProps ) {
 
   return (<>
     <NavLink {...{...props, to: `${props.to}${search}`}}>{ props.children }</NavLink>
+  </>)
+}
+
+export function NavigatePersist(props: NavigateProps) {
+  const { search } = useLocation()
+
+  return (<>
+    <Navigate {...{...props, to: `${props.to}${search}`}} />
   </>)
 }

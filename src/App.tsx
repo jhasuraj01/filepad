@@ -1,11 +1,14 @@
 import { Nav } from './components/Nav'
-import { SubNav } from './components/SubNav'
-import { Explorer } from './features/Explorer'
 import { EditorArea } from './components/EditorArea'
 import style from './App.module.scss'
 import { FolderInterface } from './libs/FolderNode'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { DirectoryTree } from './libs/DirectoryTree'
+import { NavigatePersist } from './supports/Persistence'
+import { FilesPage } from './pages/files'
+import { FoldersPage } from './pages/folders'
+import { SearchPage } from './pages/search'
+import { SettingsPage } from './pages/settings'
 
 const folder: FolderInterface = {
   type: 'folder',
@@ -109,19 +112,19 @@ const folder: FolderInterface = {
   ],
 }
 
-const tree = new DirectoryTree(folder).tree
+const workspace = new DirectoryTree(folder).tree
 
 function App() {
   return (
     <div className={style.container}>
       <Nav />
       <Routes>
-        <Route path='/' element={<Navigate to="/files" />} />
-        <Route path='/files' element={<SubNav title='Explorer'><Explorer workspace={tree} /></SubNav>} />
-        <Route path='/search' element={<SubNav title='Search'>Search</SubNav>} />
-        <Route path='/settings' element={<SubNav title='Settings'>Settings</SubNav>} />
+        <Route path='/' element={<NavigatePersist to="/editor" />} />
+        <Route path='/editor' element={<FilesPage workspace={workspace} />} />
+        <Route path='/drive' element={<FoldersPage workspace={workspace} />} />
+        <Route path='/search' element={<SearchPage />} />
+        <Route path='/settings' element={<SettingsPage />} />
       </Routes>
-      <EditorArea />
     </div>
   )
 }
