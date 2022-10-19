@@ -148,17 +148,6 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
         }
       </div>
       <hr />
-      <div className={styles.toolbar}>
-        <button className={styles.toolbarOption}>
-          <NewFileIcon className={styles.icon}/>
-          <span className={styles.text}>Create New File</span>
-        </button>
-        <button className={styles.toolbarOption}>
-          <NewFileIcon className={styles.icon}/>
-          <span className={styles.text}>Create New Folder</span>
-        </button>
-      </div>
-      <hr />
       <div className={styles.items} ref={itemsRef}>
         {
           workspace.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
