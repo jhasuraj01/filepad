@@ -14,7 +14,7 @@ import { ReactComponent as DesktopDownloadIcon } from '../../icons/desktop-downl
 import { ReactComponent as AddIcon } from '../../icons/add.svg'
 import { FileNode } from '../../libs/FileNode'
 import { ReactNode, useRef, useState } from 'react'
-import { ContextMenu, ContextMenuProps } from '../ContextMenu'
+import { ContextMenu, ContextMenuOption } from '../ContextMenu'
 import React from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
 
@@ -26,90 +26,44 @@ export interface ExplorerProps {
   }[]
 }
 
-// interface ContextMenuItem {
+const fileContextOptions: ContextMenuOption[] = [
+  { icon: RenameIcon, text: 'Rename File' },
+  { icon: TrashIcon, text: 'Delete File' },
+  { icon: DesktopDownloadIcon, text: 'Download File' },
+]
 
-// }
+const folderContextOptions: ContextMenuOption[] = [
+  { icon: RenameIcon, text: 'Rename Folder' },
+  { icon: TrashIcon, text: 'Delete Folder' },
+  { icon: LinkExternalIcon, text: 'Open in Editor' },
+]
 
-function FileContextMenu(props: ContextMenuProps) {
-  return (
-    <ContextMenu {...props} className={styles.contextMenu}>
-      <button className={styles.contextMenuOptions}>
-        <RenameIcon className={styles.icon}/>
-        <span className={styles.text}>Rename File</span>
-      </button>
-      <button className={styles.contextMenuOptions}>
-        <TrashIcon className={styles.icon}/>
-        <span className={styles.text}>Delete File</span>
-      </button>
-      <hr />
-      <button className={styles.contextMenuOptions}>
-        <DesktopDownloadIcon className={styles.icon}/>
-        <span className={styles.text}>Download File</span>
-      </button>
-    </ContextMenu>
-  )
-}
+const itemsExplorerContextOptions: ContextMenuOption[] = [
+  { icon: NewFileIcon, text: 'New File' },
+  { icon: NewFolderIcon, text: 'New Folder' },
+]
 
-function FolderContextMenu(props: ContextMenuProps) {
-  return (
-    <ContextMenu {...props} className={styles.contextMenu}>
-      <button className={styles.contextMenuOptions}>
-        <RenameIcon className={styles.icon}/>
-        <span className={styles.text}>Rename Folder</span>
-      </button>
-      <button className={styles.contextMenuOptions}>
-        <TrashIcon className={styles.icon}/>
-        <span className={styles.text}>Delete Folder</span>
-      </button>
-      <hr />
-      <button className={styles.contextMenuOptions}>
-        <LinkExternalIcon className={styles.icon}/>
-        <span className={styles.text}>Open in Editor</span>
-      </button>
-    </ContextMenu>
-  )
-}
+const deviceExplorerContextOptions: ContextMenuOption[] = [
+  {
+    icon: AddIcon,
+    text: 'New Device'
+  }
+]
 
-function ItemsExplorerContextMenu(props: ContextMenuProps) {
-  return (
-    <ContextMenu {...props} className={styles.contextMenu}>
-      <button className={styles.contextMenuOptions}>
-        <NewFileIcon className={styles.icon}/>
-        <span className={styles.text}>New File</span>
-      </button>
-      <button className={styles.contextMenuOptions}>
-        <NewFolderIcon className={styles.icon}/>
-        <span className={styles.text}>New Folder</span>
-      </button>
-    </ContextMenu>
-  )
-}
-
-function DeviceExplorerContextMenu(props: ContextMenuProps) {
-  return (
-    <ContextMenu {...props} className={styles.contextMenu}>
-      <button className={styles.contextMenuOptions}>
-        <AddIcon className={styles.icon}/>
-        <span className={styles.text}>New Device</span>
-      </button>
-    </ContextMenu>
-  )
-}
-
-function DeviceContextMenu(props: ContextMenuProps) {
-  return (
-    <ContextMenu {...props} className={styles.contextMenu}>
-      <button className={styles.contextMenuOptions}>
-        <ClearAllIcon className={styles.icon}/>
-        <span className={styles.text}>Format Device</span>
-      </button>
-      <button className={styles.contextMenuOptions}>
-        <TrashIcon className={styles.icon}/>
-        <span className={styles.text}>Delete Device</span>
-      </button>
-    </ContextMenu>
-  )
-}
+const deviceContextOptions: ContextMenuOption[] = [
+  {
+    icon: ClearAllIcon,
+    text: 'Format Device'
+  },
+  {
+    icon: TrashIcon,
+    text: 'Delete Device'
+  },
+  {
+    icon: LinkExternalIcon,
+    text: 'Open in Editor'
+  }
+]
 
 export function Explorer({ workspace, directory }: ExplorerProps) {
 
@@ -126,31 +80,31 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
 
   const showContextMenu = (
     event: React.MouseEvent<Element, MouseEvent>,
-    item: FolderNode | FileNode | string
+    item: string
   ) => {
     if(item === 'items') {
       event.stopPropagation()
       const itemsElm: HTMLDivElement = itemsRef.current!
       if(event.pageY >= itemsElm.offsetTop)
-        setContextMenu(<ItemsExplorerContextMenu hide={hideContextMenu} event={event} />)
+        setContextMenu(<ContextMenu options={itemsExplorerContextOptions} hide={hideContextMenu} event={event} />)
     }
     else if(item === 'devices') {
       event.stopPropagation()
       const itemsElm: HTMLDivElement = itemsRef.current!
       if(event.pageY >= itemsElm.offsetTop)
-        setContextMenu(<DeviceExplorerContextMenu hide={hideContextMenu} event={event} />)
+        setContextMenu(<ContextMenu options={deviceExplorerContextOptions} hide={hideContextMenu} event={event} />)
     }
     else if(item === 'file') {
       event.stopPropagation()
-      setContextMenu(<FileContextMenu hide={hideContextMenu} event={event} />)
+      setContextMenu(<ContextMenu options={fileContextOptions} hide={hideContextMenu} event={event} />)
     }
     else if(item === 'folder') {
       event.stopPropagation()
-      setContextMenu(<FolderContextMenu hide={hideContextMenu} event={event} />)
+      setContextMenu(<ContextMenu options={folderContextOptions} hide={hideContextMenu} event={event} />)
     }
     else if(item === 'device') {
       event.stopPropagation()
-      setContextMenu(<DeviceContextMenu hide={hideContextMenu} event={event} />)
+      setContextMenu(<ContextMenu options={deviceContextOptions} hide={hideContextMenu} event={event} />)
     }
   }
 
