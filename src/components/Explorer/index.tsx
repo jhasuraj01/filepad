@@ -5,10 +5,13 @@ import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.svg'
 import { ReactComponent as TrashIcon } from '../../icons/trash.svg'
 import { ReactComponent as RenameIcon } from '../../icons/rename.svg'
-import { ReactComponent as FolderOpenIcon } from '../../icons/folder-open.svg'
+import { ReactComponent as LinkExternalIcon } from '../../icons/link-external.svg'
 import { ReactComponent as NewFileIcon } from '../../icons/new-file.svg'
 import { ReactComponent as NewFolderIcon } from '../../icons/new-folder.svg'
+import { ReactComponent as ClearAllIcon } from '../../icons/clear-all.svg'
+import { ReactComponent as VMIcon } from '../../icons/vm.svg'
 import { ReactComponent as DesktopDownloadIcon } from '../../icons/desktop-download.svg'
+import { ReactComponent as AddIcon } from '../../icons/add.svg'
 import { FileNode } from '../../libs/FileNode'
 import { ReactNode, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuProps } from '../ContextMenu'
@@ -60,14 +63,14 @@ function FolderContextMenu(props: ContextMenuProps) {
       </button>
       <hr />
       <button className={styles.contextMenuOptions}>
-        <FolderOpenIcon className={styles.icon}/>
+        <LinkExternalIcon className={styles.icon}/>
         <span className={styles.text}>Open in Editor</span>
       </button>
     </ContextMenu>
   )
 }
 
-function ExplorerContextMenu(props: ContextMenuProps) {
+function ItemsExplorerContextMenu(props: ContextMenuProps) {
   return (
     <ContextMenu {...props} className={styles.contextMenu}>
       <button className={styles.contextMenuOptions}>
@@ -77,6 +80,32 @@ function ExplorerContextMenu(props: ContextMenuProps) {
       <button className={styles.contextMenuOptions}>
         <NewFolderIcon className={styles.icon}/>
         <span className={styles.text}>New Folder</span>
+      </button>
+    </ContextMenu>
+  )
+}
+
+function DeviceExplorerContextMenu(props: ContextMenuProps) {
+  return (
+    <ContextMenu {...props} className={styles.contextMenu}>
+      <button className={styles.contextMenuOptions}>
+        <AddIcon className={styles.icon}/>
+        <span className={styles.text}>New Device</span>
+      </button>
+    </ContextMenu>
+  )
+}
+
+function DeviceContextMenu(props: ContextMenuProps) {
+  return (
+    <ContextMenu {...props} className={styles.contextMenu}>
+      <button className={styles.contextMenuOptions}>
+        <ClearAllIcon className={styles.icon}/>
+        <span className={styles.text}>Format Device</span>
+      </button>
+      <button className={styles.contextMenuOptions}>
+        <TrashIcon className={styles.icon}/>
+        <span className={styles.text}>Delete Device</span>
       </button>
     </ContextMenu>
   )
@@ -103,15 +132,25 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
       event.stopPropagation()
       const itemsElm: HTMLDivElement = itemsRef.current!
       if(event.pageY >= itemsElm.offsetTop)
-        setContextMenu(<ExplorerContextMenu hide={hideContextMenu} event={event} />)
+        setContextMenu(<ItemsExplorerContextMenu hide={hideContextMenu} event={event} />)
     }
-    else if(item instanceof FileNode) {
+    else if(item === 'devices') {
+      event.stopPropagation()
+      const itemsElm: HTMLDivElement = itemsRef.current!
+      if(event.pageY >= itemsElm.offsetTop)
+        setContextMenu(<DeviceExplorerContextMenu hide={hideContextMenu} event={event} />)
+    }
+    else if(item === 'file') {
       event.stopPropagation()
       setContextMenu(<FileContextMenu hide={hideContextMenu} event={event} />)
     }
-    else if(item instanceof FolderNode) {
+    else if(item === 'folder') {
       event.stopPropagation()
       setContextMenu(<FolderContextMenu hide={hideContextMenu} event={event} />)
+    }
+    else if(item === 'device') {
+      event.stopPropagation()
+      setContextMenu(<DeviceContextMenu hide={hideContextMenu} event={event} />)
     }
   }
 
@@ -125,7 +164,7 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
 
   return (<>
     { contextMenu }
-    <div ref={containerRef} className={styles.container} onContextMenu={(event) => showContextMenu(event, 'items')}>
+    <div ref={containerRef} className={styles.container} onContextMenu={(event) => showContextMenu(event, directory.length > 1 ? 'items' : 'devices')}>
       <div className={styles.toolbar}>
         <button>Create New File</button>
         <button>Create New Folder</button>
@@ -154,8 +193,8 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
                 onClick={() => handleItemClick(item)}
                 className={styles.item}
                 key={currentPath + item.id}
-                onContextMenu={(event) => showContextMenu(event, item)}>
-                {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
+                onContextMenu={(event) => showContextMenu(event, directory.length > 1 ? 'folder' : 'device')}>
+                {directory.length > 1 ? (item instanceof FolderNode ? <FolderIcon /> : <FileIcon />) : <VMIcon />}
                 {item.name}
               </NavLinkPersist>
             }
@@ -165,7 +204,7 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
                 onClick={() => handleItemClick(item)}
                 className={styles.item}
                 key={currentPath + item.id}
-                onContextMenu={(event) => showContextMenu(event, item)}>
+                onContextMenu={(event) => showContextMenu(event, 'file')}>
                 {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
                 {item.name}
               </div>
