@@ -6,8 +6,10 @@ export interface ContextMenuOption {
   text: string
 }
 
+export type ContextMenuOptions = (ContextMenuOption | null)[]
+
 export interface ContextMenuProps {
-  options: ContextMenuOption[]
+  options: ContextMenuOptions
   event: React.MouseEvent<Element, MouseEvent>
   hide: () => void
 }
@@ -34,11 +36,11 @@ export function ContextMenu({ event, hide, options }: ContextMenuProps) {
   return (
     <div key={event.timeStamp} onContextMenu={(event) => event.preventDefault()} className={styles.contextMenu} style={style} onClick={hide}>
       {
-        options.map(({icon: Icon, text}) => {
-          return <button key={text} className={styles.contextMenuOptions}>
-            <Icon className={styles.icon}/>
-            <span className={styles.text}>{text}</span>
-          </button>
+        options.map((option) => {
+          return option ? <button key={option.text} className={styles.contextMenuOptions}>
+            <option.icon className={styles.icon}/>
+            <span className={styles.text}>{option.text}</span>
+          </button> : <hr />
         })
       }
     </div>
