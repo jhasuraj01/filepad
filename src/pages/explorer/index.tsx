@@ -25,13 +25,13 @@ export function ExplorerPage({ workspace }: ExplorerPageProps) {
   paths.forEach(folder => {
     for (let i = 0; i < currentWorkSpace.length; i++) {
       const item = currentWorkSpace[i]
-      if(item instanceof FolderNode && folder == item.id) {
+      if(item instanceof FolderNode && folder == item.pathname) {
         currentWorkSpace = item.items
         directory.push({
           name: item.name,
-          path: abspath + item.id
+          path: abspath + item.pathname
         })
-        abspath += item.id + '/'
+        abspath += item.pathname + '/'
         break
       }
     }

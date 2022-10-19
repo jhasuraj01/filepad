@@ -156,10 +156,10 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
           workspace.map(item => {
             if(item instanceof FolderNode) {
               return <NavLinkPersist
-                to={currentPath + item.id}
+                to={currentPath + item.pathname}
                 onClick={() => handleItemClick(item)}
                 className={styles.item}
-                key={currentPath + item.id}
+                key={currentPath + item.pathname}
                 onContextMenu={(event) => showContextMenu(event, directory.length > 1 ? 'folder' : 'device')}>
                 {directory.length > 1 ? <FolderIcon /> : <VMIcon />}
                 {item.name}
@@ -167,10 +167,10 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
             }
             else {
               return <div
-                // to={ [...directory, item.id].join('/') }
+                // to={ [...directory, item.pathname].join('/') }
                 onClick={() => handleItemClick(item)}
                 className={styles.item}
-                key={currentPath + item.id}
+                key={currentPath + item.pathname}
                 onContextMenu={(event) => showContextMenu(event, 'file')}>
                 <FileIcon />
                 {item.name}

@@ -25,6 +25,10 @@ export class ExplorerItemNode {
   public set id(_id: string) { this.setID(_id) }
   public get id() { return this.ID }
 
+  public get pathname() {
+    return this.name.split(' ').join('-').toLocaleLowerCase()
+  }
+
   public setParent(parent: FolderNode | null) {
     this.PARENT = parent
     return this
