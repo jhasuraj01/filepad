@@ -148,7 +148,7 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
                 className={styles.item}
                 key={currentPath + item.id}
                 onContextMenu={(event) => showContextMenu(event, directory.length > 1 ? 'folder' : 'device')}>
-                {directory.length > 1 ? (item instanceof FolderNode ? <FolderIcon /> : <FileIcon />) : <VMIcon />}
+                {directory.length > 1 ? <FolderIcon /> : <VMIcon />}
                 {item.name}
               </NavLinkPersist>
             }
@@ -159,7 +159,7 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
                 className={styles.item}
                 key={currentPath + item.id}
                 onContextMenu={(event) => showContextMenu(event, 'file')}>
-                {item instanceof FolderNode ? <FolderIcon /> : <FileIcon />}
+                <FileIcon />
                 {item.name}
               </div>
             }
