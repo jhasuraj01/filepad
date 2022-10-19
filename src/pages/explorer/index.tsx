@@ -15,7 +15,7 @@ export function ExplorerPage({ workspace }: ExplorerPageProps) {
 
   const directory: ExplorerProps['directory'] = [
     {
-      name: 'Explorer',
+      name: 'Devices',
       path: '/explorer'
     }
   ]

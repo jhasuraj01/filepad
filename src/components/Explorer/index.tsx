@@ -134,10 +134,6 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
   return (<>
     { contextMenu }
     <div ref={containerRef} className={styles.container} onContextMenu={(event) => showContextMenu(event, directory.length > 1 ? 'items' : 'devices')}>
-      <div className={styles.toolbar}>
-        <button>Create New File</button>
-        <button>Create New Folder</button>
-      </div>
       <div className={styles.breadcrumbs}>
         {
           directory.map((folder, index) =><React.Fragment key={folder.path + index}>
@@ -151,6 +147,18 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
           </React.Fragment>)
         }
       </div>
+      <hr />
+      <div className={styles.toolbar}>
+        <button className={styles.toolbarOption}>
+          <NewFileIcon className={styles.icon}/>
+          <span className={styles.text}>Create New File</span>
+        </button>
+        <button className={styles.toolbarOption}>
+          <NewFileIcon className={styles.icon}/>
+          <span className={styles.text}>Create New Folder</span>
+        </button>
+      </div>
+      <hr />
       <div className={styles.items} ref={itemsRef}>
         {
           workspace.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
