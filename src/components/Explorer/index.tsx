@@ -92,6 +92,7 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
     event: React.MouseEvent<Element, MouseEvent>,
     item: string
   ) => {
+    event.preventDefault()
     if(item === 'items') {
       event.stopPropagation()
       const itemsElm: HTMLDivElement = itemsRef.current!
