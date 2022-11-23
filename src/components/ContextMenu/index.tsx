@@ -4,6 +4,7 @@ import styles from './index.module.scss'
 export interface ContextMenuOption {
   icon: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string | undefined }>
   text: string
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export type ContextMenuOptions = (ContextMenuOption | null)[]
@@ -37,7 +38,7 @@ export function ContextMenu({ event, hide, options }: ContextMenuProps) {
     <div key={event.timeStamp} onContextMenu={(event) => event.preventDefault()} className={styles.contextMenu} style={style} onClick={hide}>
       {
         options.map((option) => {
-          return option ? <button key={option.text} className={styles.contextMenuOptions}>
+          return option ? <button key={option.text} className={styles.contextMenuOptions} onClick={option.onClick}>
             <option.icon className={styles.icon}/>
             <span className={styles.text}>{option.text}</span>
           </button> : <hr />
