@@ -13,7 +13,7 @@ export type ID = string
 export interface DirectoryNode {
   id: ID
   name: string
-  parent: DirectoryNode | null
+  parent: DirectoryNode | 'root'
   type: DirectoryNodeType
   editedAt: EpochTimeStamp
   createdAt: EpochTimeStamp
@@ -25,7 +25,7 @@ export interface FileMetadata extends DirectoryNode {
 }
 
 export interface FileContent {
-  id: FolderMetadata["id"]
+  id: FolderMetadata['id']
   backupContent: string
   content: string
 }

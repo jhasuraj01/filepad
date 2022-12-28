@@ -1,14 +1,17 @@
-import { DirectoryNode, DirectoryNodeType, ExtensionEnum, FileMetadata, FileContent, File } from "../entities/DirectoryNode"
-import { FileDatabase } from "../entities/FileDatabase"
+import { DirectoryNodeType, ExtensionEnum, FileMetadata, FileContent, File } from '../entities/DirectoryNode'
+import { FileDatabase } from '../entities/Database'
 
 export type createFileParams = {
-  id: FileMetadata["id"],
-  name: FileMetadata["name"],
+  id: FileMetadata['id'],
+  name: FileMetadata['name'],
   extension: ExtensionEnum,
-  parent: FileMetadata["parent"],
-  content: FileContent["content"]
-  backupContent: FileContent["backupContent"]
+  parent: FileMetadata['parent'],
+  content: FileContent['content']
+  backupContent: FileContent['backupContent']
 }
+
+
+
 export const createFile = async ( params: createFileParams, database: FileDatabase ): Promise<File> => {
 
   const metadata: FileMetadata = {
@@ -27,7 +30,7 @@ export const createFile = async ( params: createFileParams, database: FileDataba
     content: params.content,
   }
 
-  await database.createFileMetadata(metadata);
+  await database.createFileMetadata(metadata)
   await database.createFile(file)
   return {
     ...metadata,
@@ -36,16 +39,16 @@ export const createFile = async ( params: createFileParams, database: FileDataba
 }
 
 export const fetchFileContent = async (metadata: FileMetadata, database: FileDatabase): Promise<File> => {
-  const content: FileContent = await database.fetchFileContent(metadata);
+  const content: FileContent = await database.fetchFileContent(metadata)
   return {
     ...metadata,
     ...content,
-  };
+  }
 }
 
 export const deleteFile = async (file: FileMetadata, database: FileDatabase) => {
-  await database.deleteFile(file);
-  await database.deleteFileMetadata(file);
+  await database.deleteFile(file)
+  await database.deleteFileMetadata(file)
 }
 
 /*

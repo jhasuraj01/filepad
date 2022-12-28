@@ -1,6 +1,13 @@
-import { DirectoryNode, FileContent, FileMetadata, FolderMetadata } from "./DirectoryNode";
+import { DirectoryNode, FileContent, FileMetadata, FolderMetadata } from './DirectoryNode'
 
-export interface FileDatabase {
+export interface Database {
+  name: string,
+  owner: string,
+  connect(): Promise<Database>
+}
+
+export interface FileDatabase extends Database {
+  connect(): Promise<FileDatabase>
   createFile(file: FileContent): Promise<any>
   createFileMetadata(file: FileMetadata): Promise<any>
   fetchFileContent(metadata: FileMetadata): Promise<FileContent>

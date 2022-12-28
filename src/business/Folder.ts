@@ -1,12 +1,13 @@
-import { DirectoryNodeType, FolderMetadata, FileMetadata } from "../entities/DirectoryNode";
-import { FileDatabase } from "../entities/FileDatabase";
-import { deleteFile } from "./File";
+import { DirectoryNodeType, FolderMetadata, FileMetadata } from '../entities/DirectoryNode'
+import { FileDatabase } from '../entities/Database'
+import { deleteFile } from './File'
 
 export type createFolderParams = {
-  id: FolderMetadata["id"],
-  name: FolderMetadata["name"],
-  parent: FolderMetadata["parent"]
+  id: FolderMetadata['id'],
+  name: FolderMetadata['name'],
+  parent: FolderMetadata['parent']
 }
+
 export const createFolder = async ( params: createFolderParams, database: FileDatabase ): Promise<FolderMetadata> => {
 
   const folder: FolderMetadata = {
@@ -17,30 +18,29 @@ export const createFolder = async ( params: createFolderParams, database: FileDa
     editedAt: Date.now(),
     createdAt: Date.now()
   }
-  await database.createFolderMetadata(folder);
+  await database.createFolderMetadata(folder)
   return folder
 }
 
 export const fetchFolderContent = async (folder: FolderMetadata, database: FileDatabase): Promise<(FileMetadata | FolderMetadata)[]> => {
-  const nodes: (FileMetadata | FolderMetadata)[] = await database.fetchFolderContent(folder);
-  return nodes;
+  const nodes: (FileMetadata | FolderMetadata)[] = await database.fetchFolderContent(folder)
+  return nodes
 }
 
 export const deleteFolder = async (folder: FolderMetadata, database: FileDatabase) => {
-  const nodes = await fetchFolderContent(folder, database);
+  const nodes = await fetchFolderContent(folder, database)
 
   for (let i = 0; i < nodes.length; i++) {
-    const node = nodes[i];
+    const node = nodes[i]
     if(node.type == DirectoryNodeType.folder) {
-      await deleteFolder(node, database);
+      await deleteFolder(node, database)
     }
     else {
-      await deleteFile(node, database);
+      await deleteFile(node, database)
     }
   }
-  database.deleteFolderMetadata(folder);
+  database.deleteFolderMetadata(folder)
 }
-
 
 /*
 
