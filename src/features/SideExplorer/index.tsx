@@ -4,35 +4,59 @@ import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.sv
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import style from './index.module.scss'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectFolderExpansionState, toggleExpansion } from './sideExplorerSlice'
+import { selectFolderExpansionState, selectWorkspace, toggleExpansion } from './sideExplorerSlice'
+import { DirectoryNodeType, FileMetadata, FolderMetadata } from '../../entities/DirectoryNode'
+import { fileStorageInteractor } from '../../interactor/FileStorageInteractor'
+import { useEffect, useState } from 'react'
 
 interface FolderProps {
-  folder: FolderNode
+  folder: FolderMetadata
 }
+
 interface FileProps {
-  file: FileNode
+  file: FileMetadata
 }
 interface SideExplorerProps {
   workspace: FolderNode
 }
 interface ExplorerItemsProps {
-  items: (FolderNode | FileNode)[]
+  folder: FolderMetadata
 }
 
-export function SideExplorer({ workspace }: SideExplorerProps) {
+export function SideExplorer() {
+
+  const workspace = useAppSelector(selectWorkspace)
+
   return <>
     <div className={style.workspaceName}>{workspace.name}</div>
-    <ExplorerItems items={workspace.items}/>
+    <FolderItems folder={workspace}/>
   </>
 }
 
-export function ExplorerItems({ items }: ExplorerItemsProps) {
+export function FolderItems({ folder }: ExplorerItemsProps) {
+
+  const [items, setItems] = useState<(FolderMetadata | FileMetadata)[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    (async () => {
+      const folderContent = await fileStorageInteractor.fetchFolderContent(folder)
+      setLoading(false)
+      setItems(folderContent)
+    })()
+
+  }, [folder.id])
+
+  if(loading) {
+    return <Loading />
+  }
+
   return <>{
     items.map(item => {
-      if(item instanceof FileNode)
-        return <File key={item.id} file={item} />
+      if(item.type === DirectoryNodeType.file)
+        return <File key={item.database + item.id} file={item} />
       else
-        return <Folder key={item.id} folder={item}/>
+        return <Folder key={item.database + item.id} folder={item}/>
     })
   }</>
 }
@@ -46,14 +70,24 @@ export function File({ file }: FileProps) {
   )
 }
 
+export function Loading() {
+  return (
+    <div className={`${style.file} ${style.entry}`}>
+      <span className={style.icon}><FileIcon /></span>
+      <span>Loading...</span>
+    </div>
+  )
+}
+
 export function Folder({ folder }: FolderProps) {
 
   // const [isExpanded, toggleExpansion] = useState(false)
-  const isExpanded = useAppSelector(selectFolderExpansionState(folder.id))
+  const isExpanded = useAppSelector(selectFolderExpansionState(folder))
   const dispatch = useAppDispatch()
 
+
   const handleFolderClick = () => {
-    dispatch(toggleExpansion(folder.id))
+    dispatch(toggleExpansion(folder))
   }
 
   return (
@@ -63,7 +97,7 @@ export function Folder({ folder }: FolderProps) {
         <span>{folder.name}</span>
       </div>
       <div className={style.child}>
-        { isExpanded ? <ExplorerItems items={folder.items} /> : <></>}
+        { isExpanded ? <FolderItems folder={folder} /> : <></>}
       </div>
     </div>
   )

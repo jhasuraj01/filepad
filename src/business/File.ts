@@ -1,7 +1,8 @@
-import { DirectoryNodeType, ExtensionEnum, FileMetadata, FileContent, File } from '../entities/DirectoryNode'
+import { DirectoryNodeType, ExtensionEnum, FileMetadata, FileContent, FileType } from '../entities/DirectoryNode'
 import { FileDatabase } from '../entities/Database'
 
 export type createFileParams = {
+  database: FileMetadata['database']
   id: FileMetadata['id'],
   name: FileMetadata['name'],
   extension: ExtensionEnum,
@@ -12,10 +13,10 @@ export type createFileParams = {
 
 
 
-export const createFile = async ( params: createFileParams, database: FileDatabase ): Promise<File> => {
+export const createFile = async ( params: createFileParams, database: FileDatabase ): Promise<FileType> => {
 
   const metadata: FileMetadata = {
-    database: database.id,
+    database: params.database,
     extension: params.extension,
     type: DirectoryNodeType.file,
     id: params.id,
@@ -26,6 +27,7 @@ export const createFile = async ( params: createFileParams, database: FileDataba
   }
 
   const file: FileContent = {
+    database: params.database,
     id: params.id,
     backupContent: params.backupContent,
     content: params.content,
@@ -39,7 +41,7 @@ export const createFile = async ( params: createFileParams, database: FileDataba
   }
 }
 
-export const fetchFileContent = async (metadata: FileMetadata, database: FileDatabase): Promise<File> => {
+export const fetchFileContent = async (metadata: FileMetadata, database: FileDatabase): Promise<FileType> => {
   const content: FileContent = await database.fetchFileContent(metadata)
   return {
     ...metadata,

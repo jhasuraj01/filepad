@@ -14,7 +14,7 @@ export interface DirectoryNode {
   database: string
   id: ID
   name: string
-  parent: DirectoryNode | 'root'
+  parent: DirectoryNode | 'root' | 'all-databases'
   type: DirectoryNodeType
   editedAt: EpochTimeStamp
   createdAt: EpochTimeStamp
@@ -26,12 +26,13 @@ export interface FileMetadata extends DirectoryNode {
 }
 
 export interface FileContent {
+  database: string
   id: FolderMetadata['id']
   backupContent: string
   content: string
 }
 
-export type File = FileMetadata & FileContent
+export type FileType = FileMetadata & FileContent
 
 export interface FolderMetadata extends DirectoryNode {
   type: DirectoryNodeType.folder

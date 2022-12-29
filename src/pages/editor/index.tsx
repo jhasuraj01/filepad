@@ -9,7 +9,7 @@ export interface EditorPageProps {
 export function EditorPage({ workspace }: EditorPageProps) {
   return (
     <AppSection title='Editor'>
-      <SideExplorer workspace={workspace} />
+      <SideExplorer />
       <EditorArea />
     </AppSection>
   )

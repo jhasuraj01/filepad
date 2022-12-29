@@ -1,35 +1,42 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
+import { FolderMetadata } from '../../entities/DirectoryNode'
+import { rootFolder } from '../../interactor/FileStorageInteractor'
 
 export interface ExplorerState {
   expanded: Record<string, boolean>
+  workspace: FolderMetadata
 }
 
+const folderUUID = (metadata: FolderMetadata) => `${metadata.database}/${metadata.id}`
+
 const initialState: ExplorerState = {
-  expanded: {}
+  expanded: {},
+  workspace: rootFolder
 }
 
 export const sideExplorerSlice = createSlice({
   name: 'sideExplorer',
   initialState,
   reducers: {
-    toggleExpansion(state, { payload }: PayloadAction<string>) {
+    toggleExpansion(state, { payload }: PayloadAction<FolderMetadata>) {
       const folder = payload
-      state.expanded[folder] = !state.expanded[folder]
+      state.expanded[folderUUID(folder)] = !state.expanded[folderUUID(folder)]
     },
-    expand(state, { payload }: PayloadAction<string>) {
+    expand(state, { payload }: PayloadAction<FolderMetadata>) {
       const folder = payload
-      state.expanded[folder] = true
+      state.expanded[folderUUID(folder)] = true
     },
-    collapse(state, { payload }: PayloadAction<string>) {
+    collapse(state, { payload }: PayloadAction<FolderMetadata>) {
       const folder = payload
-      state.expanded[folder] = false
+      state.expanded[folderUUID(folder)] = false
     }
   },
 })
 
 export const { expand, collapse, toggleExpansion } = sideExplorerSlice.actions
 
-export const selectFolderExpansionState = (id: string) => (state: RootState) => Boolean(state.sideExplorer.expanded[id])
+export const selectFolderExpansionState = (metadata: FolderMetadata) => (state: RootState) => Boolean(state.sideExplorer.expanded[folderUUID(metadata)])
+export const selectWorkspace = (state: RootState) => state.sideExplorer.workspace
 
 export default sideExplorerSlice.reducer

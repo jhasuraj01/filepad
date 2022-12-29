@@ -77,6 +77,7 @@ export class LocalFileDatabase implements FileDatabase {
 
     return {
       id: metadata.id,
+      database: this.id,
       content: 'Demo Content',
       backupContent: 'Backup Content',
     }
