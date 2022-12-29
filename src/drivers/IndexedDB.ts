@@ -7,16 +7,14 @@ export class LocalFileDatabase implements FileDatabase {
   private contentStoreName = 'contentStore'
   private database: IDBPDatabase | null = null
 
-  name: string
-  owner: string
+  id: string
 
-  constructor({ name, owner }: { name: string, owner: string }) {
-    this.name = name
-    this.owner = owner
+  constructor({ id }: { id: string }) {
+    this.id = id
   }
 
   get databaseName(): string {
-    return `${this.owner}/${this.name}`
+    return `FileDatabase/${this.id}`
   }
 
   async connect(): Promise<FileDatabase> {

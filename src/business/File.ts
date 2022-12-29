@@ -15,6 +15,7 @@ export type createFileParams = {
 export const createFile = async ( params: createFileParams, database: FileDatabase ): Promise<File> => {
 
   const metadata: FileMetadata = {
+    database: database.id,
     extension: params.extension,
     type: DirectoryNodeType.file,
     id: params.id,

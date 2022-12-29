@@ -11,6 +11,7 @@ export type createFolderParams = {
 export const createFolder = async ( params: createFolderParams, database: FileDatabase ): Promise<FolderMetadata> => {
 
   const folder: FolderMetadata = {
+    database: database.id,
     type: DirectoryNodeType.folder,
     id: params.id,
     name: params.name,

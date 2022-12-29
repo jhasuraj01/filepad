@@ -22,13 +22,15 @@ class FileStorageInteractor {
   fetchFolderContent = (metadata: FolderMetadata) => folderUseCase.fetchFolderContent(metadata, this.database)
 }
 
-export class LocalFileStorageInteractor extends FileStorageInteractor {
+class LocalFileStorageInteractor extends FileStorageInteractor {
   constructor() {
     const database = new LocalFileDatabase({
-      name: 'FileStorage',
-      owner: 'default'
+      id: 'default'
     });
     super(database)
   }
 }
 
+export const databases: FileStorageInteractor[] = [
+  new LocalFileStorageInteractor()
+]

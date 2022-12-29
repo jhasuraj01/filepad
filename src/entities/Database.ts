@@ -1,8 +1,7 @@
 import { DirectoryNode, FileContent, FileMetadata, FolderMetadata } from './DirectoryNode'
 
 export interface Database {
-  name: string,
-  owner: string,
+  id: string,
   connect(): Promise<Database>
 }
 

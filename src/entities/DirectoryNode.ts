@@ -11,6 +11,7 @@ export enum DirectoryNodeType {
 export type ID = string
 
 export interface DirectoryNode {
+  database: string
   id: ID
   name: string
   parent: DirectoryNode | 'root'
