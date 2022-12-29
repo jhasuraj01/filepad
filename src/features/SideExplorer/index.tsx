@@ -47,10 +47,6 @@ export function FolderItems({ folder }: ExplorerItemsProps) {
 
   }, [folder.id])
 
-  if(loading) {
-    return <Loading />
-  }
-
   return <>{
     items.map(item => {
       if(item.type === DirectoryNodeType.file)
@@ -66,15 +62,6 @@ export function File({ file }: FileProps) {
     <div className={`${style.file} ${style.entry}`}>
       <span className={style.icon}><FileIcon /></span>
       <span>{file.name}</span>
-    </div>
-  )
-}
-
-export function Loading() {
-  return (
-    <div className={`${style.file} ${style.entry}`}>
-      <span className={style.icon}><FileIcon /></span>
-      <span>Loading...</span>
     </div>
   )
 }

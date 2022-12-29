@@ -1,6 +1,7 @@
 import { FileContent, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
 import { FileDatabase } from '../entities/Database'
 import { openDB, deleteDB, wrap, unwrap, IDBPObjectStore, IDBPDatabase } from 'idb'
+import { type } from 'os'
 
 export class LocalFileDatabase implements FileDatabase {
   private metadataStoreName = 'metadataStore'
@@ -60,6 +61,7 @@ export class LocalFileDatabase implements FileDatabase {
 
     await this.database.add(this.metadataStoreName, {
       id: file.id,
+      database: file.database,
       createdAt: file.createdAt,
       editedAt: file.editedAt,
       extension: file.extension,
@@ -99,8 +101,14 @@ export class LocalFileDatabase implements FileDatabase {
     throw new Error('Method not implemented.')
   }
 
-  fetchFolderContent(folder: FolderMetadata): Promise<(FileMetadata | FolderMetadata)[]> {
-    throw new Error('Method not implemented.')
+  async fetchFolderContent(folder: FolderMetadata): Promise<(FileMetadata | FolderMetadata)[]> {
+    
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+
+    const value = await this.database.getFromIndex(this.metadataStoreName, 'parent', folder.id) as (FileMetadata | FolderMetadata)[]
+
+    return value || []
   }
 
 }
