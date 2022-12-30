@@ -1,5 +1,3 @@
-import { FileNode } from '../../libs/FileNode'
-import { FolderNode } from '../../libs/FolderNode'
 import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.svg'
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import style from './index.module.scss'
@@ -44,6 +42,12 @@ export function FolderItems({ folder }: ExplorerItemsProps) {
     })()
 
   }, [folder.id])
+
+  if(loading) {
+    return (
+      <div>Loading...</div>
+    )
+  }
 
   return <>{
     items.map(item => {

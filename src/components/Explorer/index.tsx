@@ -1,4 +1,3 @@
-import { FolderNode } from '../../libs/FolderNode'
 import styles from './index.module.scss'
 import { ReactComponent as FolderIcon } from '../../icons/folder.svg'
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
@@ -13,7 +12,6 @@ import { ReactComponent as VMIcon } from '../../icons/vm.svg'
 import { ReactComponent as DesktopDownloadIcon } from '../../icons/desktop-download.svg'
 import { ReactComponent as AddIcon } from '../../icons/add.svg'
 import { ReactComponent as LinkIcon } from '../../icons/link.svg'
-import { FileNode } from '../../libs/FileNode'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuOptions } from '../ContextMenu'
 import React from 'react'
@@ -165,6 +163,12 @@ export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
 
   }, [folder.id])
 
+  if(loading) {
+    return (
+      <div>Loading...</div>
+    )
+  }
+
   return (
     <div className={styles.breadcrumbs}>
       {
@@ -197,6 +201,12 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
     })()
 
   }, [folder.id])
+
+  if(loading) {
+    return (
+      <div>Loading...</div>
+    )
+  }
 
   return (
     <div className={styles.items} ref={itemsRef}>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Explorer, ExplorerProps } from '../../components/Explorer'
+import { Explorer } from '../../components/Explorer'
 import { FolderMetadata } from '../../entities/DirectoryNode'
 import { fileStorageInteractor, rootFolder } from '../../interactor/FileStorageInteractor'
 import { FileNode } from '../../libs/FileNode'

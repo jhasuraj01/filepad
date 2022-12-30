@@ -1,4 +1,4 @@
-import { DirectoryNode, DirectoryNodeType, FileContent, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
+import { DirectoryNodeType, FileContent, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
 import { FileDatabase } from '../entities/Database'
 import { openDB, IDBPDatabase } from 'idb'
 
@@ -31,7 +31,7 @@ export class LocalFileDatabase implements FileDatabase {
           })
           metadataStore.createIndex('parent', 'parent')
           
-          const contentStore = db.createObjectStore(contentStoreName, {
+          db.createObjectStore(contentStoreName, {
             keyPath: 'id'
           })
         }
@@ -41,7 +41,7 @@ export class LocalFileDatabase implements FileDatabase {
     return this
   }
 
-  async createFile(file: FileContent): Promise<any> {
+  async createFile(file: FileContent): Promise<void> {
 
     await this.connect()
     if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
@@ -54,7 +54,7 @@ export class LocalFileDatabase implements FileDatabase {
 
   }
 
-  async createFileMetadata(file: FileMetadata): Promise<any> {
+  async createFileMetadata(file: FileMetadata): Promise<void> {
     await this.connect()
     if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
 
@@ -74,29 +74,29 @@ export class LocalFileDatabase implements FileDatabase {
     await this.connect()
     if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
 
-    const data = await this.database.get(this.contentStoreName, metadata.id)
+    const data = await this.database.get(this.contentStoreName, metadata.id) as FileContent
 
     return {
       id: metadata.id,
       database: this.id,
-      content: 'Demo Content',
-      backupContent: 'Backup Content',
+      content: data.content,
+      backupContent: data.backupContent,
     }
   }
 
-  deleteFile(file: FileMetadata): Promise<any> {
+  deleteFile(file: FileMetadata): Promise<void> {
     throw new Error('Method not implemented.')
   }
 
-  deleteFileMetadata(file: FileMetadata): Promise<any> {
+  deleteFileMetadata(file: FileMetadata): Promise<void> {
     throw new Error('Method not implemented.')
   }
 
-  createFolderMetadata(folder: FolderMetadata): Promise<any> {
+  createFolderMetadata(folder: FolderMetadata): Promise<void> {
     throw new Error('Method not implemented.')
   }
 
-  deleteFolderMetadata(folder: FolderMetadata): Promise<any> {
+  deleteFolderMetadata(folder: FolderMetadata): Promise<void> {
     throw new Error('Method not implemented.')
   }
 
