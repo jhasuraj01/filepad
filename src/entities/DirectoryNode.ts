@@ -1,8 +1,3 @@
-
-export enum ExtensionEnum {
-  txt = 'txt',
-}
-
 export enum DirectoryNodeType {
   folder = 'directory',
   file = 'file',
@@ -23,7 +18,7 @@ export interface DirectoryNode {
 }
 
 export interface FileMetadata extends DirectoryNode {
-  extension: ExtensionEnum
+  extension: string
   type: DirectoryNodeType.file
 }
 

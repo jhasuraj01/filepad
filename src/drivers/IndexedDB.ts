@@ -84,6 +84,28 @@ export class LocalFileDatabase implements FileDatabase {
     }
   }
 
+  async fetchFileMetadata(id: string ): Promise<FileMetadata> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+
+    const data = await this.database.get(this.metadataStoreName, id) as FileMetadata | undefined
+
+    if (data === undefined) {
+      throw new Error('[LocalFileDatabase]: File is undefined')
+    }
+
+    return {
+      id: data.id,
+      name: data.name,
+      database: this.id,
+      type: DirectoryNodeType.file,
+      parentId: data.parentId,
+      createdAt: data.createdAt,
+      editedAt: data.editedAt,
+      extension: data.extension,
+    }
+  }
+
   async deleteFile(file: FileMetadata): Promise<void> {
     await this.connect()
     if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
@@ -111,6 +133,22 @@ export class LocalFileDatabase implements FileDatabase {
       parentId: folder.parentId,
       type: folder.type,
     })
+  }
+
+  async updateFileContent(file: FileContent): Promise<void> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    await this.database.put(this.contentStoreName, file)
+  }
+  
+  async updateFileMetadata(file: FileMetadata): Promise<void> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    await this.database.put(this.metadataStoreName, file)
+  }
+
+  updateFolderMetadata(folder: FolderMetadata): Promise<void> {
+    throw new Error('Method not implemented.')
   }
 
   async deleteFolderMetadata(folder: FolderMetadata): Promise<void> {

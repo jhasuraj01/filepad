@@ -2,10 +2,13 @@ import * as fileUseCase from '../business/File'
 import * as folderUseCase from '../business/Folder'
 import { LocalFileDatabase } from '../drivers/IndexedDB'
 import { FileDatabase } from '../entities/Database'
-import { ALL_DATABASES, DirectoryNode, DirectoryNodeType, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
+import { ALL_DATABASES, DirectoryNode, DirectoryNodeType, FileMetadata, FileType, FolderMetadata } from '../entities/DirectoryNode'
 
 interface FileStorageInteractorInterface {
-  fetchFileContent: (metadata: FileMetadata) => ReturnType<typeof fileUseCase.fetchFileContent>
+  fetchFile: (metadata: {id: FileMetadata['id'], database: FileMetadata['database']}) => ReturnType<typeof fileUseCase.fetchFile>
+  saveFile: (file: FileType) => ReturnType<typeof fileUseCase.saveFile>
+  fetchFileMetadata: (metadata: {id: FileMetadata['id'], database: FileMetadata['database']}) => ReturnType<typeof fileUseCase.fetchFileMetadata>
+  fetchFileContent: (metadata: {id: FileMetadata['id'], database: FileMetadata['database']}) => ReturnType<typeof fileUseCase.fetchFileContent>
   createFile: (params: fileUseCase.createFileParams) => ReturnType<typeof fileUseCase.createFile>
   deleteFile: (metadata: FileMetadata) => ReturnType<typeof fileUseCase.deleteFile>
   createFolder: (metadata: FolderMetadata) => ReturnType<typeof folderUseCase.createFolder>
@@ -33,7 +36,10 @@ export class FileStorageInteractor implements FileStorageInteractorInterface {
     return result[0]
   }
   
-  fetchFileContent = (metadata: FileMetadata) => fileUseCase.fetchFileContent(metadata, this.selectDatabases(metadata))
+  fetchFile = (metadata: {id: FileMetadata['id'], database: FileMetadata['database']}) => fileUseCase.fetchFile(metadata, this.selectDatabases(metadata))
+  saveFile = (file: FileType) => fileUseCase.saveFile(file, this.selectDatabases(file))
+  fetchFileMetadata = (metadata: {id: FileMetadata['id'], database: FileMetadata['database']}) => fileUseCase.fetchFileMetadata(metadata, this.selectDatabases(metadata))
+  fetchFileContent = (metadata: {id: FileMetadata['id'], database: FileMetadata['database']}) => fileUseCase.fetchFileContent(metadata, this.selectDatabases(metadata))
   createFile = (params: fileUseCase.createFileParams) => fileUseCase.createFile(params, this.selectDatabases(params))
   deleteFile = (metadata: FileMetadata) => fileUseCase.deleteFile(metadata, this.selectDatabases(metadata))
   createFolder = (metadata: FolderMetadata) => folderUseCase.createFolder(metadata, this.selectDatabases(metadata))

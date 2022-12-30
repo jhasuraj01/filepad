@@ -6,6 +6,7 @@ import { selectFolderExpansionState, selectWorkspace, toggleExpansion } from './
 import { DirectoryNodeType, FileMetadata, FolderMetadata } from '../../entities/DirectoryNode'
 import { fileStorageInteractor } from '../../interactor/FileStorageInteractor'
 import { useEffect, useState } from 'react'
+import { NavLinkPersist } from '../../supports/Persistence'
 
 interface FolderProps {
   folder: FolderMetadata
@@ -61,10 +62,12 @@ export function FolderItems({ folder }: ExplorerItemsProps) {
 
 export function File({ file }: FileProps) {
   return (
-    <div className={`${style.file} ${style.entry}`}>
+    <NavLinkPersist
+      className={`${style.file} ${style.entry}`}
+      to={`/editor/${file.database}/${file.id}`}>
       <span className={style.icon}><FileIcon /></span>
-      <span>{`${file.name}.${file.extension}`}</span>
-    </div>
+      <span>{file.name}</span>
+    </NavLinkPersist>
   )
 }
 

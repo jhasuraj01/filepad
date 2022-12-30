@@ -16,7 +16,7 @@ import { ReactNode, useEffect, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuOptions } from '../ContextMenu'
 import React from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
-import { ALL_DATABASES, DirectoryNodeType, ExtensionEnum, FileMetadata, FolderMetadata } from '../../entities/DirectoryNode'
+import { ALL_DATABASES, DirectoryNodeType, FileMetadata, FolderMetadata } from '../../entities/DirectoryNode'
 import { fileStorageInteractor } from '../../interactor/FileStorageInteractor'
 
 export interface ExplorerProps {
@@ -95,7 +95,7 @@ export function Explorer({ workspace }: ExplorerProps) {
       database: workspace.database,
       id: String(Date.now()),
       name: fileName,
-      extension: ExtensionEnum.txt,
+      extension: `.${fileName.split('.').pop()}`,
       parentId: workspace.id,
       content: '',
       backupContent: '',
@@ -267,15 +267,15 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
 
 export function File({ file, showContextMenu }: FileProps) {
   return (
-    <div
-      // to={ [...directory, item.pathname].join('/') }
+    <NavLinkPersist
+      to={`/editor/${file.database}/${file.id}`}
       // onClick={() => handleItemClick(item)}
       className={styles.item}
       onContextMenu={(event) => showContextMenu(event, 'file')}
     >
       <FileIcon />
-      {`${file.name}.${file.extension}`}
-    </div>
+      {`${file.name}`}
+    </NavLinkPersist>
   )
 }
 

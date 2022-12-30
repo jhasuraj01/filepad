@@ -1,12 +1,8 @@
 import { AppSection } from '../../components/AppSection'
 import { EditorArea } from '../../components/EditorArea'
 import { SideExplorer } from '../../features/SideExplorer'
-import { FolderNode } from '../../libs/FolderNode'
 
-export interface EditorPageProps {
-  workspace: FolderNode
-}
-export function EditorPage({ workspace }: EditorPageProps) {
+export function EditorPage() {
   return (
     <AppSection title='Editor'>
       <SideExplorer />

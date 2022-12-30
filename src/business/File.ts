@@ -1,23 +1,20 @@
-import { DirectoryNodeType, ExtensionEnum, FileMetadata, FileContent, FileType } from '../entities/DirectoryNode'
+import { DirectoryNodeType, FileMetadata, FileContent, FileType } from '../entities/DirectoryNode'
 import { FileDatabase } from '../entities/Database'
 
 export type createFileParams = {
   database: FileMetadata['database']
   id: FileMetadata['id'],
   name: FileMetadata['name'],
-  extension: ExtensionEnum,
+  extension: string,
   parentId: FileMetadata['parentId'],
   content: FileContent['content']
   backupContent: FileContent['backupContent']
 }
 
-
-
 export const createFile = async ( params: createFileParams, database: FileDatabase ): Promise<FileType> => {
-
   const metadata: FileMetadata = {
     database: params.database,
-    extension: params.extension,
+    extension: params.extension || `.${params.name.split('.').pop()}` || '.txt',
     type: DirectoryNodeType.file,
     id: params.id,
     name: params.name,
@@ -41,7 +38,14 @@ export const createFile = async ( params: createFileParams, database: FileDataba
   }
 }
 
-export const fetchFileContent = async (metadata: FileMetadata, database: FileDatabase): Promise<FileType> => {
+export const fetchFileMetadata = async (metadata: {id: FileMetadata['id']}, database: FileDatabase): Promise<FileMetadata> => {
+  const metadataRes: FileMetadata = await database.fetchFileMetadata(metadata.id)
+  return {
+    ...metadataRes
+  }
+}
+
+export const fetchFileContent = async (metadata: {id: FileMetadata['id']}, database: FileDatabase): Promise<FileContent> => {
   const content: FileContent = await database.fetchFileContent(metadata)
   return {
     ...metadata,
@@ -49,9 +53,24 @@ export const fetchFileContent = async (metadata: FileMetadata, database: FileDat
   }
 }
 
+export const fetchFile = async (metadata: {id: FileMetadata['id']}, database: FileDatabase): Promise<FileType> => {
+  const contentRes: FileContent = await fetchFileContent(metadata, database)
+  const metadataRes: FileMetadata = await fetchFileMetadata(metadata, database)
+  return {
+    ...contentRes,
+    ...metadataRes,
+  }
+}
+
 export const deleteFile = async (file: FileMetadata, database: FileDatabase) => {
   await database.deleteFile(file)
   await database.deleteFileMetadata(file)
+}
+
+export const saveFile = async (file: FileType, database: FileDatabase): Promise<void> => {
+  file.editedAt = Date.now()
+  await database.updateFileContent(file)
+  await database.updateFileMetadata(file)
 }
 
 /*
