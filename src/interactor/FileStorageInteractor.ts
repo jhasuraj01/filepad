@@ -8,7 +8,7 @@ interface FileStorageInteractorInterface {
   fetchFileContent: (metadata: FileMetadata) => ReturnType<typeof fileUseCase.fetchFileContent>
   createFile: (params: fileUseCase.createFileParams) => ReturnType<typeof fileUseCase.createFile>
   deleteFile: (metadata: FileMetadata) => ReturnType<typeof fileUseCase.deleteFile>
-  createFolder: (metadata: FileMetadata) => ReturnType<typeof folderUseCase.createFolder>
+  createFolder: (metadata: FolderMetadata) => ReturnType<typeof folderUseCase.createFolder>
   deleteFolder: (metadata: FolderMetadata) => ReturnType<typeof folderUseCase.deleteFolder>
   fetchFolderContent: (metadata: FolderMetadata) => ReturnType<typeof folderUseCase.fetchFolderContent>
   fetchParentMetadata: (metadata: FolderMetadata) => ReturnType<typeof folderUseCase.fetchParentMetadata>
@@ -36,7 +36,7 @@ export class FileStorageInteractor implements FileStorageInteractorInterface {
   fetchFileContent = (metadata: FileMetadata) => fileUseCase.fetchFileContent(metadata, this.selectDatabases(metadata))
   createFile = (params: fileUseCase.createFileParams) => fileUseCase.createFile(params, this.selectDatabases(params))
   deleteFile = (metadata: FileMetadata) => fileUseCase.deleteFile(metadata, this.selectDatabases(metadata))
-  createFolder = (metadata: FileMetadata) => folderUseCase.createFolder(metadata, this.selectDatabases(metadata))
+  createFolder = (metadata: FolderMetadata) => folderUseCase.createFolder(metadata, this.selectDatabases(metadata))
   deleteFolder = (metadata: FolderMetadata) => folderUseCase.deleteFolder(metadata, this.selectDatabases(metadata))
   
   /**
@@ -55,13 +55,23 @@ export class FileStorageInteractor implements FileStorageInteractorInterface {
         name: database.id,
       })))
     }
-    // console.log('Hi')
     return folderUseCase.fetchFolderContent(metadata, this.selectDatabases(metadata))
   }
 
   fetchParentMetadata = (metadata: FolderMetadata): ReturnType<typeof folderUseCase.fetchParentMetadata> => {
     if(metadata.parentId == ALL_DATABASES) {
       return Promise.resolve(rootFolder)
+    }
+    else if(metadata.parentId == 'root') {
+      return Promise.resolve({
+        id: 'root',
+        database: metadata.database,
+        parentId: ALL_DATABASES,
+        type: DirectoryNodeType.folder,
+        createdAt: 0,
+        editedAt: 0,
+        name: metadata.database,
+      })
     }
     return folderUseCase.fetchParentMetadata(metadata, this.selectDatabases(metadata))
   }

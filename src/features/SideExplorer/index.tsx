@@ -63,7 +63,7 @@ export function File({ file }: FileProps) {
   return (
     <div className={`${style.file} ${style.entry}`}>
       <span className={style.icon}><FileIcon /></span>
-      <span>{file.name}</span>
+      <span>{`${file.name}.${file.extension}`}</span>
     </div>
   )
 }

@@ -16,7 +16,7 @@ import { ReactNode, useEffect, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuOptions } from '../ContextMenu'
 import React from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
-import { ALL_DATABASES, DirectoryNodeType, FileMetadata, FolderMetadata } from '../../entities/DirectoryNode'
+import { ALL_DATABASES, DirectoryNodeType, ExtensionEnum, FileMetadata, FolderMetadata } from '../../entities/DirectoryNode'
 import { fileStorageInteractor } from '../../interactor/FileStorageInteractor'
 
 export interface ExplorerProps {
@@ -25,17 +25,17 @@ export interface ExplorerProps {
 
 interface FolderProps {
   folder: FolderMetadata
-  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string) => void
+  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
 interface FileProps {
   file: FileMetadata
-  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string) => void
+  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
 interface ExplorerItemsProps {
   folder: FolderMetadata
-  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string) => void
+  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
 const fileContextOptions: ContextMenuOptions = [
@@ -57,11 +57,6 @@ const folderContextOptions: ContextMenuOptions = [
   { icon: TrashIcon, text: 'Delete Folder' },
   null,
   { icon: LinkExternalIcon, text: 'Open Folder in Editor' },
-]
-
-const itemsExplorerContextOptions: ContextMenuOptions = [
-  { icon: NewFileIcon, text: 'New File' },
-  { icon: NewFolderIcon, text: 'New Folder' },
 ]
 
 const deviceExplorerContextOptions: ContextMenuOptions = [
@@ -92,9 +87,41 @@ export function Explorer({ workspace }: ExplorerProps) {
   const containerRef = useRef(null)
   const itemsRef = useRef(null)
 
+  const createNewFile = async () => {
+    const fileName = prompt('Enter File Name')
+    if(fileName === null) return
+    await fileStorageInteractor.createFile({
+      database: workspace.database,
+      id: String(Date.now()),
+      name: fileName,
+      extension: ExtensionEnum.txt,
+      parentId: workspace.id,
+      content: '',
+      backupContent: '',
+    })
+  }
+  const createNewFolder = async () => {
+    const folderName = prompt('Enter Folder Name')
+    if(folderName === null) return
+    await fileStorageInteractor.createFolder({
+      database: workspace.database,
+      id: String(Date.now()),
+      name: folderName,
+      parentId: workspace.id,
+      type: DirectoryNodeType.folder,
+      editedAt: 0,
+      createdAt: 0
+    })
+  }
+
+  const itemsExplorerContextOptions: ContextMenuOptions = [
+    { icon: NewFileIcon, text: 'New File', onClick: createNewFile },
+    { icon: NewFolderIcon, text: 'New Folder', onClick: createNewFolder },
+  ]
+
   const showContextMenu = (
     event: React.MouseEvent<Element, MouseEvent>,
-    item: string
+    item: string | ContextMenuOptions
   ) => {
     event.preventDefault()
     if (item === 'items') {
@@ -125,6 +152,10 @@ export function Explorer({ workspace }: ExplorerProps) {
       event.stopPropagation()
       setContextMenu(<ContextMenu options={breadcrumbContextOptions} hide={hideContextMenu} event={event} />)
     }
+    else if(typeof item !== 'string') {
+      event.stopPropagation()
+      setContextMenu(<ContextMenu options={item} hide={hideContextMenu} event={event} />)
+    }
   }
 
   const hideContextMenu = () => {
@@ -133,7 +164,10 @@ export function Explorer({ workspace }: ExplorerProps) {
 
   return (<>
     {contextMenu}
-    <div ref={containerRef} className={styles.container} onContextMenu={(event) => showContextMenu(event, workspace.id === 'root' ? 'items' : 'devices')}>
+    <div
+      ref={containerRef}
+      className={styles.container}
+      onContextMenu={(event) => showContextMenu(event, workspace.id === 'root' ? itemsExplorerContextOptions : 'devices')}>
       <BreadCrumbs folder={workspace} showContextMenu={showContextMenu} />
       <hr />
       <div ref={itemsRef}>
@@ -236,20 +270,33 @@ export function File({ file, showContextMenu }: FileProps) {
       onContextMenu={(event) => showContextMenu(event, 'file')}
     >
       <FileIcon />
-      {file.name}
+      {`${file.name}.${file.extension}`}
     </div>
   )
 }
 
 export function Folder({ folder, showContextMenu }: FolderProps) {
 
-  return (
+  const folderContextOptions: ContextMenuOptions = [
+    { icon: RenameIcon, text: 'Rename Folder' },
+    { icon: TrashIcon, text: 'Delete Folder' },
+    null,
+    { icon: LinkExternalIcon, text: 'Open Folder in Editor' },
+  ]
+
+  const deviceContextOptions: ContextMenuOptions = [
+    { icon: ClearAllIcon, text: 'Format Device' },
+    { icon: TrashIcon, text: 'Delete Device' },
+    { icon: LinkExternalIcon, text: 'Open Device in Editor' }
+  ]
+
+  return (<>
     <NavLinkPersist
       to={`/explorer/${folder.database}/${folder.id}`}
       className={styles.item}
-      onContextMenu={(event) => showContextMenu(event, folder.id === 'root' ? 'device' : 'folder')}>
+      onContextMenu={(event) => showContextMenu(event, folder.id === 'root' ? deviceContextOptions : folderContextOptions)}>
       {folder.id === 'root' ? <VMIcon /> : <FolderIcon />}
       {folder.name}
     </NavLinkPersist>
-  )
+  </>)
 }

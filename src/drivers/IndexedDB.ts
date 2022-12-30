@@ -29,7 +29,7 @@ export class LocalFileDatabase implements FileDatabase {
             keyPath: 'id',
             autoIncrement: true,
           })
-          metadataStore.createIndex('parent', 'parent')
+          metadataStore.createIndex('parentId', 'parentId')
           
           db.createObjectStore(contentStoreName, {
             keyPath: 'id'
@@ -92,8 +92,19 @@ export class LocalFileDatabase implements FileDatabase {
     throw new Error('Method not implemented.')
   }
 
-  createFolderMetadata(folder: FolderMetadata): Promise<void> {
-    throw new Error('Method not implemented.')
+  async createFolderMetadata(folder: FolderMetadata): Promise<void> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+
+    await this.database.add(this.metadataStoreName, {
+      id: folder.id,
+      database: folder.database,
+      createdAt: folder.createdAt,
+      editedAt: folder.editedAt,
+      name: folder.name,
+      parentId: folder.parentId,
+      type: folder.type,
+    })
   }
 
   deleteFolderMetadata(folder: FolderMetadata): Promise<void> {
@@ -105,9 +116,9 @@ export class LocalFileDatabase implements FileDatabase {
     await this.connect()
     if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
 
-    const value = await this.database.getFromIndex(this.metadataStoreName, 'parent', folder.id) as (FileMetadata | FolderMetadata)[]
-
-    return value || []
+    const value = await this.database.getAllFromIndex(this.metadataStoreName, 'parentId', folder.id) as (FileMetadata | FolderMetadata)[]
+  
+    return value
   }
 
   async fetchFolderMetadata(id: FolderMetadata['id']): Promise<FolderMetadata> {
