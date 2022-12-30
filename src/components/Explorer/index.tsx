@@ -86,6 +86,7 @@ export function Explorer({ workspace }: ExplorerProps) {
   const [contextMenu, setContextMenu] = useState<ReactNode>()
   const containerRef = useRef(null)
   const itemsRef = useRef(null)
+  const [key, setKey] = useState<number>(0)
 
   const createNewFile = async () => {
     const fileName = prompt('Enter File Name')
@@ -99,7 +100,9 @@ export function Explorer({ workspace }: ExplorerProps) {
       content: '',
       backupContent: '',
     })
+    setKey(key+1) // re-render to update UI
   }
+
   const createNewFolder = async () => {
     const folderName = prompt('Enter Folder Name')
     if(folderName === null) return
@@ -112,6 +115,7 @@ export function Explorer({ workspace }: ExplorerProps) {
       editedAt: 0,
       createdAt: 0
     })
+    setKey(key+1) // re-render to update UI
   }
 
   const itemsExplorerContextOptions: ContextMenuOptions = [
@@ -167,10 +171,10 @@ export function Explorer({ workspace }: ExplorerProps) {
     <div
       ref={containerRef}
       className={styles.container}
-      onContextMenu={(event) => showContextMenu(event, workspace.id === 'root' ? itemsExplorerContextOptions : 'devices')}>
+      onContextMenu={(event) => showContextMenu(event, workspace.id === ALL_DATABASES ? deviceExplorerContextOptions : itemsExplorerContextOptions )}>
       <BreadCrumbs folder={workspace} showContextMenu={showContextMenu} />
       <hr />
-      <div ref={itemsRef}>
+      <div ref={itemsRef} key={key}>
         <FolderItems folder={workspace} showContextMenu={showContextMenu} />
       </div>
     </div>
@@ -277,9 +281,13 @@ export function File({ file, showContextMenu }: FileProps) {
 
 export function Folder({ folder, showContextMenu }: FolderProps) {
 
+  const deleteFolder = async () => {
+    await fileStorageInteractor.deleteFolder(folder)
+  }
+
   const folderContextOptions: ContextMenuOptions = [
     { icon: RenameIcon, text: 'Rename Folder' },
-    { icon: TrashIcon, text: 'Delete Folder' },
+    { icon: TrashIcon, text: 'Delete Folder', onClick: deleteFolder },
     null,
     { icon: LinkExternalIcon, text: 'Open Folder in Editor' },
   ]

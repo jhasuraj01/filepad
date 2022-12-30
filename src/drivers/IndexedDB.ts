@@ -84,12 +84,18 @@ export class LocalFileDatabase implements FileDatabase {
     }
   }
 
-  deleteFile(file: FileMetadata): Promise<void> {
-    throw new Error('Method not implemented.')
+  async deleteFile(file: FileMetadata): Promise<void> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+
+    await this.database.delete(this.contentStoreName, file.id)
   }
 
-  deleteFileMetadata(file: FileMetadata): Promise<void> {
-    throw new Error('Method not implemented.')
+  async deleteFileMetadata(file: FileMetadata): Promise<void> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+
+    await this.database.delete(this.metadataStoreName, file.id)
   }
 
   async createFolderMetadata(folder: FolderMetadata): Promise<void> {
@@ -107,8 +113,11 @@ export class LocalFileDatabase implements FileDatabase {
     })
   }
 
-  deleteFolderMetadata(folder: FolderMetadata): Promise<void> {
-    throw new Error('Method not implemented.')
+  async deleteFolderMetadata(folder: FolderMetadata): Promise<void> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+
+    await this.database.delete(this.metadataStoreName, folder.id)
   }
 
   async fetchFolderContent(folder: FolderMetadata): Promise<(FileMetadata | FolderMetadata)[]> {

@@ -37,11 +37,11 @@ export function ContextMenu({ event, hide, options }: ContextMenuProps) {
   return (
     <div key={event.timeStamp} onContextMenu={(event) => event.preventDefault()} className={styles.contextMenu} style={style} onClick={hide}>
       {
-        options.map((option) => {
+        options.map((option, index) => {
           return option ? <button key={option.text} className={styles.contextMenuOptions} onClick={option.onClick}>
             <option.icon className={styles.icon}/>
             <span className={styles.text}>{option.text}</span>
-          </button> : <hr />
+          </button> : <hr key={`${options[index - 1]}-line`} />
         })
       }
     </div>
