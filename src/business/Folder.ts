@@ -5,7 +5,7 @@ import { deleteFile } from './File'
 export type createFolderParams = {
   id: FolderMetadata['id'],
   name: FolderMetadata['name'],
-  parent: FolderMetadata['parent']
+  parentId: FolderMetadata['parentId']
 }
 
 export const createFolder = async ( params: createFolderParams, database: FileDatabase ): Promise<FolderMetadata> => {
@@ -15,7 +15,7 @@ export const createFolder = async ( params: createFolderParams, database: FileDa
     type: DirectoryNodeType.folder,
     id: params.id,
     name: params.name,
-    parent: params.parent,
+    parentId: params.parentId,
     editedAt: Date.now(),
     createdAt: Date.now()
   }
@@ -41,6 +41,16 @@ export const deleteFolder = async (folder: FolderMetadata, database: FileDatabas
     }
   }
   database.deleteFolderMetadata(folder)
+}
+
+export const fetchParentMetadata = async (folder: FolderMetadata, database: FileDatabase): Promise<FolderMetadata> => {
+  const parentMetadata = await database.fetchFolderMetadata(folder.parentId)
+  return parentMetadata
+}
+
+export const fetchFolderMetadata = async (id: FolderMetadata['id'], database: FileDatabase): Promise<FolderMetadata> => {
+  const parentMetadata = await database.fetchFolderMetadata(id)
+  return parentMetadata
 }
 
 /*

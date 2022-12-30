@@ -14,17 +14,30 @@ import { ReactComponent as DesktopDownloadIcon } from '../../icons/desktop-downl
 import { ReactComponent as AddIcon } from '../../icons/add.svg'
 import { ReactComponent as LinkIcon } from '../../icons/link.svg'
 import { FileNode } from '../../libs/FileNode'
-import { ReactNode, useRef, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuOptions } from '../ContextMenu'
 import React from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
+import { ALL_DATABASES, DirectoryNodeType, FileMetadata, FolderMetadata } from '../../entities/DirectoryNode'
+import { fileStorageInteractor } from '../../interactor/FileStorageInteractor'
 
 export interface ExplorerProps {
-  workspace: (FolderNode | FileNode)[]
-  directory: {
-    name: string,
-    path: string
-  }[]
+  workspace: FolderMetadata
+}
+
+interface FolderProps {
+  folder: FolderMetadata
+  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string) => void
+}
+
+interface FileProps {
+  file: FileMetadata
+  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string) => void
+}
+
+interface ExplorerItemsProps {
+  folder: FolderMetadata
+  showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string) => void
 }
 
 const fileContextOptions: ContextMenuOptions = [
@@ -75,49 +88,42 @@ const deviceContextOptions: ContextMenuOptions = [
   }
 ]
 
-export function Explorer({ workspace, directory }: ExplorerProps) {
+export function Explorer({ workspace }: ExplorerProps) {
 
-  const [ contextMenu, setContextMenu ] = useState<ReactNode>()
+  const [contextMenu, setContextMenu] = useState<ReactNode>()
   const containerRef = useRef(null)
   const itemsRef = useRef(null)
-
-  const handleItemClick = (item: FolderNode | FileNode) => {
-    if(item instanceof FolderNode) {
-      // parents.push(item)
-      // setFolder(item)
-    }
-  }
 
   const showContextMenu = (
     event: React.MouseEvent<Element, MouseEvent>,
     item: string
   ) => {
     event.preventDefault()
-    if(item === 'items') {
+    if (item === 'items') {
       event.stopPropagation()
       const itemsElm: HTMLDivElement = itemsRef.current!
-      if(event.pageY >= itemsElm.offsetTop)
+      if (event.pageY >= itemsElm.offsetTop)
         setContextMenu(<ContextMenu options={itemsExplorerContextOptions} hide={hideContextMenu} event={event} />)
     }
-    else if(item === 'devices') {
+    else if (item === 'devices') {
       event.stopPropagation()
       const itemsElm: HTMLDivElement = itemsRef.current!
-      if(event.pageY >= itemsElm.offsetTop)
+      if (event.pageY >= itemsElm.offsetTop)
         setContextMenu(<ContextMenu options={deviceExplorerContextOptions} hide={hideContextMenu} event={event} />)
     }
-    else if(item === 'file') {
+    else if (item === 'file') {
       event.stopPropagation()
       setContextMenu(<ContextMenu options={fileContextOptions} hide={hideContextMenu} event={event} />)
     }
-    else if(item === 'folder') {
+    else if (item === 'folder') {
       event.stopPropagation()
       setContextMenu(<ContextMenu options={folderContextOptions} hide={hideContextMenu} event={event} />)
     }
-    else if(item === 'device') {
+    else if (item === 'device') {
       event.stopPropagation()
       setContextMenu(<ContextMenu options={deviceContextOptions} hide={hideContextMenu} event={event} />)
     }
-    else if(item === 'breadcrumb') {
+    else if (item === 'breadcrumb') {
       event.stopPropagation()
       setContextMenu(<ContextMenu options={breadcrumbContextOptions} hide={hideContextMenu} event={event} />)
     }
@@ -127,58 +133,113 @@ export function Explorer({ workspace, directory }: ExplorerProps) {
     setContextMenu(<></>)
   }
 
-  let currentPath = directory[directory.length - 1].path
-  if(currentPath === '/') currentPath = ''
-  else currentPath += '/'
-
   return (<>
-    { contextMenu }
-    <div ref={containerRef} className={styles.container} onContextMenu={(event) => showContextMenu(event, directory.length > 1 ? 'items' : 'devices')}>
-      <div className={styles.breadcrumbs}>
-        {
-          directory.map((folder, index) =><React.Fragment key={folder.path + index}>
-            <NavLinkPersist
-              to={folder.path}
-              className={styles.breadcrumb}
-              onContextMenu={(event) => showContextMenu(event, 'breadcrumb')}>
-              {folder.name}
-            </NavLinkPersist>
-            {index != directory.length - 1 ? <ChevronRightIcon /> : null}
-          </React.Fragment>)
-        }
-      </div>
+    {contextMenu}
+    <div ref={containerRef} className={styles.container} onContextMenu={(event) => showContextMenu(event, workspace.id === 'root' ? 'items' : 'devices')}>
+      <BreadCrumbs folder={workspace} showContextMenu={showContextMenu} />
       <hr />
-      <div className={styles.items} ref={itemsRef}>
-        {
-          workspace.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
-        }
-        {
-          workspace.map(item => {
-            if(item instanceof FolderNode) {
-              return <NavLinkPersist
-                to={currentPath + item.pathname}
-                onClick={() => handleItemClick(item)}
-                className={styles.item}
-                key={currentPath + item.pathname}
-                onContextMenu={(event) => showContextMenu(event, directory.length > 1 ? 'folder' : 'device')}>
-                {directory.length > 1 ? <FolderIcon /> : <VMIcon />}
-                {item.name}
-              </NavLinkPersist>
-            }
-            else {
-              return <div
-                // to={ [...directory, item.pathname].join('/') }
-                onClick={() => handleItemClick(item)}
-                className={styles.item}
-                key={currentPath + item.pathname}
-                onContextMenu={(event) => showContextMenu(event, 'file')}>
-                <FileIcon />
-                {item.name}
-              </div>
-            }
-          })
-        }
+      <div ref={itemsRef}>
+        <FolderItems folder={workspace} showContextMenu={showContextMenu} />
       </div>
     </div>
   </>)
+}
+
+export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
+
+  const [parents, setParents] = useState<FolderMetadata[]>([folder])
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    (async () => {
+      const parents = [folder]
+      let parent = folder
+      for (let i = 0; i < 3 && parent.id !== ALL_DATABASES; i++) {
+        parent = await fileStorageInteractor.fetchParentMetadata(parent)
+        parents.push(parent)
+      }
+      parents.reverse()
+      setParents(parents)
+      setLoading(false)
+    })()
+
+  }, [folder.id])
+
+  return (
+    <div className={styles.breadcrumbs}>
+      {
+        parents.map((folder, index) => <React.Fragment key={folder.id}>
+          <NavLinkPersist
+            to={ folder.id === ALL_DATABASES ? '/explorer' : `/explorer/${folder.database}/${folder.id}`}
+            className={styles.breadcrumb}
+            onContextMenu={(event) => showContextMenu(event, 'breadcrumb')}
+          >
+            {folder.name}
+          </NavLinkPersist>
+          {index != parents.length - 1 ? <ChevronRightIcon /> : null}
+        </React.Fragment>)
+      }
+    </div>
+  )
+}
+
+export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
+
+  const [items, setItems] = useState<(FolderMetadata | FileMetadata)[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const itemsRef = useRef(null)
+
+  useEffect(() => {
+    (async () => {
+      const folderContent = await fileStorageInteractor.fetchFolderContent(folder)
+      setLoading(false)
+      setItems(folderContent)
+    })()
+
+  }, [folder.id])
+
+  return (
+    <div className={styles.items} ref={itemsRef}>
+      {
+        items.length === 0 && <div className={styles.emptyFolderShowCase}>This Folder is Empty!</div>
+      }
+      {
+        items.map(item => {
+          if (item.type === DirectoryNodeType.folder) {
+            return <Folder key={item.database + item.id} folder={item} showContextMenu={showContextMenu} />
+          }
+          else {
+            return <File key={item.database + item.id} file={item} showContextMenu={showContextMenu} />
+          }
+        })
+      }
+    </div>
+  )
+}
+
+export function File({ file, showContextMenu }: FileProps) {
+  return (
+    <div
+      // to={ [...directory, item.pathname].join('/') }
+      // onClick={() => handleItemClick(item)}
+      className={styles.item}
+      onContextMenu={(event) => showContextMenu(event, 'file')}
+    >
+      <FileIcon />
+      {file.name}
+    </div>
+  )
+}
+
+export function Folder({ folder, showContextMenu }: FolderProps) {
+
+  return (
+    <NavLinkPersist
+      to={`/explorer/${folder.database}/${folder.id}`}
+      className={styles.item}
+      onContextMenu={(event) => showContextMenu(event, folder.id === 'root' ? 'device' : 'folder')}>
+      {folder.id === 'root' ? <VMIcon /> : <FolderIcon />}
+      {folder.name}
+    </NavLinkPersist>
+  )
 }

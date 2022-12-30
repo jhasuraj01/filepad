@@ -15,4 +15,5 @@ export interface FileDatabase extends Database {
   createFolderMetadata(folder: FolderMetadata): Promise<any>
   deleteFolderMetadata(folder: FolderMetadata): Promise<any>
   fetchFolderContent(folder: FolderMetadata): Promise<(FileMetadata | FolderMetadata)[]>
+  fetchFolderMetadata(id: FolderMetadata['id']): Promise<FolderMetadata>
 }

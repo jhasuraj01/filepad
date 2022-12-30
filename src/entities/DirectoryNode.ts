@@ -9,12 +9,14 @@ export enum DirectoryNodeType {
 }
 
 export type ID = string
+type ALL_DATABASES = 'all-databases'
+export const ALL_DATABASES: ALL_DATABASES = 'all-databases'
 
 export interface DirectoryNode {
   database: string
   id: ID
   name: string
-  parent: DirectoryNode | 'root' | 'all-databases'
+  parentId: string
   type: DirectoryNodeType
   editedAt: EpochTimeStamp
   createdAt: EpochTimeStamp

@@ -6,7 +6,7 @@ export type createFileParams = {
   id: FileMetadata['id'],
   name: FileMetadata['name'],
   extension: ExtensionEnum,
-  parent: FileMetadata['parent'],
+  parentId: FileMetadata['parentId'],
   content: FileContent['content']
   backupContent: FileContent['backupContent']
 }
@@ -21,7 +21,7 @@ export const createFile = async ( params: createFileParams, database: FileDataba
     type: DirectoryNodeType.file,
     id: params.id,
     name: params.name,
-    parent: params.parent,
+    parentId: params.parentId,
     editedAt: Date.now(),
     createdAt: Date.now()
   }

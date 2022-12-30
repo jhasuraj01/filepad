@@ -1,7 +1,6 @@
-import { FileContent, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
+import { DirectoryNode, DirectoryNodeType, FileContent, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
 import { FileDatabase } from '../entities/Database'
-import { openDB, deleteDB, wrap, unwrap, IDBPObjectStore, IDBPDatabase } from 'idb'
-import { type } from 'os'
+import { openDB, IDBPDatabase } from 'idb'
 
 export class LocalFileDatabase implements FileDatabase {
   private metadataStoreName = 'metadataStore'
@@ -66,7 +65,7 @@ export class LocalFileDatabase implements FileDatabase {
       editedAt: file.editedAt,
       extension: file.extension,
       name: file.name,
-      parent: file.parent,
+      parentId: file.parentId,
       type: file.type,
     })
   }
@@ -111,4 +110,25 @@ export class LocalFileDatabase implements FileDatabase {
     return value || []
   }
 
+  async fetchFolderMetadata(id: FolderMetadata['id']): Promise<FolderMetadata> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+
+    const data = await this.database.get(this.metadataStoreName, id) as FolderMetadata | undefined
+
+    if (data === undefined) {
+      throw new Error('[LocalFileDatabase]: Folder is undefined')
+    }
+
+    return {
+      id: data.id,
+      name: data.name,
+      database: this.id,
+      type: DirectoryNodeType.folder,
+      parentId: data.parentId,
+      createdAt: data.createdAt,
+      editedAt: data.editedAt,
+    }
+
+  }
 }

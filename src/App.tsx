@@ -324,7 +324,8 @@ function App() {
       <Routes>
         <Route path='/' element={<NavigatePersist to="/editor" />} />
         <Route path='/editor' element={<EditorPage workspace={workspace[0]} />} />
-        <Route path='/explorer/*' element={<ExplorerPage workspace={workspace} />} />
+        <Route path='/explorer/' element={<ExplorerPage />} />
+        <Route path='/explorer/:database/:parentId' element={<ExplorerPage />} />
         <Route path='/search' element={<SearchPage />} />
         <Route path='/settings' element={<SettingsPage />} />
       </Routes>

@@ -16,9 +16,7 @@ interface FolderProps {
 interface FileProps {
   file: FileMetadata
 }
-interface SideExplorerProps {
-  workspace: FolderNode
-}
+
 interface ExplorerItemsProps {
   folder: FolderMetadata
 }
