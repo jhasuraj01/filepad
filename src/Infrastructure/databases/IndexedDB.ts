@@ -1,5 +1,5 @@
-import { DirectoryNodeType, FileContent, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
-import { FileDatabase } from '../entities/Database'
+import { DirectoryNodeType, FileContent, FileMetadata, FolderMetadata } from '../../domain/entities/DirectoryNode'
+import { FileDatabase } from '../../domain/repositories/Database'
 import { openDB, IDBPDatabase } from 'idb'
 
 export class LocalFileDatabase implements FileDatabase {

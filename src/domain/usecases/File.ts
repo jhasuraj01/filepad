@@ -1,5 +1,5 @@
 import { DirectoryNodeType, FileMetadata, FileContent, FileType } from '../entities/DirectoryNode'
-import { FileDatabase } from '../entities/Database'
+import { FileDatabase } from '../repositories/Database'
 
 export type createFileParams = {
   database: FileMetadata['database']

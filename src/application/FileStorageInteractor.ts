@@ -1,8 +1,8 @@
-import * as fileUseCase from '../business/File'
-import * as folderUseCase from '../business/Folder'
-import { LocalFileDatabase } from '../drivers/IndexedDB'
-import { FileDatabase } from '../entities/Database'
-import { ALL_DATABASES, DirectoryNode, DirectoryNodeType, FileMetadata, FileType, FolderMetadata } from '../entities/DirectoryNode'
+import * as fileUseCase from '../domain/usecases/File'
+import * as folderUseCase from '../domain/usecases/Folder'
+import { LocalFileDatabase } from '../Infrastructure/databases/IndexedDB'
+import { FileDatabase } from '../domain/repositories/Database'
+import { ALL_DATABASES, DirectoryNode, DirectoryNodeType, FileMetadata, FileType, FolderMetadata } from '../domain/entities/DirectoryNode'
 
 interface FileStorageInteractorInterface {
   fetchFile: (metadata: {id: FileMetadata['id'], database: FileMetadata['database']}) => ReturnType<typeof fileUseCase.fetchFile>

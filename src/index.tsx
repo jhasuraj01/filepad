@@ -1,12 +1,12 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
-import { store } from './app/store'
-import App from './App'
+import { store } from './presentation/app/store'
+import App from './presentation/App'
 import { BrowserRouter } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
-import './index.css'
-import { PersistSelectedStates } from './supports/Persistence'
+import './presentation/index.css'
+import { PersistSelectedStates } from './presentation/supports/Persistence'
 
 const container = document.getElementById('root')!
 const root = createRoot(container)

@@ -1,4 +1,4 @@
-import { DirectoryNode, FileContent, FileMetadata, FolderMetadata } from './DirectoryNode'
+import { DirectoryNode, FileContent, FileMetadata, FolderMetadata } from '../entities/DirectoryNode'
 
 export interface Database {
   id: string,

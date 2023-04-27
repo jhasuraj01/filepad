@@ -2,9 +2,9 @@ import style from './index.module.scss'
 import Editor, { OnChange, OnMount } from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { fileStorageInteractor } from '../../interactor/FileStorageInteractor'
-import { DirectoryNodeType, FileType } from '../../entities/DirectoryNode'
-import ExtensionLanguageMap from '../../entities/ExtensionLanguageMap'
+import { fileStorageInteractor } from '../../../application/FileStorageInteractor'
+import { DirectoryNodeType, FileType } from '../../../domain/entities/DirectoryNode'
+import ExtensionLanguageMap from '../../../domain/entities/ExtensionLanguageMap'
 
 export function EditorArea() {
 

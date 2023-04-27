@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { FolderMetadata } from '../../entities/DirectoryNode'
-import { rootFolder } from '../../interactor/FileStorageInteractor'
+import { FolderMetadata } from '../../../domain/entities/DirectoryNode'
+import { rootFolder } from '../../../application/FileStorageInteractor'
 
 export interface ExplorerState {
   expanded: Record<string, boolean>

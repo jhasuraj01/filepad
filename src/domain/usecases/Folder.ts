@@ -1,5 +1,5 @@
 import { DirectoryNodeType, FolderMetadata, FileMetadata } from '../entities/DirectoryNode'
-import { FileDatabase } from '../entities/Database'
+import { FileDatabase } from '../repositories/Database'
 import { deleteFile } from './File'
 
 export type createFolderParams = {
