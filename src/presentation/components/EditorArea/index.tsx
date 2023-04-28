@@ -2,7 +2,7 @@ import style from './index.module.scss'
 import Editor, { OnChange, OnMount } from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { fileStorageInteractor } from '../../../application/FileStorageInteractor'
+import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { DirectoryNodeType, FileType } from '../../../domain/entities/DirectoryNode'
 import ExtensionLanguageMap from '../../../domain/entities/ExtensionLanguageMap'
 

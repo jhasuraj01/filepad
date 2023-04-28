@@ -17,7 +17,7 @@ import { ContextMenu, ContextMenuOptions } from '../ContextMenu'
 import React from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
 import { ALL_DATABASES, DirectoryNodeType, FileMetadata, FolderMetadata } from '../../../domain/entities/DirectoryNode'
-import { fileStorageInteractor } from '../../../application/FileStorageInteractor'
+import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 
 export interface ExplorerProps {
   workspace: FolderMetadata

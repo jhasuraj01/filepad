@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Explorer } from '../../components/Explorer'
 import { FolderMetadata } from '../../../domain/entities/DirectoryNode'
-import { fileStorageInteractor, rootFolder } from '../../../application/FileStorageInteractor'
+import { fileStorageInteractor, rootFolder } from '../../../adapters/FileStorageAdapter'
 import { NavigatePersist } from '../../supports/Persistence'
 
 export function ExplorerPage() {

@@ -4,7 +4,7 @@ import style from './index.module.scss'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { selectFolderExpansionState, selectWorkspace, toggleExpansion } from './sideExplorerSlice'
 import { DirectoryNodeType, FileMetadata, FolderMetadata } from '../../../domain/entities/DirectoryNode'
-import { fileStorageInteractor } from '../../../application/FileStorageInteractor'
+import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { useEffect, useState } from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
 
