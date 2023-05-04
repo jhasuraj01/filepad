@@ -99,6 +99,7 @@ export const deleteFile = async (
   await database.deleteFileMetadata(file)
   state.deleteFileContent(file)
   state.deleteFileMetadata(file)
+  state.setFileStatus(file, FileStatus.Deleted)
 }
 
 export const saveFile = async (

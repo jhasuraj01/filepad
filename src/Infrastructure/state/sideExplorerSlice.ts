@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './app/store'
 import { Directory } from '../../domain/entities/Directory'
-import { rootFolder } from '../../adapters/FileStorageAdapter'
 
 export interface ExplorerState {
   expanded: Record<string, boolean>
@@ -12,7 +11,7 @@ const folderUUID = (metadata: Directory.FolderMetadata) => `${metadata.id}`
 
 const initialState: ExplorerState = {
   expanded: {},
-  workspace: rootFolder
+  workspace: Directory.RootNode
 }
 
 export const sideExplorerSlice = createSlice({

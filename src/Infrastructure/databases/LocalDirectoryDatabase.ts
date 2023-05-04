@@ -1,23 +1,22 @@
 import { Directory } from '../../domain/entities/Directory'
-import { FileDatabase } from '../../domain/repositories/DirectoryDatabase'
+import { DirectoryDatabase } from '../../domain/repositories/DirectoryDatabase'
 import { openDB, IDBPDatabase } from 'idb'
 
-export class LocalFileDatabase implements FileDatabase {
+export class LocalDirectoryDatabase implements DirectoryDatabase {
   private metadataStoreName = 'metadataStore'
   private contentStoreName = 'contentStore'
   private database: IDBPDatabase | null = null
-
-  id: string
+  readonly id: string
 
   constructor({ id }: { id: string }) {
     this.id = id
   }
 
   get databaseName(): string {
-    return `FileDatabase/${this.id}`
+    return `DirectoryDatabase/${this.id}`
   }
 
-  private async connect(): Promise<FileDatabase> {
+  private async connect(): Promise<LocalDirectoryDatabase> {
 
     const metadataStoreName = this.metadataStoreName
     const contentStoreName = this.contentStoreName
@@ -41,10 +40,10 @@ export class LocalFileDatabase implements FileDatabase {
     return this
   }
 
-  async createFile(file: Directory.FileContent): Promise<void> {
+  async createFileContent(file: Directory.FileContent): Promise<void> {
 
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     await this.database.add(this.contentStoreName, {
       id: file.id,
@@ -55,7 +54,7 @@ export class LocalFileDatabase implements FileDatabase {
 
   async createFileMetadata(file: Directory.FileMetadata): Promise<void> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     await this.database.add(this.metadataStoreName, {
       id: file.id,
@@ -69,7 +68,7 @@ export class LocalFileDatabase implements FileDatabase {
 
   async fetchFileContent(metadata: Directory.FileMetadata): Promise<Directory.FileContent> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     const data = await this.database.get(this.contentStoreName, metadata.id) as Directory.FileContent
 
@@ -79,14 +78,14 @@ export class LocalFileDatabase implements FileDatabase {
     }
   }
 
-  async fetchFileMetadata(id: string ): Promise<Directory.FileMetadata> {
+  async fetchFileMetadata(metadata: {id: string}): Promise<Directory.FileMetadata> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
-    const data = await this.database.get(this.metadataStoreName, id) as Directory.FileMetadata | undefined
+    const data = await this.database.get(this.metadataStoreName, metadata.id) as Directory.FileMetadata | undefined
 
     if (data === undefined) {
-      throw new Error('[LocalFileDatabase]: File is undefined')
+      throw new Error('[LocalDirectoryDatabase]: File is undefined')
     }
 
     return {
@@ -101,21 +100,21 @@ export class LocalFileDatabase implements FileDatabase {
 
   async deleteFile(file: Directory.FileMetadata): Promise<void> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     await this.database.delete(this.contentStoreName, file.id)
   }
 
   async deleteFileMetadata(file: Directory.FileMetadata): Promise<void> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     await this.database.delete(this.metadataStoreName, file.id)
   }
 
   async createFolderMetadata(folder: Directory.FolderMetadata): Promise<void> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     await this.database.add(this.metadataStoreName, {
       id: folder.id,
@@ -129,13 +128,13 @@ export class LocalFileDatabase implements FileDatabase {
 
   async updateFileContent(file: Directory.FileContent): Promise<void> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
     await this.database.put(this.contentStoreName, file)
   }
   
   async updateFileMetadata(file: Directory.FileMetadata): Promise<void> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
     await this.database.put(this.metadataStoreName, file)
   }
 
@@ -145,7 +144,7 @@ export class LocalFileDatabase implements FileDatabase {
 
   async deleteFolderMetadata(folder: Directory.FolderMetadata): Promise<void> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     await this.database.delete(this.metadataStoreName, folder.id)
   }
@@ -153,21 +152,21 @@ export class LocalFileDatabase implements FileDatabase {
   async fetchFolderContent(folder: Directory.FolderMetadata): Promise<(Directory.FileMetadata | Directory.FolderMetadata)[]> {
     
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     const value = await this.database.getAllFromIndex(this.metadataStoreName, 'parentId', folder.id) as (Directory.FileMetadata | Directory.FolderMetadata)[]
   
     return value
   }
 
-  async fetchFolderMetadata(id: Directory.FolderMetadata['id']): Promise<Directory.FolderMetadata> {
+  async fetchFolderMetadata({ id }: Pick<Directory.FileMetadata, "id">): Promise<Directory.FolderMetadata> {
     await this.connect()
-    if(this.database == null) throw new Error('[LocalFileDatabase] Database: NULL')
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     const data = await this.database.get(this.metadataStoreName, id) as Directory.FolderMetadata | undefined
 
     if (data === undefined) {
-      throw new Error('[LocalFileDatabase]: Folder is undefined')
+      throw new Error('[LocalDirectoryDatabase]: Folder is undefined')
     }
 
     return {

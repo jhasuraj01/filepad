@@ -61,7 +61,6 @@ export const deleteFolder = async (
 ) => {
 
   state.setFolderStatus(folder, FolderStatus.Deleting)
-
   const nodes: Directory.FolderContent = await fetchFolderContent(folder, database, state)
 
   for (let i = 0; i < nodes.length; i++) {
@@ -76,6 +75,7 @@ export const deleteFolder = async (
 
   await database.deleteFolderMetadata(folder)
   state.deleteFolderMetadata(folder)
+  state.setFolderStatus(folder, FolderStatus.Deleted)
 
 }
 

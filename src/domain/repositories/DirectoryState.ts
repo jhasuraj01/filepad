@@ -8,6 +8,7 @@ export enum FileStatus {
   ChangesSaving = 'ChangesSaving',
   ChangesSaved = 'Default',
   Deleting = 'Deleting',
+  Deleted = 'Deleted',
   Default = 'Default',
 }
 
@@ -16,6 +17,7 @@ export enum FolderStatus {
   Default = 'Default',
   ContentLoading = 'ContentLoading',
   Deleting = 'Deleting',
+  Deleted = 'Deleted',
 }
 
 export interface DirectoryState {
