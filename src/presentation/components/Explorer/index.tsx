@@ -16,25 +16,26 @@ import { ReactNode, useEffect, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuOptions } from '../ContextMenu'
 import React from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
-import { ALL_DATABASES, DirectoryNodeType, FileMetadata, FolderMetadata } from '../../../domain/entities/DirectoryNode'
+// import { ALL_DATABASES, DirectoryNodeType, FileMetadata, FolderMetadata } from '../../../domain/entities/Directory'
+import { Directory } from '../../../domain/entities/Directory'
 import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 
 export interface ExplorerProps {
-  workspace: FolderMetadata
+  workspace: Directory.FolderMetadata | null
 }
 
 interface FolderProps {
-  folder: FolderMetadata
+  folder: Directory.FolderMetadata
   showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
 interface FileProps {
-  file: FileMetadata
+  file: Directory.FileMetadata
   showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
 interface ExplorerItemsProps {
-  folder: FolderMetadata
+  folder: Directory.FolderMetadata | null
   showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
@@ -92,13 +93,10 @@ export function Explorer({ workspace }: ExplorerProps) {
     const fileName = prompt('Enter File Name')
     if(fileName === null) return
     await fileStorageInteractor.createFile({
-      database: workspace.database,
       id: String(Date.now()),
       name: fileName,
-      extension: `.${fileName.split('.').pop()}`,
       parentId: workspace.id,
       content: '',
-      backupContent: '',
     })
     setKey(key+1) // re-render to update UI
   }
@@ -107,11 +105,10 @@ export function Explorer({ workspace }: ExplorerProps) {
     const folderName = prompt('Enter Folder Name')
     if(folderName === null) return
     await fileStorageInteractor.createFolder({
-      database: workspace.database,
       id: String(Date.now()),
       name: folderName,
       parentId: workspace.id,
-      type: DirectoryNodeType.folder,
+      type: Directory.NodeType.folder,
       editedAt: 0,
       createdAt: 0
     })
@@ -171,7 +168,7 @@ export function Explorer({ workspace }: ExplorerProps) {
     <div
       ref={containerRef}
       className={styles.container}
-      onContextMenu={(event) => showContextMenu(event, workspace.id === ALL_DATABASES ? deviceExplorerContextOptions : itemsExplorerContextOptions )}>
+      onContextMenu={(event) => showContextMenu(event, itemsExplorerContextOptions)}>
       <BreadCrumbs folder={workspace} showContextMenu={showContextMenu} />
       <hr />
       <div ref={itemsRef} key={key}>
@@ -183,16 +180,16 @@ export function Explorer({ workspace }: ExplorerProps) {
 
 export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
 
-  const [parents, setParents] = useState<FolderMetadata[]>([folder])
+  const [parents, setParents] = useState<Directory.FolderMetadata[]>([folder])
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     (async () => {
-      const parents = [folder]
-      let parent = folder
-      for (let i = 0; i < 3 && parent.id !== ALL_DATABASES; i++) {
-        parent = await fileStorageInteractor.fetchParentMetadata(parent)
+      const parents: Directory.FolderMetadata[] = [folder]
+      let parent: Directory.FolderMetadata | null = folder
+      for (let i = 0; i < 3 && parent !== null; i++) {
         parents.push(parent)
+        parent = await fileStorageInteractor.fetchParentMetadata(parent)
       }
       parents.reverse()
       setParents(parents)
@@ -212,7 +209,7 @@ export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
       {
         parents.map((folder, index) => <React.Fragment key={folder.id}>
           <NavLinkPersist
-            to={ folder.id === ALL_DATABASES ? '/explorer' : `/explorer/${folder.database}/${folder.id}`}
+            to={`/explorer/${folder.id}`}
             className={styles.breadcrumb}
             onContextMenu={(event) => showContextMenu(event, 'breadcrumb')}
           >
@@ -227,7 +224,7 @@ export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
 
 export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
 
-  const [items, setItems] = useState<(FolderMetadata | FileMetadata)[]>([])
+  const [items, setItems] = useState<(Directory.FolderMetadata | Directory.FileMetadata)[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const itemsRef = useRef(null)
 
@@ -253,11 +250,11 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
       }
       {
         items.map(item => {
-          if (item.type === DirectoryNodeType.folder) {
-            return <Folder key={item.database + item.id} folder={item} showContextMenu={showContextMenu} />
+          if (item.type === Directory.NodeType.folder) {
+            return <Folder key={item.id} folder={item} showContextMenu={showContextMenu} />
           }
           else {
-            return <File key={item.database + item.id} file={item} showContextMenu={showContextMenu} />
+            return <File key={item.id} file={item} showContextMenu={showContextMenu} />
           }
         })
       }
@@ -268,7 +265,7 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
 export function File({ file, showContextMenu }: FileProps) {
   return (
     <NavLinkPersist
-      to={`/editor/${file.database}/${file.id}`}
+      to={`/editor/${file.id}`}
       // onClick={() => handleItemClick(item)}
       className={styles.item}
       onContextMenu={(event) => showContextMenu(event, 'file')}
@@ -300,7 +297,7 @@ export function Folder({ folder, showContextMenu }: FolderProps) {
 
   return (<>
     <NavLinkPersist
-      to={`/explorer/${folder.database}/${folder.id}`}
+      to={`/explorer/${folder.id}`}
       className={styles.item}
       onContextMenu={(event) => showContextMenu(event, folder.id === 'root' ? deviceContextOptions : folderContextOptions)}>
       {folder.id === 'root' ? <VMIcon /> : <FolderIcon />}

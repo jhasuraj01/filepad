@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Explorer } from '../../components/Explorer'
-import { FolderMetadata } from '../../../domain/entities/DirectoryNode'
-import { fileStorageInteractor, rootFolder } from '../../../adapters/FileStorageAdapter'
+import { Directory } from '../../../domain/entities/Directory'
+import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { NavigatePersist } from '../../supports/Persistence'
 
 export function ExplorerPage() {
   const { database, parentId } = useParams()
-  const [folder, setFolder] = useState<FolderMetadata>()
+  const [folder, setFolder] = useState<Directory.FolderMetadata | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     (async () => {
-      if(database === undefined || parentId === undefined) {
-        setFolder(rootFolder)
+      if(parentId === undefined) {
+        setFolder(null)
       }
       else {
-        const folderContent = await fileStorageInteractor.fetchFolderMetadata(parentId, database)
+        const folderContent = await fileStorageInteractor.fetchFolderMetadata(parentId)
         setFolder(folderContent)
       }
       setLoading(false)

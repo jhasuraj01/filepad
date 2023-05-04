@@ -1,23 +1,23 @@
 import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.svg'
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
 import style from './index.module.scss'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectFolderExpansionState, selectWorkspace, toggleExpansion } from './sideExplorerSlice'
-import { DirectoryNodeType, FileMetadata, FolderMetadata } from '../../../domain/entities/DirectoryNode'
+import { useAppDispatch, useAppSelector } from '../../../Infrastructure/state/app/hooks'
+import { selectFolderExpansionState, selectWorkspace, toggleExpansion } from '../../../Infrastructure/state/sideExplorerSlice'
+import { Directory } from '../../../domain/entities/Directory'
 import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { useEffect, useState } from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
 
 interface FolderProps {
-  folder: FolderMetadata
+  folder: Directory.FolderMetadata
 }
 
 interface FileProps {
-  file: FileMetadata
+  file: Directory.FileMetadata
 }
 
 interface ExplorerItemsProps {
-  folder: FolderMetadata
+  folder: Directory.FolderMetadata
 }
 
 export function SideExplorer() {
@@ -32,7 +32,7 @@ export function SideExplorer() {
 
 export function FolderItems({ folder }: ExplorerItemsProps) {
 
-  const [items, setItems] = useState<(FolderMetadata | FileMetadata)[]>([])
+  const [items, setItems] = useState<(Directory.FolderMetadata | Directory.FileMetadata)[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -52,10 +52,10 @@ export function FolderItems({ folder }: ExplorerItemsProps) {
 
   return <>{
     items.map(item => {
-      if(item.type === DirectoryNodeType.file)
-        return <File key={item.database + item.id} file={item} />
+      if(item.type === Directory.NodeType.file)
+        return <File key={item.id} file={item} />
       else
-        return <Folder key={item.database + item.id} folder={item}/>
+        return <Folder key={item.id} folder={item}/>
     })
   }</>
 }
@@ -64,7 +64,7 @@ export function File({ file }: FileProps) {
   return (
     <NavLinkPersist
       className={`${style.file} ${style.entry}`}
-      to={`/editor/${file.database}/${file.id}`}>
+      to={`/editor/${file.id}`}>
       <span className={style.icon}><FileIcon /></span>
       <span>{file.name}</span>
     </NavLinkPersist>

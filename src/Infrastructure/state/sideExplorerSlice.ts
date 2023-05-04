@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from '../../app/store'
-import { FolderMetadata } from '../../../domain/entities/DirectoryNode'
-import { rootFolder } from '../../../adapters/FileStorageAdapter'
+import { RootState } from './app/store'
+import { Directory } from '../../domain/entities/Directory'
+import { rootFolder } from '../../adapters/FileStorageAdapter'
 
 export interface ExplorerState {
   expanded: Record<string, boolean>
-  workspace: FolderMetadata
+  workspace: Directory.FolderMetadata
 }
 
-const folderUUID = (metadata: FolderMetadata) => `${metadata.database}/${metadata.id}`
+const folderUUID = (metadata: Directory.FolderMetadata) => `${metadata.id}`
 
 const initialState: ExplorerState = {
   expanded: {},
@@ -19,15 +19,15 @@ export const sideExplorerSlice = createSlice({
   name: 'sideExplorer',
   initialState,
   reducers: {
-    toggleExpansion(state, { payload }: PayloadAction<FolderMetadata>) {
+    toggleExpansion(state, { payload }: PayloadAction<Directory.FolderMetadata>) {
       const folder = payload
       state.expanded[folderUUID(folder)] = !state.expanded[folderUUID(folder)]
     },
-    expand(state, { payload }: PayloadAction<FolderMetadata>) {
+    expand(state, { payload }: PayloadAction<Directory.FolderMetadata>) {
       const folder = payload
       state.expanded[folderUUID(folder)] = true
     },
-    collapse(state, { payload }: PayloadAction<FolderMetadata>) {
+    collapse(state, { payload }: PayloadAction<Directory.FolderMetadata>) {
       const folder = payload
       state.expanded[folderUUID(folder)] = false
     }
@@ -36,7 +36,7 @@ export const sideExplorerSlice = createSlice({
 
 export const { expand, collapse, toggleExpansion } = sideExplorerSlice.actions
 
-export const selectFolderExpansionState = (metadata: FolderMetadata) => (state: RootState) => Boolean(state.sideExplorer.expanded[folderUUID(metadata)])
+export const selectFolderExpansionState = (metadata: Directory.FolderMetadata) => (state: RootState) => Boolean(state.sideExplorer.expanded[folderUUID(metadata)])
 export const selectWorkspace = (state: RootState) => state.sideExplorer.workspace
 
 export default sideExplorerSlice.reducer

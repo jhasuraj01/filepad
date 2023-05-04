@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Navigate, NavigateOptions, NavigateProps, NavLink, NavLinkProps, To, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { useAppSelector } from '../app/hooks'
-import { RootState } from '../app/store'
+import { useAppSelector } from '../../Infrastructure/state/app/hooks'
+import { RootState } from '../../Infrastructure/state/app/store'
 
 interface Props {
   children: React.ReactNode

@@ -1,97 +1,116 @@
-import { DirectoryNodeType, FileMetadata, FileContent, FileType } from '../entities/DirectoryNode'
-import { FileDatabase } from '../repositories/Database'
+import { Directory } from '../entities/Directory'
+import { DirectoryDatabase } from '../repositories/DirectoryDatabase'
+import { DirectoryState, FileStatus } from '../repositories/DirectoryState'
 
 export type createFileParams = {
-  database: FileMetadata['database']
-  id: FileMetadata['id'],
-  name: FileMetadata['name'],
-  extension: string,
-  parentId: FileMetadata['parentId'],
-  content: FileContent['content']
-  backupContent: FileContent['backupContent']
+  id: Directory.FileMetadata['id'],
+  name: Directory.FileMetadata['name'],
+  parentId: Directory.FileMetadata['parentId'],
+  content: Directory.FileContent['content']
 }
 
-export const createFile = async ( params: createFileParams, database: FileDatabase ): Promise<FileType> => {
-  const metadata: FileMetadata = {
-    database: params.database,
-    extension: params.extension || `.${params.name.split('.').pop()}` || '.txt',
-    type: DirectoryNodeType.file,
+export const createFile = async (
+  params: createFileParams,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+): Promise<Directory.FileType> => {
+  const fileMetadata: Directory.FileMetadata = {
+    type: Directory.NodeType.file,
     id: params.id,
     name: params.name,
-    parentId: params.parentId,
+    parentId: params.parentId || Directory.RootNode.id,
     editedAt: Date.now(),
     createdAt: Date.now()
   }
 
-  const file: FileContent = {
-    database: params.database,
+  const fileContent: Directory.FileContent = {
+    // database: params.database,
     id: params.id,
-    backupContent: params.backupContent,
+    // backupContent: params.backupContent,
     content: params.content,
   }
 
-  await database.createFileMetadata(metadata)
-  await database.createFile(file)
+  state.setFileMetadata(fileMetadata)
+  state.setFileContent(fileContent)
+  state.setFileStatus(fileMetadata, FileStatus.Creating)
+  await database.createFileMetadata(fileMetadata)
+  await database.createFileContent(fileContent)
+  state.setFileStatus(fileMetadata, FileStatus.Default)
+
   return {
-    ...metadata,
-    ...file,
+    ...fileMetadata,
+    ...fileContent,
   }
 }
 
-export const fetchFileMetadata = async (metadata: {id: FileMetadata['id']}, database: FileDatabase): Promise<FileMetadata> => {
-  const metadataRes: FileMetadata = await database.fetchFileMetadata(metadata.id)
+export const fetchFileMetadata = async (
+  fileMetadataPartial: Pick<Directory.FileMetadata, "id">,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+): Promise<Directory.FileMetadata> => {
+
+  const fileMetadata: Directory.FileMetadata = await database.fetchFileMetadata(fileMetadataPartial)
+  state.setFileMetadata(fileMetadata)
+
   return {
-    ...metadataRes
+    ...fileMetadata
   }
 }
 
-export const fetchFileContent = async (metadata: {id: FileMetadata['id']}, database: FileDatabase): Promise<FileContent> => {
-  const content: FileContent = await database.fetchFileContent(metadata)
+export const fetchFileContent = async (
+  fileMetadataPartial: Pick<Directory.FileMetadata, "id">,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+): Promise<Directory.FileContent> => {
+
+  state.setFileStatus(fileMetadataPartial, FileStatus.ContentLoading)
+  const fileContent: Directory.FileContent = await database.fetchFileContent(fileMetadataPartial)
+  state.setFileContent(fileContent)
+  state.setFileStatus(fileMetadataPartial, FileStatus.ContentLoaded)
+
   return {
-    ...metadata,
-    ...content,
+    ...fileContent,
   }
 }
 
-export const fetchFile = async (metadata: {id: FileMetadata['id']}, database: FileDatabase): Promise<FileType> => {
-  const contentRes: FileContent = await fetchFileContent(metadata, database)
-  const metadataRes: FileMetadata = await fetchFileMetadata(metadata, database)
+export const fetchFile = async (
+  fileMetadataPartial: Pick<Directory.FileMetadata, "id">,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+): Promise<Directory.FileType> => {
+
+  const fileContent: Directory.FileContent = await fetchFileContent(fileMetadataPartial, database, state)
+  const fileMetadata: Directory.FileMetadata = await fetchFileMetadata(fileMetadataPartial, database, state)
+
   return {
-    ...contentRes,
-    ...metadataRes,
+    ...fileContent,
+    ...fileMetadata,
   }
 }
 
-export const deleteFile = async (file: FileMetadata, database: FileDatabase) => {
+export const deleteFile = async (
+  file: Directory.FileMetadata,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+) => {
+
+  state.setFileStatus(file, FileStatus.Deleting)
   await database.deleteFile(file)
   await database.deleteFileMetadata(file)
+  state.deleteFileContent(file)
+  state.deleteFileMetadata(file)
 }
 
-export const saveFile = async (file: FileType, database: FileDatabase): Promise<void> => {
+export const saveFile = async (
+  file: Directory.FileType,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+): Promise<void> => {
+  state.setFileStatus(file, FileStatus.ChangesSaving)
   file.editedAt = Date.now()
   await database.updateFileContent(file)
   await database.updateFileMetadata(file)
+  state.setFileContent(file)
+  state.setFileMetadata(file)
+  state.setFileStatus(file, FileStatus.Default)
 }
-
-/*
-  save(): void {
-    this.backupContent = this.content
-  }
-
-  backup(database: Database): Promise<any> {
-    throw new Error("Method not implemented.")
-  }
-  create(): Promise<any> {
-    throw new Error("Method not implemented.")
-  }
-  delete(): Promise<any> {
-    throw new Error("Method not implemented.")
-  }
-  rename(newName: string): Promise<any> {
-    throw new Error("Method not implemented.")
-  }
-  download(): Promise<any> {
-    throw new Error("Method not implemented.")
-  }
-  
-*/

@@ -3,21 +3,18 @@ import Editor, { OnChange, OnMount } from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
-import { DirectoryNodeType, FileType } from '../../../domain/entities/DirectoryNode'
-import ExtensionLanguageMap from '../../../domain/entities/ExtensionLanguageMap'
+import { Directory } from '../../../domain/entities/Directory'
+import ExtensionLanguageMap from '../../../constants/ExtensionLanguageMap'
 
 export function EditorArea() {
 
   const { fileId, database } = useParams()
-  const [file, setFile] = useState<FileType>({
+  const [file, setFile] = useState<Directory.FileType>({
     name: 'temp',
-    extension: '.md',
-    type: DirectoryNodeType.file,
+    type: Directory.NodeType.file,
     parentId: 'root',
-    database: database || 'default',
     id: fileId || String(Date.now()),
     content: '',
-    backupContent: '',
     createdAt: Date.now(),
     editedAt: Date.now()
   })
@@ -53,7 +50,7 @@ export function EditorArea() {
       <Editor
         key={file.id}
         defaultValue={file.content}
-        defaultLanguage={ExtensionLanguageMap[file.extension] || 'plaintext'}
+        defaultLanguage={/*ExtensionLanguageMap[file.extension] ||*/ 'plaintext'}
         onChange={handleChange}
         onMount={handleEditorDidMount}
         theme='vs-dark'
