@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import counterReducer from '../counterSlice'
 import explorerReducer from '../sideExplorerSlice'
+import directoryReducer from '../DirectoryState'
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     sideExplorer: explorerReducer,
+    directory: directoryReducer,
   },
 })
 

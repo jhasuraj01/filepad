@@ -1,6 +1,6 @@
 import * as fileUseCase from '../domain/usecases/File'
 import * as folderUseCase from '../domain/usecases/Folder'
-import { LocalFileDatabase } from '../Infrastructure/databases/LocalDirectoryDatabase'
+import { LocalFileDatabase } from '../infrastructure/databases/LocalDirectoryDatabase'
 import { FileDatabase } from '../domain/repositories/DirectoryDatabase'
 // import { ALL_DATABASES, DirectoryNode, DirectoryNodeType, Directory.FileMetadata,Directory.FileType, Directory.FolderMetadata } from '../domain/entities/Directory'
 import { Directory } from '../domain/entities/Directory'

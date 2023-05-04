@@ -3,20 +3,25 @@ import { DirectoryDatabase } from '../repositories/DirectoryDatabase'
 import { DirectoryState, FileStatus } from '../repositories/DirectoryState'
 
 export type createFileParams = {
-  id: Directory.FileMetadata['id'],
   name: Directory.FileMetadata['name'],
   parentId: Directory.FileMetadata['parentId'],
-  content: Directory.FileContent['content']
 }
 
+/**
+ * 
+ * @todo Implement File ID Generator
+ */
 export const createFile = async (
   params: createFileParams,
   database: DirectoryDatabase,
   state: DirectoryState,
 ): Promise<Directory.FileType> => {
+
+  const fileId = String(Date.now())
+
   const fileMetadata: Directory.FileMetadata = {
     type: Directory.NodeType.file,
-    id: params.id,
+    id: fileId,
     name: params.name,
     parentId: params.parentId || Directory.RootNode.id,
     editedAt: Date.now(),
@@ -25,9 +30,9 @@ export const createFile = async (
 
   const fileContent: Directory.FileContent = {
     // database: params.database,
-    id: params.id,
+    id: fileId,
     // backupContent: params.backupContent,
-    content: params.content,
+    content: '',
   }
 
   state.setFileMetadata(fileMetadata)
@@ -89,13 +94,13 @@ export const fetchFile = async (
 }
 
 export const deleteFile = async (
-  file: Directory.FileMetadata,
+  file: Pick<Directory.FileMetadata, "id">,
   database: DirectoryDatabase,
   state: DirectoryState,
 ) => {
 
   state.setFileStatus(file, FileStatus.Deleting)
-  await database.deleteFile(file)
+  await database.deleteFileContent(file)
   await database.deleteFileMetadata(file)
   state.deleteFileContent(file)
   state.deleteFileMetadata(file)

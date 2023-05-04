@@ -33,7 +33,7 @@ export const createFolder = async (
 }
 
 export const fetchFolderContent = async (
-  folder: Directory.FolderMetadata,
+  folder: Pick<Directory.FolderMetadata, "id">,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderContent> => {
@@ -55,7 +55,7 @@ export const fetchFolderContent = async (
 }
 
 export const deleteFolder = async (
-  folder: Directory.FolderMetadata,
+  folder: Pick<Directory.FolderMetadata, "id">,
   database: DirectoryDatabase,
   state: DirectoryState
 ) => {
@@ -80,7 +80,7 @@ export const deleteFolder = async (
 }
 
 export const fetchParentMetadata = async (
-  node: Directory.Node,
+  node: Pick<Directory.Node, "id" | "parentId">,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
@@ -91,7 +91,7 @@ export const fetchParentMetadata = async (
 }
 
 export const fetchAnsestors = async (
-  node: Directory.Node,
+  node: Pick<Directory.Node, "id" | "parentId">,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata[]> => {

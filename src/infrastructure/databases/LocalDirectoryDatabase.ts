@@ -1,11 +1,28 @@
 import { Directory } from '../../domain/entities/Directory'
 import { DirectoryDatabase } from '../../domain/repositories/DirectoryDatabase'
-import { openDB, IDBPDatabase } from 'idb'
+import { openDB, IDBPDatabase, DBSchema } from 'idb'
+
+interface LocalDirectoryDatabaseSchema extends DBSchema {
+  'metadataStore': {
+    key: Directory.NodeId,
+    value: Directory.Node,
+    indexes: {
+      'parentId': Directory.NodeId
+    }
+  },
+  'contentStore': {
+    value: Directory.FileContent,
+    key: Directory.FileContent["id"],
+    indexes: {
+      'id': Directory.FileContent["id"]
+    },
+  }
+}
 
 export class LocalDirectoryDatabase implements DirectoryDatabase {
-  private metadataStoreName = 'metadataStore'
-  private contentStoreName = 'contentStore'
-  private database: IDBPDatabase | null = null
+  private readonly metadataStoreName = 'metadataStore'
+  private readonly contentStoreName = 'contentStore'
+  private database: IDBPDatabase<LocalDirectoryDatabaseSchema> | null = null
   readonly id: string
 
   constructor({ id }: { id: string }) {
@@ -22,7 +39,7 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     const contentStoreName = this.contentStoreName
   
     if(this.database == null) {
-      this.database = await openDB(this.databaseName, 1, {
+      this.database = await openDB<LocalDirectoryDatabaseSchema>(this.databaseName, 1, {
         upgrade(db) {
           const metadataStore = db.createObjectStore(metadataStoreName, {
             keyPath: 'id',
@@ -98,7 +115,7 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     }
   }
 
-  async deleteFile(file: Directory.FileMetadata): Promise<void> {
+  async deleteFileContent(file: Directory.FileMetadata): Promise<void> {
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
@@ -129,17 +146,38 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
   async updateFileContent(file: Directory.FileContent): Promise<void> {
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
-    await this.database.put(this.contentStoreName, file)
+  
+    const tnx = this.database.transaction(this.contentStoreName, "readwrite")
+  
+    const fileContent = await tnx.store.get(file.id)
+    if(fileContent === undefined ) throw new Error(`[LocalDirectoryDatabase] File Not Found: ID("${file.id}")`)
+  
+    await tnx.store.put({ ...fileContent, content: file.content })
+  
+    await tnx.done
   }
   
-  async updateFileMetadata(file: Directory.FileMetadata): Promise<void> {
+  async updateFileMetadata(fileMetadataNew: Directory.FileMetadata): Promise<void> {
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
-    await this.database.put(this.metadataStoreName, file)
+    // await this.database.put(this.metadataStoreName, file)
+  
+    const tnx = this.database.transaction(this.metadataStoreName, "readwrite")
+    const fileMetadata = await tnx.store.get(fileMetadataNew.id)
+    if(fileMetadata === undefined ) throw new Error(`[LocalDirectoryDatabase] File Not Found: ID("${fileMetadataNew.id}")`)
+    await tnx.store.put({ ...fileMetadata, ...fileMetadataNew })
+    await tnx.done
   }
 
-  updateFolderMetadata(folder: Directory.FolderMetadata): Promise<void> {
-    throw new Error('Method not implemented.')
+  async updateFolderMetadata(folderMetadataNew: Directory.FolderMetadata): Promise<void> {
+    await this.connect()
+    if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
+  
+    const tnx = this.database.transaction(this.metadataStoreName, "readwrite")
+    const folderMetadata = await tnx.store.get(folderMetadataNew.id)
+    if(folderMetadata === undefined) throw new Error(`[LocalDirectoryDatabase] Folder Not Found: ID("${folderMetadataNew.id}")`)
+    await tnx.store.put({ ...folderMetadata, ...folderMetadataNew })
+    await tnx.done
   }
 
   async deleteFolderMetadata(folder: Directory.FolderMetadata): Promise<void> {
@@ -149,12 +187,12 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     await this.database.delete(this.metadataStoreName, folder.id)
   }
 
-  async fetchFolderContent(folder: Directory.FolderMetadata): Promise<(Directory.FileMetadata | Directory.FolderMetadata)[]> {
+  async fetchFolderContent(folder: Directory.FolderMetadata): Promise<Directory.Node[]> {
     
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
-    const value = await this.database.getAllFromIndex(this.metadataStoreName, 'parentId', folder.id) as (Directory.FileMetadata | Directory.FolderMetadata)[]
+    const value = await this.database.getAllFromIndex(this.metadataStoreName, 'parentId', folder.id)
   
     return value
   }
@@ -163,7 +201,7 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
-    const data = await this.database.get(this.metadataStoreName, id) as Directory.FolderMetadata | undefined
+    const data = await this.database.get(this.metadataStoreName, id)
 
     if (data === undefined) {
       throw new Error('[LocalDirectoryDatabase]: Folder is undefined')
@@ -179,4 +217,12 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     }
 
   }
+}
+
+let localDirectoryDatabaseInstance: LocalDirectoryDatabase;
+export const useLocalDirectoryDatabase = (id: string) => {
+  if(localDirectoryDatabaseInstance === undefined) {
+    localDirectoryDatabaseInstance = new LocalDirectoryDatabase({ id })
+  }
+  return localDirectoryDatabaseInstance
 }

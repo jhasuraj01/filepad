@@ -13,12 +13,12 @@ export interface DirectoryDatabase extends Database {
   updateFileMetadata(file: Directory.FileMetadata): Promise<void>
   updateFolderMetadata(folder: Directory.FolderMetadata): Promise<void>
 
-  deleteFile(file: Directory.FileMetadata): Promise<void>
-  deleteFileMetadata(file: Directory.FileMetadata): Promise<void>
-  deleteFolderMetadata(folder: Directory.FolderMetadata): Promise<void>
+  deleteFileContent(file: Pick<Directory.FileMetadata, "id">): Promise<void>
+  deleteFileMetadata(file: Pick<Directory.FileMetadata, "id">): Promise<void>
+  deleteFolderMetadata(folder: Pick<Directory.FolderMetadata, "id">): Promise<void>
   
-  fetchFileContent(metadata: Pick<Directory.FileMetadata, "id">): Promise<Directory.FileContent>
-  fetchFolderContent(folder: Pick<Directory.FileMetadata, "id">): Promise<(Directory.FileMetadata | Directory.FolderMetadata)[]>
-  fetchFileMetadata(metadata: Pick<Directory.FileMetadata, "id">): Promise<Directory.FileMetadata>
-  fetchFolderMetadata(metadata: Pick<Directory.FileMetadata, "id">): Promise<Directory.FolderMetadata>
+  fetchFileContent(file: Pick<Directory.FileMetadata, "id">): Promise<Directory.FileContent>
+  fetchFileMetadata(file: Pick<Directory.FileMetadata, "id">): Promise<Directory.FileMetadata>
+  fetchFolderContent(folder: Pick<Directory.FolderMetadata, "id">): Promise<(Directory.FileMetadata | Directory.FolderMetadata)[]>
+  fetchFolderMetadata(folder: Pick<Directory.FolderMetadata, "id">): Promise<Directory.FolderMetadata>
 }

@@ -1,14 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from './app/store'
 import { Directory } from '../../domain/entities/Directory'
 import { DirectoryState, FileStatus, FolderStatus } from '../../domain/repositories/DirectoryState'
-import { AppDispatch } from './app/store'
+import { AppDispatch, RootState } from './app/store'
 
-export interface ExplorerState {
+interface ExplorerState {
   fileMetadata: Record<Directory.NodeId, Directory.FileMetadata>
   folderMetadata: Record<Directory.NodeId, Directory.FolderMetadata>
   fileContent: Record<Directory.NodeId, Directory.FileContent>
-  folderContent: Record<Directory.NodeId, Directory.FileMetadata | Directory.FolderMetadata>
   fileStatus: Record<Directory.NodeId, FileStatus>
   folderStatus: Record<Directory.NodeId, FolderStatus>
 }
@@ -17,17 +15,16 @@ const initialState: ExplorerState = {
   fileMetadata: {},
   folderMetadata: {},
   fileContent: {},
-  folderContent: {},
   fileStatus: {},
   folderStatus: {},
 }
 
-export const reduxDirectoryState = createSlice({
+const reduxDirectoryState = createSlice({
   name: 'ReduxDirectoryState',
   initialState,
   reducers: {
     setFolderMetadata(state, { payload }: PayloadAction<Directory.FolderMetadata>) {
-      state.folderContent[payload.id] = payload
+      state.folderMetadata[payload.id] = payload
     },
     setFileMetadata(state, { payload }: PayloadAction<Directory.FileMetadata>) {
       state.fileMetadata[payload.id] = payload
@@ -66,7 +63,7 @@ export const reduxDirectoryState = createSlice({
   },
 })
 
-export class ReduxDirectoryState implements DirectoryState {
+class ReduxDirectoryState implements DirectoryState {
 
   private readonly dispatch: AppDispatch
 
@@ -101,4 +98,66 @@ export class ReduxDirectoryState implements DirectoryState {
     this.dispatch(reduxDirectoryState.actions.deleteFolderMetadata(folder))
   }
   
+}
+
+export default reduxDirectoryState.reducer
+
+let reduxDirectoryStateInstance: ReduxDirectoryState;
+export const useReduxDirectoryState = (dispatch: AppDispatch) => {
+  if(reduxDirectoryStateInstance === undefined) {
+    reduxDirectoryStateInstance = new ReduxDirectoryState(dispatch)
+  }
+  return reduxDirectoryStateInstance
+}
+
+export const selectFolderContent = (folderMetadata: Pick<Directory.FolderMetadata, 'id'>) => {
+  return (state: RootState) => {
+    const content: Directory.Node[] = []
+
+    for (const nodeId in state.directory.folderMetadata) {
+      const node = state.directory.folderMetadata[nodeId]
+      if(node.parentId === folderMetadata.id) {
+        content.push(node)
+      }
+    }
+
+    for (const nodeId in state.directory.fileMetadata) {
+      const node = state.directory.folderMetadata[nodeId]
+      if(node.parentId === folderMetadata.id) {
+        content.push(node)
+      }
+    }
+
+    return content
+  }
+}
+
+export const selectFolderMetadata = (folderMetadata: Pick<Directory.FolderMetadata, 'id'>) => {
+  return (state: RootState) => {
+    return state.directory.folderMetadata[folderMetadata.id]
+  }
+}
+
+export const selectFileMetadata = (fileMetadata: Pick<Directory.FileMetadata, 'id'>) => {
+  return (state: RootState) => {
+    return state.directory.fileMetadata[fileMetadata.id]
+  }
+}
+
+export const selectFileContent = (fileMetadata: Pick<Directory.FileMetadata, 'id'>) => {
+  return (state: RootState) => {
+    return state.directory.fileContent[fileMetadata.id]
+  }
+}
+
+export const selectFolderStatus = (folderMetadata: Pick<Directory.FolderMetadata, 'id'>) => {
+  return (state: RootState) => {
+    return state.directory.folderStatus[folderMetadata.id]
+  }
+}
+
+export const selectFileStatus = (fileMetadata: Pick<Directory.FileMetadata, 'id'>) => {
+  return (state: RootState) => {
+    return state.directory.fileStatus[fileMetadata.id]
+  }
 }
