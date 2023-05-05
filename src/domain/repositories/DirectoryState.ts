@@ -13,6 +13,7 @@ export enum FileStatus {
 }
 
 export enum FolderStatus {
+  Loading = 'Loading',
   Creating = 'Creating',
   Default = 'Default',
   ContentLoading = 'ContentLoading',
