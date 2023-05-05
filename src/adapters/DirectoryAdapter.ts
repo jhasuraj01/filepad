@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocalDirectoryDatabase } from '../infrastructure/databases/LocalDirectoryDatabase'
-import { selectFileContent, selectFileMetadata, selectFileStatus, selectFolderContent, selectFolderMetadata, selectFolderStatus, useReduxDirectoryState } from '../infrastructure/state/DirectoryState'
+import { selectAnsestors, selectFileContent, selectFileMetadata, selectFileStatus, selectFolderContent, selectFolderMetadata, selectFolderStatus, useReduxDirectoryState } from '../infrastructure/state/DirectoryState'
 import { DirectoryState } from '../domain/repositories/DirectoryState'
 import * as File from '../domain/usecases/File'
 import * as Folder from '../domain/usecases/Folder'
 import { AppDispatch } from '../infrastructure/state/app/store'
 import { Directory } from '../domain/entities/Directory'
+import { useMemo } from 'react'
 
 const databaseId = 'db1'
 
@@ -20,32 +21,35 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
 
   const file: Directory.FileType = {...fileContent, ...fileMetadata}
 
-  const createFile = (params: Pick<File.createFileParams, 'name'>) => {
+  const createFile = useMemo(() => (params: Pick<File.createFileParams, 'name'>) => {
     File.createFile({
       parentId: metadata.id,
       name: params.name,
     }, localDirectoryDatabase, directoryState)
-  }
+  }, [metadata.id])
 
-  const fetchFileMetadata = () => {
+  const fetchFileMetadata = useMemo(() => () => {
     File.fetchFileMetadata(metadata, localDirectoryDatabase, directoryState)
-  }
-  const fetchFileContent = () => {
-    File.fetchFileContent(metadata, localDirectoryDatabase, directoryState)
-  }
-  const fetchFile = () => {
-    File.fetchFile(metadata, localDirectoryDatabase, directoryState)
-  }
-  const deleteFile = () => {
-    File.deleteFile(metadata, localDirectoryDatabase, directoryState)
-  }
+  }, [metadata.id])
 
-  const updateContent = (newContent: Directory.FileContent['content']) => {
+  const fetchFileContent = useMemo(() => () => {
+    File.fetchFileContent(metadata, localDirectoryDatabase, directoryState)
+  }, [metadata.id])
+
+  const fetchFile = useMemo(() => () => {
+    File.fetchFile(metadata, localDirectoryDatabase, directoryState)
+  }, [metadata.id])
+
+  const deleteFile = useMemo(() => () => {
+    File.deleteFile(metadata, localDirectoryDatabase, directoryState)
+  }, [metadata.id])
+
+  const updateContent = useMemo(() => (newContent: Directory.FileContent['content']) => {
     File.saveFile({
       ...file,
       content: newContent
     }, localDirectoryDatabase, directoryState)
-  }
+  }, [metadata.id])
 
   return {
     createFile,
@@ -65,31 +69,37 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
   const directoryState: DirectoryState = useReduxDirectoryState(dispatch)
   const localDirectoryDatabase = useLocalDirectoryDatabase(databaseId)
 
-  const createFolder = (params: Pick<File.createFileParams, 'name'>) => {
+  const createFolder = useMemo(() => (params: Pick<File.createFileParams, 'name'>) => {
     Folder.createFolder({
       name: params.name,
       parentId: metadata.id,
     }, localDirectoryDatabase, directoryState)
-  }
-  const fetchFolderContent = () => {
+  }, [metadata.id])
+
+  const fetchFolderContent = useMemo(() => () => {
     Folder.fetchFolderContent(metadata, localDirectoryDatabase, directoryState)
-  }
-  const deleteFolder = () => {
+  }, [metadata.id])
+
+  const deleteFolder = useMemo(() => () => {
     Folder.deleteFolder(metadata, localDirectoryDatabase, directoryState)
-  }
-  const fetchParentMetadata = () => {
+  }, [metadata.id])
+
+  const fetchParentMetadata = useMemo(() => () => {
     Folder.fetchParentMetadata(metadata, localDirectoryDatabase, directoryState)
-  }
-  const fetchAnsestors = () => {
+  }, [metadata.id])
+
+  const fetchAnsestors = useMemo(() => () => {
     Folder.fetchAnsestors(metadata, localDirectoryDatabase, directoryState)
-  }
-  const fetchFolderMetadata = () => {
+  }, [metadata.id])
+
+  const fetchFolderMetadata = useMemo(() => () => {
     Folder.fetchFolderMetadata(metadata, localDirectoryDatabase, directoryState)
-  }
+  }, [metadata.id])
 
   const folderContent = useSelector(selectFolderContent(metadata))
   const folderMetadata = useSelector(selectFolderMetadata(metadata))
   const folderStatus = useSelector(selectFolderStatus(metadata))
+  const ansestors = useSelector(selectAnsestors(metadata))
 
   return {
     createFolder,
@@ -101,5 +111,6 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
     folderContent,
     folderMetadata,
     folderStatus,
+    ansestors,
   }
 }

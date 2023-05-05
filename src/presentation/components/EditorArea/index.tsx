@@ -2,7 +2,7 @@ import style from './index.module.scss'
 import Editor, { OnChange, OnMount } from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
+// import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { Directory } from '../../../domain/entities/Directory'
 import ExtensionLanguageMap from '../../../constants/ExtensionLanguageMap'
 
@@ -21,14 +21,14 @@ export function EditorArea() {
 
   console.log({ fileId, database })
 
-  useEffect(() => {
-    if(fileId === undefined || database === undefined) return
-    (async () => {
-      const file = await fileStorageInteractor.fetchFile({ id: fileId, database: database })
-      setFile(file)
-      console.log(file)
-    })()
-  }, [fileId, database])
+  // useEffect(() => {
+  //   if(fileId === undefined || database === undefined) return
+  //   (async () => {
+  //     const file = await fileStorageInteractor.fetchFile({ id: fileId, database: database })
+  //     setFile(file)
+  //     console.log(file)
+  //   })()
+  // }, [fileId, database])
 
   const handleEditorDidMount: OnMount = (editor) => {
     editor.focus()
@@ -37,7 +37,7 @@ export function EditorArea() {
   const handleChange: OnChange = async (value) => {
     if(file === undefined || value == undefined) return
     file.content = value
-    await fileStorageInteractor.saveFile(file)
+    // await fileStorageInteractor.saveFile(file)
   }
 
   return (

@@ -103,6 +103,7 @@ export const fetchAnsestors = async (
   do {
     parent = await fetchParentMetadata(node, database, state)
     parents.push(parent)
+    node = parent
   } while (parent.id != Directory.RootNode.id)
 
   parents.reverse()

@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
 import './presentation/index.css'
 import { PersistSelectedStates } from './presentation/supports/Persistence'
+import { ConfigProvider, theme } from 'antd'
 
 const container = document.getElementById('root')!
 const root = createRoot(container)
@@ -16,7 +17,13 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         <PersistSelectedStates>
-          <App />
+          <ConfigProvider
+            theme={{
+              algorithm: theme.darkAlgorithm,
+            }}
+          >
+            <App />
+          </ConfigProvider>
         </PersistSelectedStates>
       </BrowserRouter>
     </Provider>

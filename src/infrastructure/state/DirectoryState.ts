@@ -160,6 +160,18 @@ export const selectFolderStatus = (folderMetadata: Pick<Directory.FolderMetadata
   }
 }
 
+export const selectAnsestors = (folderMetadata: Pick<Directory.FolderMetadata, 'id'>) => {
+  return (state: RootState) => {
+    let currentNode: Directory.FolderMetadata | undefined = state.directory.folderMetadata[folderMetadata.id]
+    const ansestors = []
+    while(currentNode) {
+      ansestors.push(currentNode)
+      currentNode = state.directory.folderMetadata[currentNode.parentId]
+    }
+    return ansestors.reverse()
+  }
+}
+
 export const selectFileStatus = (fileMetadata: Pick<Directory.FileMetadata, 'id'>) => {
   return (state: RootState) => {
     return state.directory.fileStatus[fileMetadata.id]

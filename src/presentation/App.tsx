@@ -6,6 +6,7 @@ import { EditorPage } from './pages/editor'
 import { ExplorerPage } from './pages/explorer'
 import { SearchPage } from './pages/search'
 import { SettingsPage } from './pages/settings'
+import 'antd/dist/reset.css'
 
 function App() {
   return (

@@ -36,7 +36,7 @@ interface FileProps {
 }
 
 interface ExplorerItemsProps {
-  folder: Directory.FolderMetadata
+  folder: Pick<Directory.FolderMetadata, 'parentId' | 'id'>
   showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
@@ -81,12 +81,11 @@ export function Explorer({ workspace }: ExplorerProps) {
   const { createFolder, fetchFolderContent } = useFolderAdapter(workspace)
   const { createFile } = useFileAdapter(workspace)
 
-  useEffect(fetchFolderContent, [])
+  useEffect(fetchFolderContent, [workspace.id])
 
   const [contextMenu, setContextMenu] = useState<ReactNode>()
   const containerRef = useRef(null)
   const itemsRef = useRef(null)
-  const [key, setKey] = useState<number>(0)
 
   const createNewFile = async () => {
     const fileName = prompt('Enter File Name')
@@ -153,58 +152,49 @@ export function Explorer({ workspace }: ExplorerProps) {
       ref={containerRef}
       className={styles.container}
       onContextMenu={(event) => showContextMenu(event, itemsExplorerContextOptions)}>
-      {/* <BreadCrumbs folder={workspace} showContextMenu={showContextMenu} /> */}
+      <BreadCrumbs folder={workspace} showContextMenu={showContextMenu} />
       <hr />
-      <div ref={itemsRef} key={key}>
+      <div ref={itemsRef}>
         <FolderItems folder={workspace} showContextMenu={showContextMenu} />
       </div>
     </div>
   </>)
 }
 
-// export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
+/**
+ * 
+ * @todo **ansestors** State Not Updating!!!
+ */
+export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
 
-//   const [parents, setParents] = useState<Directory.FolderMetadata[]>([folder])
-//   const [loading, setLoading] = useState<boolean>(true)
+  const { ansestors, fetchAnsestors } = useFolderAdapter(folder)
+  useEffect(fetchAnsestors, [folder.id])
 
-//   // useEffect(() => {
-//   //   (async () => {
-//   //     const parents: Directory.FolderMetadata[] = [folder]
-//   //     let parent: Directory.FolderMetadata | null = folder
-//   //     for (let i = 0; i < 3 && parent !== null; i++) {
-//   //       parents.push(parent)
-//   //       parent = await fileStorageInteractor.fetchParentMetadata(parent)
-//   //     }
-//   //     parents.reverse()
-//   //     setParents(parents)
-//   //     setLoading(false)
-//   //   })()
+  console.log({ folder, ansestors })
 
-//   // }, [folder.id])
+  if(ansestors.length == 0) {
+    return (
+      <div>Loading...</div>
+    )
+  }
 
-//   if(loading) {
-//     return (
-//       <div>Loading...</div>
-//     )
-//   }
-
-//   return (
-//     <div className={styles.breadcrumbs}>
-//       {
-//         parents.map((folder, index) => <React.Fragment key={folder.id}>
-//           <NavLinkPersist
-//             to={`/explorer/${folder.id}`}
-//             className={styles.breadcrumb}
-//             onContextMenu={(event) => showContextMenu(event, 'breadcrumb')}
-//           >
-//             {folder.name}
-//           </NavLinkPersist>
-//           {index != parents.length - 1 ? <ChevronRightIcon /> : null}
-//         </React.Fragment>)
-//       }
-//     </div>
-//   )
-// }
+  return (
+    <div className={styles.breadcrumbs}>
+      {
+        ansestors.map((folder, index) => <React.Fragment key={folder.id}>
+          <NavLinkPersist
+            to={`/explorer/${folder.id}`}
+            className={styles.breadcrumb}
+            onContextMenu={(event) => showContextMenu(event, 'breadcrumb')}
+          >
+            {folder.name}
+          </NavLinkPersist>
+          {index != ansestors.length - 1 ? <ChevronRightIcon /> : null}
+        </React.Fragment>)
+      }
+    </div>
+  )
+}
 
 export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
 
