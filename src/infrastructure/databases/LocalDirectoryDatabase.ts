@@ -12,10 +12,10 @@ interface LocalDirectoryDatabaseSchema extends DBSchema {
   },
   'contentStore': {
     value: Directory.FileContent,
-    key: Directory.FileContent["id"],
-    indexes: {
-      'id': Directory.FileContent["id"]
-    },
+    key: Directory.FileContent['id'],
+    // indexes: {
+    //   'id': Directory.FileContent['id']
+    // },
   }
 }
 
@@ -147,7 +147,7 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
   
-    const tnx = this.database.transaction(this.contentStoreName, "readwrite")
+    const tnx = this.database.transaction(this.contentStoreName, 'readwrite')
   
     const fileContent = await tnx.store.get(file.id)
     if(fileContent === undefined ) throw new Error(`[LocalDirectoryDatabase] File Not Found: ID("${file.id}")`)
@@ -156,13 +156,13 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
   
     await tnx.done
   }
-  
+
   async updateFileMetadata(fileMetadataNew: Directory.FileMetadata): Promise<void> {
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
     // await this.database.put(this.metadataStoreName, file)
   
-    const tnx = this.database.transaction(this.metadataStoreName, "readwrite")
+    const tnx = this.database.transaction(this.metadataStoreName, 'readwrite')
     const fileMetadata = await tnx.store.get(fileMetadataNew.id)
     if(fileMetadata === undefined ) throw new Error(`[LocalDirectoryDatabase] File Not Found: ID("${fileMetadataNew.id}")`)
     await tnx.store.put({ ...fileMetadata, ...fileMetadataNew })
@@ -173,7 +173,7 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
   
-    const tnx = this.database.transaction(this.metadataStoreName, "readwrite")
+    const tnx = this.database.transaction(this.metadataStoreName, 'readwrite')
     const folderMetadata = await tnx.store.get(folderMetadataNew.id)
     if(folderMetadata === undefined) throw new Error(`[LocalDirectoryDatabase] Folder Not Found: ID("${folderMetadataNew.id}")`)
     await tnx.store.put({ ...folderMetadata, ...folderMetadataNew })
@@ -193,11 +193,11 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
     const value = await this.database.getAllFromIndex(this.metadataStoreName, 'parentId', folder.id)
-  
     return value
   }
 
-  async fetchFolderMetadata({ id }: Pick<Directory.FileMetadata, "id">): Promise<Directory.FolderMetadata> {
+  async fetchFolderMetadata({ id }: Pick<Directory.FileMetadata, 'id'>): Promise<Directory.FolderMetadata> {
+
     await this.connect()
     if(this.database == null) throw new Error('[LocalDirectoryDatabase] Database: NULL')
 
@@ -219,7 +219,7 @@ export class LocalDirectoryDatabase implements DirectoryDatabase {
   }
 }
 
-let localDirectoryDatabaseInstance: LocalDirectoryDatabase;
+let localDirectoryDatabaseInstance: LocalDirectoryDatabase
 export const useLocalDirectoryDatabase = (id: string) => {
   if(localDirectoryDatabaseInstance === undefined) {
     localDirectoryDatabaseInstance = new LocalDirectoryDatabase({ id })

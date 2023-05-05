@@ -13,10 +13,14 @@ interface ExplorerState {
 
 const initialState: ExplorerState = {
   fileMetadata: {},
-  folderMetadata: {},
+  folderMetadata: {
+    [Directory.RootNode.id]: Directory.RootNode
+  },
   fileContent: {},
   fileStatus: {},
-  folderStatus: {},
+  folderStatus: {
+    [Directory.RootNode.id]: FolderStatus.Default
+  },
 }
 
 const reduxDirectoryState = createSlice({
@@ -102,7 +106,7 @@ class ReduxDirectoryState implements DirectoryState {
 
 export default reduxDirectoryState.reducer
 
-let reduxDirectoryStateInstance: ReduxDirectoryState;
+let reduxDirectoryStateInstance: ReduxDirectoryState
 export const useReduxDirectoryState = (dispatch: AppDispatch) => {
   if(reduxDirectoryStateInstance === undefined) {
     reduxDirectoryStateInstance = new ReduxDirectoryState(dispatch)
@@ -112,22 +116,22 @@ export const useReduxDirectoryState = (dispatch: AppDispatch) => {
 
 export const selectFolderContent = (folderMetadata: Pick<Directory.FolderMetadata, 'id'>) => {
   return (state: RootState) => {
-    const content: Directory.Node[] = []
+    const content: (Directory.FolderMetadata | Directory.FileMetadata)[] = []
 
     for (const nodeId in state.directory.folderMetadata) {
       const node = state.directory.folderMetadata[nodeId]
-      if(node.parentId === folderMetadata.id) {
+      if(node && node.parentId === folderMetadata.id) {
         content.push(node)
       }
     }
 
     for (const nodeId in state.directory.fileMetadata) {
-      const node = state.directory.folderMetadata[nodeId]
-      if(node.parentId === folderMetadata.id) {
+      const node = state.directory.fileMetadata[nodeId]
+      if(node && node.parentId === folderMetadata.id) {
         content.push(node)
       }
     }
-
+  
     return content
   }
 }

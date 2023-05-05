@@ -1,4 +1,4 @@
-import type { Directory } from "../entities/Directory"
+import type { Directory } from '../entities/Directory'
 
 export enum FileStatus {
   Creating = 'Creating',
@@ -25,10 +25,10 @@ export interface DirectoryState {
   setFileMetadata(file: Directory.FileMetadata): void
   setFolderMetadata(folder: Directory.FolderMetadata): void
 
-  setFileStatus(file: Pick<Directory.Node, "id">, status: FileStatus): void
-  setFolderStatus(file: Pick<Directory.Node, "id">, status: FolderStatus): void
+  setFileStatus(file: Pick<Directory.Node, 'id'>, status: FileStatus): void
+  setFolderStatus(file: Pick<Directory.Node, 'id'>, status: FolderStatus): void
 
-  deleteFileContent(file: Pick<Directory.Node, "id">): void
-  deleteFileMetadata(file: Pick<Directory.Node, "id">): void
-  deleteFolderMetadata(folder: Pick<Directory.Node, "id">): void
+  deleteFileContent(file: Pick<Directory.Node, 'id'>): void
+  deleteFileMetadata(file: Pick<Directory.Node, 'id'>): void
+  deleteFolderMetadata(folder: Pick<Directory.Node, 'id'>): void
 }

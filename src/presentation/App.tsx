@@ -12,13 +12,13 @@ function App() {
     <div className={style.container}>
       <Nav />
       <Routes>
-        <Route path='/' element={<NavigatePersist to="/editor" />} />
-        <Route path='/editor' element={<EditorPage />} />
-        <Route path='/editor/:database/:fileId' element={<EditorPage />} />
+        {/* <Route path='/' element={<NavigatePersist to="/editor" />} /> */}
+        {/* <Route path='/editor' element={<EditorPage />} /> */}
+        {/* <Route path='/editor/:database/:fileId' element={<EditorPage />} /> */}
         <Route path='/explorer/' element={<ExplorerPage />} />
-        <Route path='/explorer/:database/:parentId' element={<ExplorerPage />} />
-        <Route path='/search' element={<SearchPage />} />
-        <Route path='/settings' element={<SettingsPage />} />
+        <Route path='/explorer/:parentId/:folderId' element={<ExplorerPage />} />
+        {/* <Route path='/search' element={<SearchPage />} /> */}
+        {/* <Route path='/settings' element={<SettingsPage />} /> */}
       </Routes>
     </div>
   )

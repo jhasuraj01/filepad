@@ -35,9 +35,9 @@ export namespace Directory {
 
   export const RootNode: FolderMetadata = {
     type: NodeType.folder,
-    id: "root-node",
-    name: "Notepad Home",
-    parentId: "root-node",
+    id: 'root-node',
+    name: 'Notepad Home',
+    parentId: '',
     editedAt: 0,
     createdAt: 0
   }

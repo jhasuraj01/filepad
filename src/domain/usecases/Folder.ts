@@ -4,7 +4,6 @@ import { DirectoryState, FolderStatus } from '../repositories/DirectoryState'
 import { deleteFile } from './File'
 
 export type createFolderParams = {
-  id: Directory.NodeId,
   name: Directory.FolderMetadata['name'],
   parentId?: Directory.FolderMetadata['parentId']
 }
@@ -15,9 +14,11 @@ export const createFolder = async (
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
 
+  const folderId = String(Date.now())
+
   const folder: Directory.FolderMetadata = {
     type: Directory.NodeType.folder,
-    id: params.id,
+    id: folderId,
     name: params.name,
     parentId: params.parentId || Directory.RootNode.id,
     editedAt: Date.now(),
@@ -33,7 +34,7 @@ export const createFolder = async (
 }
 
 export const fetchFolderContent = async (
-  folder: Pick<Directory.FolderMetadata, "id">,
+  folder: Pick<Directory.FolderMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderContent> => {
@@ -55,7 +56,7 @@ export const fetchFolderContent = async (
 }
 
 export const deleteFolder = async (
-  folder: Pick<Directory.FolderMetadata, "id">,
+  folder: Pick<Directory.FolderMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState
 ) => {
@@ -80,7 +81,7 @@ export const deleteFolder = async (
 }
 
 export const fetchParentMetadata = async (
-  node: Pick<Directory.Node, "id" | "parentId">,
+  node: Pick<Directory.Node, 'id' | 'parentId'>,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
@@ -91,33 +92,33 @@ export const fetchParentMetadata = async (
 }
 
 export const fetchAnsestors = async (
-  node: Pick<Directory.Node, "id" | "parentId">,
+  node: Pick<Directory.Node, 'id' | 'parentId'>,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata[]> => {
-  if (node.id === Directory.RootNode.id) return [];
+  if (node.id === Directory.RootNode.id) return []
 
   const parents: Directory.FolderMetadata[] = []
   let parent: Directory.FolderMetadata
 
   do {
-    parent = await fetchParentMetadata(node, database, state);
-    parents.push(parent);
-  } while (parent.id != Directory.RootNode.id);
+    parent = await fetchParentMetadata(node, database, state)
+    parents.push(parent)
+  } while (parent.id != Directory.RootNode.id)
 
-  parents.reverse();
+  parents.reverse()
 
   return parents
 }
 
 export const fetchFolderMetadata = async (
-  folderMetadataPartial: Pick<Directory.FileMetadata, "id">,
+  folderMetadataPartial: Pick<Directory.FileMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
-  
+
   const folderMetadata = await database.fetchFolderMetadata(folderMetadataPartial)
   state.setFolderMetadata(folderMetadata)
-  
+
   return folderMetadata
 }

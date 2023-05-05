@@ -49,7 +49,7 @@ export const createFile = async (
 }
 
 export const fetchFileMetadata = async (
-  fileMetadataPartial: Pick<Directory.FileMetadata, "id">,
+  fileMetadataPartial: Pick<Directory.FileMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState,
 ): Promise<Directory.FileMetadata> => {
@@ -63,7 +63,7 @@ export const fetchFileMetadata = async (
 }
 
 export const fetchFileContent = async (
-  fileMetadataPartial: Pick<Directory.FileMetadata, "id">,
+  fileMetadataPartial: Pick<Directory.FileMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState,
 ): Promise<Directory.FileContent> => {
@@ -79,7 +79,7 @@ export const fetchFileContent = async (
 }
 
 export const fetchFile = async (
-  fileMetadataPartial: Pick<Directory.FileMetadata, "id">,
+  fileMetadataPartial: Pick<Directory.FileMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState,
 ): Promise<Directory.FileType> => {
@@ -94,7 +94,7 @@ export const fetchFile = async (
 }
 
 export const deleteFile = async (
-  file: Pick<Directory.FileMetadata, "id">,
+  file: Pick<Directory.FileMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState,
 ) => {

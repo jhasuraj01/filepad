@@ -4,7 +4,7 @@ import style from './index.module.scss'
 import { useAppDispatch, useAppSelector } from '../../../infrastructure/state/app/hooks'
 import { selectFolderExpansionState, selectWorkspace, toggleExpansion } from '../../../infrastructure/state/sideExplorerSlice'
 import { Directory } from '../../../domain/entities/Directory'
-import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
+// import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { useEffect, useState } from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
 
@@ -35,14 +35,14 @@ export function FolderItems({ folder }: ExplorerItemsProps) {
   const [items, setItems] = useState<(Directory.FolderMetadata | Directory.FileMetadata)[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
-  useEffect(() => {
-    (async () => {
-      const folderContent = await fileStorageInteractor.fetchFolderContent(folder)
-      setLoading(false)
-      setItems(folderContent)
-    })()
+  // useEffect(() => {
+  //   (async () => {
+  //     const folderContent = await fileStorageInteractor.fetchFolderContent(folder)
+  //     setLoading(false)
+  //     setItems(folderContent)
+  //   })()
 
-  }, [folder.id])
+  // }, [folder.id])
 
   if(loading) {
     return (
