@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 export function ExplorerPage() {
   const {folderId, parentId } = useParams()
 
-  let workspace: Pick<Directory.FolderMetadata, "parentId" | "id"> = Directory.RootNode
+  let workspace: Pick<Directory.FolderMetadata, 'parentId' | 'id'> = Directory.RootNode
 
   if(folderId && parentId) {
     workspace = { parentId: parentId, id: folderId, }

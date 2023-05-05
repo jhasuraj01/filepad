@@ -1,7 +1,7 @@
 import * as fileUseCase from '../domain/usecases/File'
 import * as folderUseCase from '../domain/usecases/Folder'
 
-console.log("File Storage Adapter")
+console.log('File Storage Adapter')
 
 // import { LocalFileDatabase } from '../infrastructure/databases/LocalDirectoryDatabase'
 // import { FileDatabase } from '../domain/repositories/DirectoryDatabase'

@@ -22,7 +22,7 @@ import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAda
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 
 export interface ExplorerProps {
-  workspace: Pick<Directory.FolderMetadata, "parentId" | "id">
+  workspace: Pick<Directory.FolderMetadata, 'parentId' | 'id'>
 }
 
 interface FolderProps {

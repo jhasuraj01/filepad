@@ -9,7 +9,7 @@ import { Directory } from '../domain/entities/Directory'
 
 const databaseId = 'db1'
 
-export function useFileAdapter(metadata: Pick<Directory.FileContent, "id">) {
+export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
   const dispatch: AppDispatch = useDispatch()
   const directoryState: DirectoryState = useReduxDirectoryState(dispatch)
   const localDirectoryDatabase = useLocalDirectoryDatabase(databaseId)
@@ -20,7 +20,7 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, "id">) {
 
   const file: Directory.FileType = {...fileContent, ...fileMetadata}
 
-  const createFile = (params: Pick<File.createFileParams, "name">) => {
+  const createFile = (params: Pick<File.createFileParams, 'name'>) => {
     File.createFile({
       parentId: metadata.id,
       name: params.name,
@@ -60,12 +60,12 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, "id">) {
   }
 }
 
-export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, "id" | "parentId"> = Directory.RootNode) {
+export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' | 'parentId'> = Directory.RootNode) {
   const dispatch: AppDispatch = useDispatch()
   const directoryState: DirectoryState = useReduxDirectoryState(dispatch)
   const localDirectoryDatabase = useLocalDirectoryDatabase(databaseId)
 
-  const createFolder = (params: Pick<File.createFileParams, "name">) => {
+  const createFolder = (params: Pick<File.createFileParams, 'name'>) => {
     Folder.createFolder({
       name: params.name,
       parentId: metadata.id,

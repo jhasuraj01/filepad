@@ -12,7 +12,7 @@ function App() {
     <div className={style.container}>
       <Nav />
       <Routes>
-        {/* <Route path='/' element={<NavigatePersist to="/editor" />} /> */}
+        <Route path='/' element={<NavigatePersist to="/explorer" />} />
         {/* <Route path='/editor' element={<EditorPage />} /> */}
         {/* <Route path='/editor/:database/:fileId' element={<EditorPage />} /> */}
         <Route path='/explorer/' element={<ExplorerPage />} />
