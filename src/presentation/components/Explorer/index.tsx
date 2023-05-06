@@ -89,13 +89,13 @@ export function Explorer({ workspace }: ExplorerProps) {
 
   const createNewFile = async () => {
     const fileName = prompt('Enter File Name')
-    if(fileName === null) return
+    if (fileName === null) return
     createFile({ name: fileName })
   }
 
   const createNewFolder = async () => {
     const folderName = prompt('Enter Folder Name')
-    if(folderName === null) return
+    if (folderName === null) return
     createFolder({ name: folderName })
   }
 
@@ -133,7 +133,7 @@ export function Explorer({ workspace }: ExplorerProps) {
       event.stopPropagation()
       setContextMenu(<ContextMenu options={breadcrumbContextOptions} hide={hideContextMenu} event={event} />)
     }
-    else if(typeof item !== 'string') {
+    else if (typeof item !== 'string') {
       event.stopPropagation()
       setContextMenu(<ContextMenu options={item} hide={hideContextMenu} event={event} />)
     }
@@ -170,7 +170,7 @@ export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
   const { ansestors, fetchAnsestors } = useFolderAdapter(folder)
   useEffect(fetchAnsestors, [folder.id])
 
-  if(ansestors.length == 0) {
+  if (ansestors.length == 0) {
     return (
       <div>Loading...</div>
     )
@@ -179,16 +179,24 @@ export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
   return (
     <div className={styles.breadcrumbs}>
       {
-        ansestors.map((folder, index) => <React.Fragment key={folder.id}>
-          <NavLinkPersist
-            to={`/explorer/${folder.id}`}
-            className={styles.breadcrumb}
-            onContextMenu={(event) => showContextMenu(event, 'breadcrumb')}
-          >
-            {folder.name}
-          </NavLinkPersist>
-          {index != ansestors.length - 1 ? <ChevronRightIcon /> : null}
-        </React.Fragment>)
+        ansestors.map((folder, index) => {
+          const breadcrumbTarget = folder.id === Directory.RootNode.id
+            ? '/explorer'
+            : `/explorer/${folder.parentId}/${folder.id}`
+
+          return (
+            <React.Fragment key={folder.id}>
+              <NavLinkPersist
+                to={breadcrumbTarget}
+                className={styles.breadcrumb}
+                onContextMenu={(event) => showContextMenu(event, 'breadcrumb')}
+              >
+                {folder.name}
+              </NavLinkPersist>
+              {index != ansestors.length - 1 ? <ChevronRightIcon /> : null}
+            </React.Fragment>
+          )
+        })
       }
     </div>
   )
@@ -202,7 +210,7 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
 
   useEffect(fetchFolderContent, [folder.id])
 
-  if(folderStatus === FolderStatus.ContentLoading || folderStatus === FolderStatus.Creating) {
+  if (folderStatus === FolderStatus.ContentLoading || folderStatus === FolderStatus.Creating) {
     return (
       <div>Loading...</div>
     )
@@ -230,7 +238,7 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
 export function File({ file, showContextMenu }: FileProps) {
 
   const { deleteFile } = useFileAdapter(file)
-  
+
   const fileContextOptions: ContextMenuOptions = [
     { icon: RenameIcon, text: 'Rename File' },
     { icon: TrashIcon, text: 'Delete File', onClick: deleteFile },
