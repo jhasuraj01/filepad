@@ -137,7 +137,7 @@ export const selectFolderContent = (folderMetadata: Pick<Directory.FolderMetadat
 }
 
 export const selectFolderMetadata = (folderMetadata: Pick<Directory.FolderMetadata, 'id'>) => {
-  return (state: RootState) => {
+  return (state: RootState): Directory.FolderMetadata | undefined => {
     return state.directory.folderMetadata[folderMetadata.id]
   }
 }

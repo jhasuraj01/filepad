@@ -13,41 +13,36 @@ import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 
 interface FolderProps {
   folder: Directory.FolderMetadata
+  openFile: (fileId: string) => void
 }
 
 interface FileProps {
   file: Directory.FileMetadata
+  openFile: (fileId: string) => void
 }
 
 interface ExplorerItemsProps {
   folder: Directory.FolderMetadata
+  openFile: (fileId: string) => void
 }
 
 interface SideExplorerProps {
   workspace: Directory.FolderMetadata
+  openFile: (fileId: string) => void
 }
 
-export function SideExplorer({workspace}: SideExplorerProps) {
+export function SideExplorer({workspace, openFile}: SideExplorerProps) {
   return <>
     <div className={style.workspaceName}>{workspace.name}</div>
-    <FolderItems folder={workspace}/>
+    <FolderItems folder={workspace} openFile={openFile}/>
   </>
 }
 
-export function FolderItems({ folder }: ExplorerItemsProps) {
+export function FolderItems({ folder, openFile }: ExplorerItemsProps) {
 
   const { fetchFolderContent, folderContent, folderStatus } = useFolderAdapter(folder)
 
   useEffect(fetchFolderContent, [])
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const folderContent = await fileStorageInteractor.fetchFolderContent(folder)
-  //     setLoading(false)
-  //     setItems(folderContent)
-  //   })()
-
-  // }, [folder.id])
 
   if(folderStatus === FolderStatus.ContentLoading) {
     return (
@@ -58,26 +53,26 @@ export function FolderItems({ folder }: ExplorerItemsProps) {
   return <>{
     folderContent.map(item => {
       if(item.type === Directory.NodeType.file)
-        return <File key={item.id} file={item} />
+        return <File key={item.id} file={item} openFile={openFile} />
       else
-        return <Folder key={item.id} folder={item}/>
+        return <Folder key={item.id} folder={item} openFile={openFile} />
     })
   }</>
 }
 
-export function File({ file }: FileProps) {
+export function File({ file, openFile }: FileProps) {
   return (
-    <NavLinkPersist
+    <div
       className={`${style.file} ${style.entry}`}
-      to={`/editor/${file.id}`}
+      onClick={() => openFile(file.id)}
     >
       <span className={style.icon}><FileIcon /></span>
       <span>{file.name}</span>
-    </NavLinkPersist>
+    </div>
   )
 }
 
-export function Folder({ folder }: FolderProps) {
+export function Folder({ folder, openFile }: FolderProps) {
 
   // const [isExpanded, toggleExpansion] = useState(false)
   const isExpanded = useAppSelector(selectFolderExpansionState(folder))
@@ -95,7 +90,7 @@ export function Folder({ folder }: FolderProps) {
         <span>{folder.name}</span>
       </div>
       <div className={style.child}>
-        { isExpanded ? <FolderItems folder={folder} /> : <></>}
+        { isExpanded ? <FolderItems folder={folder} openFile={openFile} /> : <></>}
       </div>
     </div>
   )

@@ -37,7 +37,7 @@ export namespace Directory {
     type: NodeType.folder,
     id: 'home',
     name: 'Home',
-    parentId: '',
+    parentId: 'root',
     editedAt: 0,
     createdAt: 0
   }

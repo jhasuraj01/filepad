@@ -31,6 +31,7 @@ interface FolderProps {
 }
 
 interface FileProps {
+  folder: Pick<Directory.FolderMetadata, 'parentId' | 'id'>
   file: Directory.FileMetadata
   showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
@@ -227,7 +228,7 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
             return <Folder key={item.id} folder={item} showContextMenu={showContextMenu} />
           }
           else {
-            return <File key={item.id} file={item} showContextMenu={showContextMenu} />
+            return <File key={item.id} folder={folder} file={item} showContextMenu={showContextMenu} />
           }
         })
       }
@@ -235,7 +236,7 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
   )
 }
 
-export function File({ file, showContextMenu }: FileProps) {
+export function File({ folder, file, showContextMenu }: FileProps) {
 
   const { deleteFile } = useFileAdapter(file)
 
@@ -248,7 +249,7 @@ export function File({ file, showContextMenu }: FileProps) {
 
   return (
     <NavLinkPersist
-      to={`/editor/${file.parentId}/${file.id}`}
+      to={`/editor/${folder.parentId}/${folder.id}/${file.id}`}
       className={styles.item}
       onContextMenu={(event) => showContextMenu(event, fileContextOptions)}
     >

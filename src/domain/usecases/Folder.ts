@@ -39,6 +39,8 @@ export const fetchFolderContent = async (
   state: DirectoryState
 ): Promise<Directory.FolderContent> => {
 
+  console.log('fetchFolderContent')
+
   state.setFolderStatus(folder, FolderStatus.ContentLoading)
 
   const nodes: Directory.FolderContent = await database.fetchFolderContent(folder)
@@ -61,6 +63,7 @@ export const deleteFolder = async (
   state: DirectoryState
 ) => {
 
+  console.log('deleteFolder')
   state.setFolderStatus(folder, FolderStatus.Deleting)
   const nodes: Directory.FolderContent = await fetchFolderContent(folder, database, state)
 
@@ -80,21 +83,14 @@ export const deleteFolder = async (
 
 }
 
-export const fetchParentMetadata = async (
-  node: Pick<Directory.Node, 'id' | 'parentId'>,
-  database: DirectoryDatabase,
-  state: DirectoryState
-): Promise<Directory.FolderMetadata> => {
-  if (node.parentId == Directory.RootNode.id) return Directory.RootNode
-  const parentMetadata = await fetchFolderMetadata({ id: node.parentId }, database, state)
-  return parentMetadata
-}
-
 export const fetchAnsestors = async (
   node: Pick<Directory.Node, 'id' | 'parentId'>,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata[]> => {
+
+  console.log('fetchAnsestors')
+
   if (node.id === Directory.RootNode.id) return []
 
 
@@ -112,12 +108,25 @@ export const fetchAnsestors = async (
   return parents
 }
 
+export const fetchParentMetadata = async (
+  node: Pick<Directory.Node, 'id' | 'parentId'>,
+  database: DirectoryDatabase,
+  state: DirectoryState
+): Promise<Directory.FolderMetadata> => {
+
+  console.log('fetchParentMetadata')
+  if (node.parentId == Directory.RootNode.id) return Directory.RootNode
+  const parentMetadata = await fetchFolderMetadata({ id: node.parentId }, database, state)
+  return parentMetadata
+}
+
 export const fetchFolderMetadata = async (
   folderMetadataPartial: Pick<Directory.FileMetadata, 'id'>,
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
 
+  console.log('fetchFolderMetadata')
   if(folderMetadataPartial.id === Directory.RootNode.id) return Directory.RootNode
 
   state.setFolderStatus(folderMetadataPartial, FolderStatus.Loading)

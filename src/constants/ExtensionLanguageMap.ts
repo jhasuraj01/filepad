@@ -1,4 +1,5 @@
 export default {
+  '.': 'plaintext',
   '.txt': 'plaintext',
   '.abap': 'abap',
   '.cls': 'apex',
