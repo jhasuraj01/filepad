@@ -10,8 +10,8 @@ export function Nav() {
     <div className={style.container}>
       <NavLinkPersist to='/editor' title='Editor' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><FilesIcon /></NavLinkPersist>
       <NavLinkPersist to='/explorer' title='Explorer' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><RootFolderIcon /></NavLinkPersist>
-      <NavLinkPersist to='/search' title='Search' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><SearchIcon /></NavLinkPersist>
-      <NavLinkPersist to='/settings' title='Settings' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><SettingsGearIcon /></NavLinkPersist>
+      {/* <NavLinkPersist to='/search' title='Search' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><SearchIcon /></NavLinkPersist> */}
+      {/* <NavLinkPersist to='/settings' title='Settings' className={({ isActive }) => isActive ? `${style.active} ${style.option}` : `${style.option}`}><SettingsGearIcon /></NavLinkPersist> */}
     </div>
   )
 }
