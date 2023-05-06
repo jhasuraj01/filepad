@@ -1,7 +1,6 @@
 import style from './index.module.scss'
 import Editor, { OnChange, OnMount } from '@monaco-editor/react'
-import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 // import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { Directory } from '../../../domain/entities/Directory'
 import ExtensionLanguageMap from '../../../constants/ExtensionLanguageMap'
@@ -15,7 +14,7 @@ export interface EditorAreaProps {
   closeFile: (fileId: string) => void
 }
 
-export function EditorArea({ files, open, openFile, closeFile }: EditorAreaProps) {
+export function EditorArea({ open }: EditorAreaProps) {
 
   const { fetchFile, updateContent, fileContent, fileMetadata, fileStatus } = useFileAdapter({ id: open })
 
