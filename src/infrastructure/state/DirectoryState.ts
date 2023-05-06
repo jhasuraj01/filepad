@@ -164,10 +164,11 @@ export const selectAnsestors = (folderMetadata: Pick<Directory.FolderMetadata, '
   return (state: RootState) => {
     let currentNode: Directory.FolderMetadata | undefined = state.directory.folderMetadata[folderMetadata.id]
     const ansestors = []
-    while(currentNode) {
+    while(currentNode && currentNode.id !== Directory.RootNode.id) {
       ansestors.push(currentNode)
       currentNode = state.directory.folderMetadata[currentNode.parentId]
     }
+    ansestors.push(Directory.RootNode)
     return ansestors.reverse()
   }
 }

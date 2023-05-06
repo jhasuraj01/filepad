@@ -170,8 +170,6 @@ export function BreadCrumbs({ folder, showContextMenu }: ExplorerItemsProps) {
   const { ansestors, fetchAnsestors } = useFolderAdapter(folder)
   useEffect(fetchAnsestors, [folder.id])
 
-  console.log({ folder, ansestors })
-
   if(ansestors.length == 0) {
     return (
       <div>Loading...</div>

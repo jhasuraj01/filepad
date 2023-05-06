@@ -97,9 +97,10 @@ export const fetchAnsestors = async (
 ): Promise<Directory.FolderMetadata[]> => {
   if (node.id === Directory.RootNode.id) return []
 
+
   const parents: Directory.FolderMetadata[] = []
   let parent: Directory.FolderMetadata
-
+  
   do {
     parent = await fetchParentMetadata(node, database, state)
     parents.push(parent)
@@ -116,6 +117,8 @@ export const fetchFolderMetadata = async (
   database: DirectoryDatabase,
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
+
+  if(folderMetadataPartial.id === Directory.RootNode.id) return Directory.RootNode
 
   state.setFolderStatus(folderMetadataPartial, FolderStatus.Loading)
   const folderMetadata = await database.fetchFolderMetadata(folderMetadataPartial)
