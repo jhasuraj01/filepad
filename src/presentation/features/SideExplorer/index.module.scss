@@ -2,34 +2,28 @@
   .name {
     cursor: pointer;
   }
-
-  .child {
-
-    .folder, .file {
-      padding-left: 14px;
-      margin-left: 2px;
-      box-shadow: inset 1px 0 rgb(54, 54, 54);
-      text-decoration: none;
-      color: currentColor;
-
-      &:hover {
-        box-shadow: inset 1px 0 rgb(255, 102, 255);
-      }
-      &:first-child {
-        margin-top: 4px;
-      }
-
-      @for $i from 1 through 20 {
-        &:nth-child(#{$i}n) {
-          animation: bringin #{$i * 100}ms ease-out forwards;
-        }
-      }
-    }
-  }
 }
 
 .folder, .file {
   cursor: pointer;
+  padding-left: 14px;
+  margin-left: 2px;
+  box-shadow: inset 1px 0 rgb(54, 54, 54);
+  text-decoration: none;
+  color: currentColor;
+
+  &:hover {
+    box-shadow: inset 1px 0 rgb(255, 102, 255);
+  }
+  &:first-child {
+    margin-top: 4px;
+  }
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}n) {
+      animation: bringin #{$i * 100}ms ease-out forwards;
+    }
+  }
 }
 
 @keyframes bringin {

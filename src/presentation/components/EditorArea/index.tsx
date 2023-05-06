@@ -8,7 +8,7 @@ import ExtensionLanguageMap from '../../../constants/ExtensionLanguageMap'
 
 export function EditorArea() {
 
-  const { fileId, database } = useParams()
+  const { fileId } = useParams()
   const [file, setFile] = useState<Directory.FileType>({
     name: 'temp',
     type: Directory.NodeType.file,
@@ -19,7 +19,7 @@ export function EditorArea() {
     editedAt: Date.now()
   })
 
-  console.log({ fileId, database })
+  // console.log({ fileId, database })
 
   // useEffect(() => {
   //   if(fileId === undefined || database === undefined) return

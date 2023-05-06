@@ -15,11 +15,11 @@ export function PersistSelectedStates({ children }: Props) {
 
   useEffect(() => {
 
-    searchParams.set('count', count)
+    // searchParams.set('count', count)
     // Add more params here
 
     setSearchParams(searchParams)
-  }, [setSearchParams, searchParams, count])
+  }, [count])
 
   return (<> { children } </>)
 }
@@ -36,10 +36,9 @@ export function NavigatePersist(props: NavigateProps) {
   const { search } = useLocation()
 
   return (<>
-    <Navigate {...{...props, to: `${props.to}${search}`}} />
+    <Navigate {...{replace: true, ...props, to: `${props.to}${search}`}} />
   </>)
 }
-
 
 export function useNavigatePersist() {
   const navigate = useNavigate()
@@ -52,18 +51,29 @@ export function useNavigatePersist() {
     let hash: string | undefined = ''
 
     if(typeof to == 'string') {
-      pathname = to
-      search = oldSearch
+      const link = mergeLink(to, oldSearch)
+      pathname = to.split('?')[0]
+      search = link.search
       hash = oldHash
     }
     else {
       pathname = to.pathname
-      search = to.search || oldSearch
-      hash = to.hash || oldHash
+      search = to.search !== undefined ? to.search : oldSearch
+      hash = to.hash !== undefined ? to.hash : oldHash
     }
 
     navigate({ pathname, search, hash }, options)
   }
 
   return navigateProxy
+}
+
+function mergeLink(to: string, oldSearch: string) {
+  const url = new URL(to, new URL(location.href))
+  const oldSearchObj = Object.fromEntries(new URLSearchParams(oldSearch).entries())
+  const newSearchObj = Object.fromEntries(new URLSearchParams(url.search).entries())
+  const pathname = url.pathname
+  const search = new URLSearchParams({...oldSearchObj, ...newSearchObj}).toString()
+
+  return { pathname, search }
 }

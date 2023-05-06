@@ -14,8 +14,9 @@ function App() {
       <Nav />
       <Routes>
         <Route path='/' element={<NavigatePersist to="/explorer" />} />
-        {/* <Route path='/editor' element={<EditorPage />} /> */}
-        {/* <Route path='/editor/:database/:fileId' element={<EditorPage />} /> */}
+        <Route path='/editor' element={<EditorPage />} />
+        <Route path='/editor/:workspaceId' element={<EditorPage />} />
+        <Route path='/editor/:workspaceId/:fileId' element={<EditorPage />} />
         <Route path='/explorer/' element={<ExplorerPage />} />
         <Route path='/explorer/:parentId/:folderId' element={<ExplorerPage />} />
         {/* <Route path='/search' element={<SearchPage />} /> */}

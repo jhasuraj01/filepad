@@ -1,3 +1,4 @@
+import React from 'react'
 import styles from './index.module.scss'
 import { ReactComponent as FolderIcon } from '../../icons/folder.svg'
 import { ReactComponent as FileIcon } from '../../icons/file.svg'
@@ -14,12 +15,11 @@ import { ReactComponent as AddIcon } from '../../icons/add.svg'
 import { ReactComponent as LinkIcon } from '../../icons/link.svg'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { ContextMenu, ContextMenuOptions } from '../ContextMenu'
-import React from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
-// import { ALL_DATABASES, DirectoryNodeType, FileMetadata, FolderMetadata } from '../../../domain/entities/Directory'
 import { Directory } from '../../../domain/entities/Directory'
 import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
+import { NavLink } from 'react-router-dom'
 
 export interface ExplorerProps {
   workspace: Pick<Directory.FolderMetadata, 'parentId' | 'id'>
@@ -248,7 +248,7 @@ export function File({ file, showContextMenu }: FileProps) {
 
   return (
     <NavLinkPersist
-      to={`/editor/${file.id}`}
+      to={`/editor/${file.parentId}/${file.id}`}
       className={styles.item}
       onContextMenu={(event) => showContextMenu(event, fileContextOptions)}
     >

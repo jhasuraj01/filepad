@@ -7,6 +7,9 @@ import { Directory } from '../../../domain/entities/Directory'
 // import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { useEffect, useState } from 'react'
 import { NavLinkPersist } from '../../supports/Persistence'
+import { useParams } from 'react-router-dom'
+import { useFolderAdapter } from '../../../adapters/DirectoryAdapter'
+import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 
 interface FolderProps {
   folder: Directory.FolderMetadata
@@ -20,10 +23,11 @@ interface ExplorerItemsProps {
   folder: Directory.FolderMetadata
 }
 
-export function SideExplorer() {
+interface SideExplorerProps {
+  workspace: Directory.FolderMetadata
+}
 
-  const workspace = useAppSelector(selectWorkspace)
-
+export function SideExplorer({workspace}: SideExplorerProps) {
   return <>
     <div className={style.workspaceName}>{workspace.name}</div>
     <FolderItems folder={workspace}/>
@@ -32,8 +36,9 @@ export function SideExplorer() {
 
 export function FolderItems({ folder }: ExplorerItemsProps) {
 
-  const [items, setItems] = useState<(Directory.FolderMetadata | Directory.FileMetadata)[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
+  const { fetchFolderContent, folderContent, folderStatus } = useFolderAdapter(folder)
+
+  useEffect(fetchFolderContent, [])
 
   // useEffect(() => {
   //   (async () => {
@@ -44,14 +49,14 @@ export function FolderItems({ folder }: ExplorerItemsProps) {
 
   // }, [folder.id])
 
-  if(loading) {
+  if(folderStatus === FolderStatus.ContentLoading) {
     return (
       <div>Loading...</div>
     )
   }
 
   return <>{
-    items.map(item => {
+    folderContent.map(item => {
       if(item.type === Directory.NodeType.file)
         return <File key={item.id} file={item} />
       else
@@ -64,7 +69,8 @@ export function File({ file }: FileProps) {
   return (
     <NavLinkPersist
       className={`${style.file} ${style.entry}`}
-      to={`/editor/${file.id}`}>
+      to={`/editor/${file.id}`}
+    >
       <span className={style.icon}><FileIcon /></span>
       <span>{file.name}</span>
     </NavLinkPersist>
