@@ -17,8 +17,6 @@ export interface EditorAreaProps {
 
 export function EditorArea({ files, open, openFile, closeFile }: EditorAreaProps) {
 
-  console.log({ files, open })
-
   const { fetchFile, updateContent, fileContent, fileMetadata, fileStatus } = useFileAdapter({ id: open })
 
   useEffect(fetchFile, [open])
@@ -32,13 +30,13 @@ export function EditorArea({ files, open, openFile, closeFile }: EditorAreaProps
   }
 
   const isFileReady = fileContent && fileMetadata && fileStatus !== FileStatus.ContentLoading
-  const extension = '.' + fileMetadata.name.split('.').reverse()[0]
+  const extension = '.' + fileMetadata?.name?.split('.')?.reverse()[0] || ''
 
   return (
     <div className={style.container}>
       <div className={style.titleBar}>
         <div className={`${style.title} ${style.selected}`}>
-          {fileMetadata.name}
+          {fileMetadata?.name || 'Loading...'}
         </div>
       </div>
       {isFileReady && <Editor
@@ -48,6 +46,7 @@ export function EditorArea({ files, open, openFile, closeFile }: EditorAreaProps
         onChange={handleChange}
         onMount={handleEditorDidMount}
         theme='vs-dark'
+        options={{wordWrap: 'on'}}
       />}
     </div>
   )

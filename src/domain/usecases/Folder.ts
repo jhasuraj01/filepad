@@ -39,7 +39,6 @@ export const fetchFolderContent = async (
   state: DirectoryState
 ): Promise<Directory.FolderContent> => {
 
-  console.log('fetchFolderContent')
 
   state.setFolderStatus(folder, FolderStatus.ContentLoading)
 
@@ -63,7 +62,6 @@ export const deleteFolder = async (
   state: DirectoryState
 ) => {
 
-  console.log('deleteFolder')
   state.setFolderStatus(folder, FolderStatus.Deleting)
   const nodes: Directory.FolderContent = await fetchFolderContent(folder, database, state)
 
@@ -89,7 +87,6 @@ export const fetchAnsestors = async (
   state: DirectoryState
 ): Promise<Directory.FolderMetadata[]> => {
 
-  console.log('fetchAnsestors')
 
   if (node.id === Directory.RootNode.id) return []
 
@@ -114,7 +111,6 @@ export const fetchParentMetadata = async (
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
 
-  console.log('fetchParentMetadata')
   if (node.parentId == Directory.RootNode.id) return Directory.RootNode
   const parentMetadata = await fetchFolderMetadata({ id: node.parentId }, database, state)
   return parentMetadata
@@ -126,7 +122,6 @@ export const fetchFolderMetadata = async (
   state: DirectoryState
 ): Promise<Directory.FolderMetadata> => {
 
-  console.log('fetchFolderMetadata')
   if(folderMetadataPartial.id === Directory.RootNode.id) return Directory.RootNode
 
   state.setFolderStatus(folderMetadataPartial, FolderStatus.Loading)

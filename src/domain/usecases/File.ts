@@ -54,7 +54,6 @@ export const fetchFileMetadata = async (
   state: DirectoryState,
 ): Promise<Directory.FileMetadata> => {
 
-  console.log('fetchFileMetadata')
   const fileMetadata: Directory.FileMetadata = await database.fetchFileMetadata(fileMetadataPartial)
   state.setFileMetadata(fileMetadata)
 
@@ -69,7 +68,6 @@ export const fetchFileContent = async (
   state: DirectoryState,
 ): Promise<Directory.FileContent> => {
 
-  console.log('fetchFileContent')
   state.setFileStatus(fileMetadataPartial, FileStatus.ContentLoading)
   const fileContent: Directory.FileContent = await database.fetchFileContent(fileMetadataPartial)
   state.setFileContent(fileContent)
@@ -86,7 +84,6 @@ export const fetchFile = async (
   state: DirectoryState,
 ): Promise<Directory.FileType> => {
 
-  console.log('fetchFile')
   const fileContent: Directory.FileContent = await fetchFileContent(fileMetadataPartial, database, state)
   const fileMetadata: Directory.FileMetadata = await fetchFileMetadata(fileMetadataPartial, database, state)
 
@@ -102,7 +99,6 @@ export const deleteFile = async (
   state: DirectoryState,
 ) => {
 
-  console.log('deleteFile')
   state.setFileStatus(file, FileStatus.Deleting)
   await database.deleteFileContent(file)
   await database.deleteFileMetadata(file)
@@ -117,7 +113,6 @@ export const saveFile = async (
   state: DirectoryState,
 ): Promise<void> => {
 
-  console.log('saveFile')
   state.setFileStatus(file, FileStatus.ChangesSaving)
   file.editedAt = Date.now()
   await database.updateFileContent(file)
