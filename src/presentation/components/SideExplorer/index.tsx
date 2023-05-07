@@ -13,22 +13,22 @@ import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 
 interface FolderProps {
   folder: Directory.FolderMetadata
-  openFile: (fileId: string) => void
+  openFile: (file: Directory.FileMetadata) => void
 }
 
 interface FileProps {
   file: Directory.FileMetadata
-  openFile: (fileId: string) => void
+  openFile: (file: Directory.FileMetadata) => void
 }
 
 interface ExplorerItemsProps {
   folder: Directory.FolderMetadata
-  openFile: (fileId: string) => void
+  openFile: (file: Directory.FileMetadata) => void
 }
 
 interface SideExplorerProps {
   workspace: Directory.FolderMetadata
-  openFile: (fileId: string) => void
+  openFile: (file: Directory.FileMetadata) => void
 }
 
 export function SideExplorer({workspace, openFile}: SideExplorerProps) {
@@ -64,7 +64,7 @@ export function File({ file, openFile }: FileProps) {
   return (
     <div
       className={`${style.file} ${style.entry}`}
-      onClick={() => openFile(file.id)}
+      onClick={() => openFile(file)}
     >
       <span className={style.icon}><FileIcon /></span>
       <span>{file.name}</span>
