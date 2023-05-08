@@ -13,9 +13,10 @@ export interface EditorAreaProps {
   open: Directory.FileMetadata
   openFile: (file: Directory.FileMetadata) => void
   closeFile: (file: Directory.FileMetadata) => void
+  className?: string
 }
 
-export function EditorArea({ files, open, openFile, closeFile }: EditorAreaProps) {
+export function EditorArea({ files, open, openFile, closeFile, className }: EditorAreaProps) {
 
   const { fetchFile, updateContent, fileContent, fileMetadata, fileStatus } = useFileAdapter(open)
 
@@ -33,7 +34,7 @@ export function EditorArea({ files, open, openFile, closeFile }: EditorAreaProps
   const extension = '.' + fileMetadata?.name?.split('.')?.reverse()[0] || ''
 
   return (
-    <div className={style.container}>
+    <div className={`${className} ${style.container}`}>
       <div className={style.titleBar}>
         {
           files.map(file => (
