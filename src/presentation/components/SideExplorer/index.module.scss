@@ -1,6 +1,24 @@
-.folder {
+.folder, .file {
   .name {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     cursor: pointer;
+    .left, .right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .right > * {
+      opacity: 0;
+      transition: opacity 150ms ease-in-out;
+    }
+
+    &:hover .right > *, &:focus .right > * {
+      opacity: 1;
+    }
   }
 }
 
@@ -14,6 +32,9 @@
 
   &:hover {
     box-shadow: inset 1px 0 rgb(255, 102, 255);
+    & > .name {
+      color: #ddd;
+    }
   }
   &:first-child {
     margin-top: 4px;

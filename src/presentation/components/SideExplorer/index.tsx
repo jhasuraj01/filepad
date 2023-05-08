@@ -10,6 +10,7 @@ import { NavLinkPersist } from '../../supports/Persistence'
 import { useParams } from 'react-router-dom'
 import { useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
+import { CloudDownloadOutlined, FileAddOutlined, FilePdfOutlined, FolderAddOutlined } from '@ant-design/icons'
 
 interface FolderProps {
   folder: Directory.FolderMetadata
@@ -31,10 +32,10 @@ interface SideExplorerProps {
   openFile: (file: Directory.FileMetadata) => void
 }
 
-export function SideExplorer({workspace, openFile}: SideExplorerProps) {
+export function SideExplorer({ workspace, openFile }: SideExplorerProps) {
   return <>
     <div className={style.workspaceName}>{workspace.name}</div>
-    <FolderItems folder={workspace} openFile={openFile}/>
+    <FolderItems folder={workspace} openFile={openFile} />
   </>
 }
 
@@ -44,7 +45,7 @@ export function FolderItems({ folder, openFile }: ExplorerItemsProps) {
 
   useEffect(fetchFolderContent, [])
 
-  if(folderStatus === FolderStatus.ContentLoading) {
+  if (folderStatus === FolderStatus.ContentLoading) {
     return (
       <div>Loading...</div>
     )
@@ -52,7 +53,7 @@ export function FolderItems({ folder, openFile }: ExplorerItemsProps) {
 
   return <>{
     folderContent.map(item => {
-      if(item.type === Directory.NodeType.file)
+      if (item.type === Directory.NodeType.file)
         return <File key={item.id} file={item} openFile={openFile} />
       else
         return <Folder key={item.id} folder={item} openFile={openFile} />
@@ -62,12 +63,20 @@ export function FolderItems({ folder, openFile }: ExplorerItemsProps) {
 
 export function File({ file, openFile }: FileProps) {
   return (
-    <div
-      className={`${style.file} ${style.entry}`}
-      onClick={() => openFile(file)}
-    >
-      <span className={style.icon}><FileIcon /></span>
-      <span>{file.name}</span>
+    <div className={style.file}>
+      <div
+        className={`${style.name} ${style.entry}`}
+        onClick={() => openFile(file)}
+      >
+        <div className={style.left}>
+          <span className={style.icon}><FileIcon /></span>
+          <span>{file.name}</span>
+        </div>
+        <div className={style.right}>
+          <FilePdfOutlined title={`Download ${file.name} as PDF`} />
+          <CloudDownloadOutlined title={`Download ${file.name}`} />
+        </div>
+      </div>
     </div>
   )
 }
@@ -86,11 +95,17 @@ export function Folder({ folder, openFile }: FolderProps) {
   return (
     <div className={style.folder}>
       <div className={`${style.name} ${style.entry}`} onClick={handleFolderClick}>
-        <span className={isExpanded ? `${style.icon} ${style.turn90}` : `${style.icon}`}><ChevronRightIcon /></span>
-        <span>{folder.name}</span>
+        <div className={style.left}>
+          <span className={isExpanded ? `${style.icon} ${style.turn90}` : `${style.icon}`}><ChevronRightIcon /></span>
+          <span>{folder.name}</span>
+        </div>
+        <div className={style.right}>
+          <FolderAddOutlined title={`Create new folder in ${folder.name}`} />
+          <FileAddOutlined title={`Create new file in ${folder.name}`} />
+        </div>
       </div>
       <div className={style.child}>
-        { isExpanded ? <FolderItems folder={folder} openFile={openFile} /> : <></>}
+        {isExpanded ? <FolderItems folder={folder} openFile={openFile} /> : <></>}
       </div>
     </div>
   )
