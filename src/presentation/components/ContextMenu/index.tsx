@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import styles from './index.module.scss'
 
 export interface ContextMenuOption {
-  icon: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string | undefined }>
+  icon: React.FunctionComponent<{ className?: string }>
   text: string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }

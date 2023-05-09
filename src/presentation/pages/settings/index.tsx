@@ -3,9 +3,10 @@ import { EditorArea } from '../../components/EditorArea'
 
 export function SettingsPage() {
   return (
-    <AppSection title='Settings'>
-      Settings
-      <EditorArea />
-    </AppSection>
+    <></>
+    // <AppSection title='Settings'>
+      // Settings
+      // {/* <EditorArea /> */}
+    // </AppSection>
   )
 }

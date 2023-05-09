@@ -1,63 +1,62 @@
 import style from './index.module.scss'
 import Editor, { OnChange, OnMount } from '@monaco-editor/react'
-import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
-import { DirectoryNodeType, FileType } from '../../../domain/entities/DirectoryNode'
-import ExtensionLanguageMap from '../../../domain/entities/ExtensionLanguageMap'
+import { useEffect } from 'react'
+// import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
+import { Directory } from '../../../domain/entities/Directory'
+import ExtensionLanguageMap from '../../../constants/ExtensionLanguageMap'
+import { useFileAdapter } from '../../../adapters/DirectoryAdapter'
+import { FileStatus } from '../../../domain/repositories/DirectoryState'
+import {CloseOutlined} from '@ant-design/icons'
 
-export function EditorArea() {
+export interface EditorAreaProps {
+  files: Directory.FileMetadata[]
+  open: Directory.FileMetadata
+  openFile: (file: Directory.FileMetadata) => void
+  closeFile: (file: Directory.FileMetadata) => void
+  className?: string
+}
 
-  const { fileId, database } = useParams()
-  const [file, setFile] = useState<FileType>({
-    name: 'temp',
-    extension: '.md',
-    type: DirectoryNodeType.file,
-    parentId: 'root',
-    database: database || 'default',
-    id: fileId || String(Date.now()),
-    content: '',
-    backupContent: '',
-    createdAt: Date.now(),
-    editedAt: Date.now()
-  })
+export function EditorArea({ files, open, openFile, closeFile, className }: EditorAreaProps) {
 
-  console.log({ fileId, database })
+  const { fetchFile, updateContent, fileContent, fileMetadata, fileStatus } = useFileAdapter(open)
 
-  useEffect(() => {
-    if(fileId === undefined || database === undefined) return
-    (async () => {
-      const file = await fileStorageInteractor.fetchFile({ id: fileId, database: database })
-      setFile(file)
-      console.log(file)
-    })()
-  }, [fileId, database])
+  useEffect(fetchFile, [open])
 
   const handleEditorDidMount: OnMount = (editor) => {
     editor.focus()
   }
 
   const handleChange: OnChange = async (value) => {
-    if(file === undefined || value == undefined) return
-    file.content = value
-    await fileStorageInteractor.saveFile(file)
+    if(value) updateContent(value)
   }
 
+  const isFileReady = fileContent && fileMetadata && fileStatus !== FileStatus.ContentLoading
+  const extension = '.' + fileMetadata?.name?.split('.')?.reverse()[0] || ''
+
   return (
-    <div className={style.container}>
+    <div className={`${className} ${style.container}`}>
       <div className={style.titleBar}>
-        <div className={`${style.title} ${style.selected}`}>
-          {file.name}
-        </div>
+        {
+          files.map(file => (
+            <div
+              key={file.id}
+              className={`${style.title} ${file.id === open.id && style.selected}`}
+            >
+              <span onClick={() => openFile(file)}>{file.name}</span>
+              <span className={style.closeButton} onClick={() => closeFile(file)}><CloseOutlined /></span>
+            </div>
+          ))
+        }
       </div>
-      <Editor
-        key={file.id}
-        defaultValue={file.content}
-        defaultLanguage={ExtensionLanguageMap[file.extension] || 'plaintext'}
+      {isFileReady && <Editor
+        key={open.id}
+        defaultValue={fileContent.content}
+        defaultLanguage={ExtensionLanguageMap[extension] || 'markdown'}
         onChange={handleChange}
         onMount={handleEditorDidMount}
         theme='vs-dark'
-      />
+        options={{wordWrap: 'on'}}
+      />}
     </div>
   )
 }

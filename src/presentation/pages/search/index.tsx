@@ -3,9 +3,10 @@ import { EditorArea } from '../../components/EditorArea'
 
 export function SearchPage() {
   return (
-    <AppSection title='Search'>
-      Search
-      <EditorArea />
-    </AppSection>
+    <></>
+    // <AppSection title='Search'>
+      // Search
+    //   <EditorArea />
+    // </AppSection>
   )
 }

@@ -5,9 +5,32 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #1e1e1e;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root:root {
+  --adm-color-primary: #1677ff;
+  --adm-color-success: #00b578;
+  --adm-color-warning: #ff8f1f;
+  --adm-color-danger: #ff3141;
+
+  --adm-color-white: #ffffff;
+  --adm-color-text: #cccccc;
+  --adm-color-text-secondary: hsl(0, 0%, 60%);
+  --adm-color-weak: #999999;
+  --adm-color-light: #cccccc;
+  --adm-color-border: #eeeeee;
+  --adm-color-box: #f5f5f5;
+  --adm-color-background: #262626;
+
+  --adm-font-size-main: 16px; /* var(--adm-font-size-5); */
+
+  --adm-font-family: -apple-system, blinkmacsystemfont, 'Helvetica Neue',
+  helvetica, segoe ui, arial, roboto, 'PingFang SC', 'miui',
+  'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
 }

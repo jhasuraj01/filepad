@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  flex-direction: row;
+
+  .sideNav {
+    width: 300px;
+  }
+  .editorArea {
+    flex-grow: 1
+  }
+}

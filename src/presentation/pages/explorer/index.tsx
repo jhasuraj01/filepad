@@ -1,36 +1,27 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { Explorer } from '../../components/Explorer'
-import { FolderMetadata } from '../../../domain/entities/DirectoryNode'
-import { fileStorageInteractor, rootFolder } from '../../../adapters/FileStorageAdapter'
-import { NavigatePersist } from '../../supports/Persistence'
+import { Directory } from '../../../domain/entities/Directory'
+import { useFolderAdapter } from '../../../adapters/DirectoryAdapter'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 
 export function ExplorerPage() {
-  const { database, parentId } = useParams()
-  const [folder, setFolder] = useState<FolderMetadata>()
-  const [loading, setLoading] = useState<boolean>(true)
+  const {folderId, parentId } = useParams()
+  
+  let workspace: Pick<Directory.FolderMetadata, 'parentId' | 'id'> = Directory.RootNode
+  
+  if(folderId && parentId) {
+    workspace = { parentId: parentId, id: folderId, }
+  }
+  
+  const { fetchFolderMetadata, folderStatus } = useFolderAdapter(workspace)
+  useEffect(fetchFolderMetadata, [])
 
-  useEffect(() => {
-    (async () => {
-      if(database === undefined || parentId === undefined) {
-        setFolder(rootFolder)
-      }
-      else {
-        const folderContent = await fileStorageInteractor.fetchFolderMetadata(parentId, database)
-        setFolder(folderContent)
-      }
-      setLoading(false)
-    })()
-  }, [parentId, database])
-
-  if(folder === undefined) {
-    if(loading === false)
-      return <NavigatePersist to='/404' />
-    else
-      return <div>Loading...</div>
+  if(folderStatus == FolderStatus.Loading) {
+    return <p>Loading...</p>
   }
 
   return (
-    <Explorer workspace={folder} />
+    <Explorer workspace={workspace} />
   )
 }

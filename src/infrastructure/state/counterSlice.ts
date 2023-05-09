@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState, AppThunk } from '../../app/store'
-import { fetchCount } from './counterAPI'
+import { RootState, AppThunk } from './app/store'
+import { fetchCount } from '../../presentation/components/counter/counterAPI'
 
 const url = new URL(window.location.href)
 const count = url.searchParams.get('count')
