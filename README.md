@@ -1,20 +1,62 @@
+
 # React Notepad Based on Clean Architecture
 
 This is a sample project built with React, following the principles of clean architecture. The project aims to provide a simple file explorer with basic features such as editing files, creating directories, creating files, and renaming/deleting directories and files.
 
-## Getting Started
-To get started with the project, you will need to have Node.js installed on your computer. Then, clone the repository to your local machine and install the dependencies by running the following commands:
+
+## Features
+
+- Create New Folder and File
+- Monaco Editor Supported
+- Export File to PDF [todo]
+- Download File [todo]
+- Export Folder to PDF [todo]
+- Download Folder [todo]
+- Open Local File [todo]
+- Open Local Folder [todo]
+
+## Authors
+
+- [@jhasuraj01](https://www.github.com/jhasuraj01)
+
+
+## Tech Stack
+
+- ReactJS
+- Redux Toolkit
+- TypeScript
+- Sass
+- Ant Design
+
+## Environment Setup
+- Download and install [Git](https://git-scm.com/downloads)
+- Download and install [Node.js](https://nodejs.org/en/download/)
+## Run Locally
+
+Clone the project
 
 ```bash
-git clone https://github.com/jhasuraj01/notepad.git
-cd notepad
-npm install
+  git clone https://github.com/jhasuraj01/notepad.git
 ```
 
-After the installation is complete, start the development server with the following command:
+Go to the project directory
+
 ```bash
-npm start
+  cd notepad
 ```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run start
+```
+
 
 ## Folder Structure
 
@@ -31,13 +73,34 @@ This layer provides the implementation details for the abstractions defined in t
 
 #### Adapters Layer
 This layer provides the interfaces between the application and external systems. It consists of the adapters directory and its subdirectories.
+## Screenshots
 
-## Technologies Used
-- ReactJS
-- Redux Toolkit
-- TypeScript
-- Sass
-- Ant Design
+#### Notepad Editor
+![Notepad Editor](https://github.com/jhasuraj01/notepad/assets/44930179/057aff72-56b8-4a8b-92dd-116480940797)
 
-## Conclusion
+#### Notepad File Explorer
+![Notepad Explorer](https://github.com/jhasuraj01/notepad/assets/44930179/13540121-9bf6-4a62-8abb-730853b56d6d)
+
+#### Context Menu - Create New File
+![Context Menu - Create New File](https://github.com/jhasuraj01/notepad/assets/44930179/65dfaa13-56bf-4522-82ee-70c9216b5b3d)
+
+##### Folder Context Menu
+![Folder Context Menu](https://github.com/jhasuraj01/notepad/assets/44930179/dcabb439-1695-4a72-905a-74deb5f9db06)
+
+##### File Context Menu
+![File Context Menu](https://github.com/jhasuraj01/notepad/assets/44930179/7949af84-06ba-4394-8a57-53e61d4233c0)
+
+##### Notepad Editor: Mobile View
+<img src="https://github.com/jhasuraj01/notepad/assets/44930179/9c806994-18cf-4684-ac0e-c6928675e4ed" width="414" title="Mobile View" alt="Mobile View">
+
+## References
+
+- [OpenAI ChatGPT](https://openai.com/blog/chatgpt)
+- [Clean Architerture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [How to implement Clean Architecture in Node.js (and why it's important)](https://youtu.be/VmY22KuRDbk)
+- [Using Clean Architecture for Microservice APIs in Node.js with MongoDB and Express](https://youtu.be/CnailTcJV_U)
+- [4Dev React - Enquetes para Programadores](https://github.com/rmanguinho/clean-react)
+- [Clean Architecture: Applying with React](https://dev.to/rubemfsv/clean-architecture-applying-with-react-40h6)
+## Appendix
+
 This project is an example of how to structure a React application following the Clean Architecture principles. By separating the code into different layers, it becomes easier to maintain and test the application. The use of Redux Toolkit simplifies the implementation of state management and improves the performance of the application.
