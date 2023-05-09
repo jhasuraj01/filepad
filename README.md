@@ -1,8 +1,7 @@
 
-# React Notepad Based on Clean Architecture
+# React FilePad: A Simple File Explorer with Clean Architecture Principles
 
-This is a sample project built with React, following the principles of clean architecture. The project aims to provide a simple file explorer with basic features such as editing files, creating directories, creating files, and renaming/deleting directories and files.
-
+File Explorer & Editor built with React, following the principles of clean architecture.
 
 ## Features
 
@@ -36,13 +35,13 @@ This is a sample project built with React, following the principles of clean arc
 Clone the project
 
 ```bash
-  git clone https://github.com/jhasuraj01/notepad.git
+  git clone https://github.com/jhasuraj01/filepad.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd notepad
+  cd filepad
 ```
 
 Install dependencies
@@ -75,23 +74,23 @@ This layer provides the implementation details for the abstractions defined in t
 This layer provides the interfaces between the application and external systems. It consists of the adapters directory and its subdirectories.
 ## Screenshots
 
-#### Notepad Editor
-![Notepad Editor](https://github.com/jhasuraj01/notepad/assets/44930179/057aff72-56b8-4a8b-92dd-116480940797)
+#### FilePad Editor
+![FilePad Editor](https://github.com/jhasuraj01/filepad/assets/44930179/057aff72-56b8-4a8b-92dd-116480940797)
 
-#### Notepad File Explorer
-![Notepad Explorer](https://github.com/jhasuraj01/notepad/assets/44930179/13540121-9bf6-4a62-8abb-730853b56d6d)
+#### FilePad File Explorer
+![FilePad Explorer](https://github.com/jhasuraj01/filepad/assets/44930179/13540121-9bf6-4a62-8abb-730853b56d6d)
 
 #### Context Menu - Create New File
-![Context Menu - Create New File](https://github.com/jhasuraj01/notepad/assets/44930179/65dfaa13-56bf-4522-82ee-70c9216b5b3d)
+![Context Menu - Create New File](https://github.com/jhasuraj01/filepad/assets/44930179/65dfaa13-56bf-4522-82ee-70c9216b5b3d)
 
 ##### Folder Context Menu
-![Folder Context Menu](https://github.com/jhasuraj01/notepad/assets/44930179/dcabb439-1695-4a72-905a-74deb5f9db06)
+![Folder Context Menu](https://github.com/jhasuraj01/filepad/assets/44930179/dcabb439-1695-4a72-905a-74deb5f9db06)
 
 ##### File Context Menu
-![File Context Menu](https://github.com/jhasuraj01/notepad/assets/44930179/7949af84-06ba-4394-8a57-53e61d4233c0)
+![File Context Menu](https://github.com/jhasuraj01/filepad/assets/44930179/7949af84-06ba-4394-8a57-53e61d4233c0)
 
-##### Notepad Editor: Mobile View
-<img src="https://github.com/jhasuraj01/notepad/assets/44930179/9c806994-18cf-4684-ac0e-c6928675e4ed" width="414" title="Mobile View" alt="Mobile View">
+##### FilePad Editor: Mobile View
+<img src="https://github.com/jhasuraj01/filepad/assets/44930179/9c806994-18cf-4684-ac0e-c6928675e4ed" width="414" title="Mobile View" alt="Mobile View">
 
 ## References
 
