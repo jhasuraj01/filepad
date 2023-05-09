@@ -19,7 +19,6 @@ import { NavLinkPersist } from '../../supports/Persistence'
 import { Directory } from '../../../domain/entities/Directory'
 import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
-import { NavLink } from 'react-router-dom'
 
 export interface ExplorerProps {
   workspace: Pick<Directory.FolderMetadata, 'parentId' | 'id'>

@@ -1,7 +1,7 @@
 import style from './index.module.scss'
 import { ReactComponent as FilesIcon } from '../../icons/files.svg'
-import { ReactComponent as SearchIcon } from '../../icons/search.svg'
-import { ReactComponent as SettingsGearIcon } from '../../icons/settings-gear.svg'
+// import { ReactComponent as SearchIcon } from '../../icons/search.svg'
+// import { ReactComponent as SettingsGearIcon } from '../../icons/settings-gear.svg'
 import { ReactComponent as RootFolderIcon } from '../../icons/root-folder.svg'
 import { NavLinkPersist } from '../../supports/Persistence'
 

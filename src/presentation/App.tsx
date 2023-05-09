@@ -4,10 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import { NavigatePersist } from './supports/Persistence'
 import { EditorPage } from './pages/editor'
 import { ExplorerPage } from './pages/explorer'
-import { SearchPage } from './pages/search'
-import { SettingsPage } from './pages/settings'
 import 'antd/dist/reset.css'
-import { FloatingPanel } from 'antd-mobile'
 
 function App() {
   return (
