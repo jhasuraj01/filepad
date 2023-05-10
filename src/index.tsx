@@ -5,7 +5,7 @@ import { store } from './infrastructure/state/app/store'
 import App from './presentation/App'
 import { BrowserRouter } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
-import './presentation/index.css'
+import './presentation/index.scss'
 import { PersistSelectedStates } from './presentation/supports/Persistence'
 import { ConfigProvider, theme } from 'antd'
 

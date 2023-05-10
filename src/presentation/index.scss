@@ -33,4 +33,35 @@ code {
   --adm-font-family: -apple-system, blinkmacsystemfont, 'Helvetica Neue',
   helvetica, segoe ui, arial, roboto, 'PingFang SC', 'miui',
   'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+
+  
+  --scrollbar-thumb: hsl(0, 0%, 40%);
+  --scrollbar-thumb_hover: hsl(0, 0%, 50%);
+}
+
+$scroll-bar-width: 12px;
+@mixin scrollbar {
+    body {
+        // overflow: auto;
+        overflow: overlay;
+    }
+    ::-webkit-scrollbar {
+        width: $scroll-bar-width;
+        height: $scroll-bar-width;
+    }
+    ::-webkit-scrollbar-thumb {
+        border: 4px solid transparent;
+        background-clip: padding-box;
+        background-color: var(--scrollbar-thumb);
+        border-radius: $scroll-bar-width;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        border: 3px solid transparent;
+        background-color: var(--scrollbar-thumb_hover);
+        cursor: pointer;
+    }
+}
+
+@media not screen and (hover: none) {
+    @include scrollbar
 }
