@@ -78,8 +78,7 @@ const deviceContextOptions: ContextMenuOptions = [
 
 export function Explorer({ workspace }: ExplorerProps) {
 
-  const { createFolder, fetchFolderContent } = useFolderAdapter(workspace)
-  const { createFile } = useFileAdapter(workspace)
+  const { createFolder, fetchFolderContent, createFile } = useFolderAdapter(workspace)
 
   useEffect(fetchFolderContent, [workspace.id])
 

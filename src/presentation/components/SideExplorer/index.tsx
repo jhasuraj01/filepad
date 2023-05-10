@@ -8,9 +8,9 @@ import { Directory } from '../../../domain/entities/Directory'
 import { useEffect } from 'react'
 // import { NavLinkPersist } from '../../supports/Persistence'
 // import { useParams } from 'react-router-dom'
-import { useFolderAdapter } from '../../../adapters/DirectoryAdapter'
+import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
-import { CloudDownloadOutlined, FileAddOutlined, FilePdfOutlined, FolderAddOutlined } from '@ant-design/icons'
+import { CloudDownloadOutlined, DeleteOutlined, FileAddOutlined, FilePdfOutlined, FolderAddOutlined } from '@ant-design/icons'
 
 interface FolderProps {
   folder: Directory.FolderMetadata
@@ -62,6 +62,17 @@ export function FolderItems({ folder, openFile }: ExplorerItemsProps) {
 }
 
 export function File({ file, openFile }: FileProps) {
+
+  const { deleteFile } = useFileAdapter(file)
+
+  const deleteThisFile = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    const isConfirmedDelete = confirm (`Permanently Delete File: ${file.name}`)
+    if (isConfirmedDelete === false) return
+    deleteFile()
+  }
+
   return (
     <div className={style.file}>
       <div
@@ -73,6 +84,7 @@ export function File({ file, openFile }: FileProps) {
           <span>{file.name}</span>
         </div>
         <div className={style.right}>
+          <DeleteOutlined title={`Permanently Delete ${file.name}`} onClick={deleteThisFile}/>
           <FilePdfOutlined title={`Download ${file.name} as PDF`} />
           <CloudDownloadOutlined title={`Download ${file.name}`} />
         </div>
@@ -87,6 +99,31 @@ export function Folder({ folder, openFile }: FolderProps) {
   const isExpanded = useAppSelector(selectFolderExpansionState(folder))
   const dispatch = useAppDispatch()
 
+  const { createFolder, createFile, deleteFolder } = useFolderAdapter(folder)
+
+  const deleteThisFolder = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    const isConfirmedDelete = confirm (`Permanently Delete Folder: ${folder.name}`)
+    if (isConfirmedDelete === false) return
+    deleteFolder()
+  }
+
+  const createNewFile = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    const fileName = prompt('Enter File Name')
+    if (fileName === null) return
+    createFile({ name: fileName })
+  }
+
+  const createNewFolder = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    const folderName = prompt('Enter Folder Name')
+    if (folderName === null) return
+    createFolder({ name: folderName })
+  }
 
   const handleFolderClick = () => {
     dispatch(toggleExpansion(folder))
@@ -100,8 +137,9 @@ export function Folder({ folder, openFile }: FolderProps) {
           <span>{folder.name}</span>
         </div>
         <div className={style.right}>
-          <FolderAddOutlined title={`Create new folder in ${folder.name}`} />
-          <FileAddOutlined title={`Create new file in ${folder.name}`} />
+          <DeleteOutlined title={`Delete Folder: ${folder.name}`} onClick={deleteThisFolder}/>
+          <FolderAddOutlined title={`Create new folder in ${folder.name}`} onClick={createNewFolder}/>
+          <FileAddOutlined title={`Create new file in ${folder.name}`} onClick={createNewFile}/>
         </div>
       </div>
       <div className={style.child}>

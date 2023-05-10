@@ -21,13 +21,6 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
 
   const file: Directory.FileType = {...fileContent, ...fileMetadata}
 
-  const createFile = useMemo(() => (params: Pick<File.createFileParams, 'name'>) => {
-    File.createFile({
-      parentId: metadata.id,
-      name: params.name,
-    }, localDirectoryDatabase, directoryState)
-  }, [metadata.id])
-
   const fetchFileMetadata = useMemo(() => () => {
     File.fetchFileMetadata(metadata, localDirectoryDatabase, directoryState)
   }, [metadata.id])
@@ -52,7 +45,6 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
   }, [metadata.id])
 
   return {
-    createFile,
     fetchFileMetadata,
     fetchFileContent,
     fetchFile,
@@ -68,6 +60,13 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
   const dispatch: AppDispatch = useDispatch()
   const directoryState: DirectoryState = useReduxDirectoryState(dispatch)
   const localDirectoryDatabase = useLocalDirectoryDatabase(databaseId)
+
+  const createFile = useMemo(() => (params: Pick<File.createFileParams, 'name'>) => {
+    File.createFile({
+      parentId: metadata.id,
+      name: params.name,
+    }, localDirectoryDatabase, directoryState)
+  }, [metadata.id])
 
   const createFolder = useMemo(() => (params: Pick<File.createFileParams, 'name'>) => {
     Folder.createFolder({
@@ -102,6 +101,7 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
   const ansestors = useSelector(selectAnsestors(metadata))
 
   return {
+    createFile,
     createFolder,
     fetchFolderContent,
     deleteFolder,
