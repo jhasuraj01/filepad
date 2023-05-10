@@ -77,5 +77,18 @@
 }
 
 .workspaceName {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 8px;
+  .left, .right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.empty {
+  margin-top: min(64px, 10%);
 }

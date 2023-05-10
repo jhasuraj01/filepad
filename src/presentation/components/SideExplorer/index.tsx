@@ -11,6 +11,7 @@ import { useEffect } from 'react'
 import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 import { CloudDownloadOutlined, DeleteOutlined, FileAddOutlined, FilePdfOutlined, FolderAddOutlined } from '@ant-design/icons'
+import { Empty } from 'antd'
 
 interface FolderProps {
   folder: Directory.FolderMetadata
@@ -33,8 +34,34 @@ interface SideExplorerProps {
 }
 
 export function SideExplorer({ workspace, openFile }: SideExplorerProps) {
+
+  const { createFile, createFolder } = useFolderAdapter(workspace)
+  const createNewFile = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    const fileName = prompt('Enter File Name')
+    if (fileName === null) return
+    createFile({ name: fileName })
+  }
+
+  const createNewFolder = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    const folderName = prompt('Enter Folder Name')
+    if (folderName === null) return
+    createFolder({ name: folderName })
+  }
   return <>
-    <div className={style.workspaceName}>{workspace.name}</div>
+    <div className={style.workspaceName}>
+      <div className={style.left}>
+        <span>{workspace.name}</span>
+      </div>
+      <div className={style.right}>
+        <FolderAddOutlined title={`Create new folder in ${workspace.name}`} onClick={createNewFolder} />
+        <FileAddOutlined title={`Create new file in ${workspace.name}`} onClick={createNewFile} />
+      </div>
+    </div>
+
     <FolderItems folder={workspace} openFile={openFile} />
   </>
 }
@@ -51,14 +78,19 @@ export function FolderItems({ folder, openFile }: ExplorerItemsProps) {
     )
   }
 
-  return <>{
-    folderContent.map(item => {
-      if (item.type === Directory.NodeType.file)
-        return <File key={item.id} file={item} openFile={openFile} />
-      else
-        return <Folder key={item.id} folder={item} openFile={openFile} />
-    })
-  }</>
+  return <>
+    {folderContent.length === 0 &&
+      <Empty className={style.empty} description="Folder Empty" />
+    }
+    {
+      folderContent.map(item => {
+        if (item.type === Directory.NodeType.file)
+          return <File key={item.id} file={item} openFile={openFile} />
+        else
+          return <Folder key={item.id} folder={item} openFile={openFile} />
+      })
+    }
+  </>
 }
 
 export function File({ file, openFile }: FileProps) {
@@ -68,7 +100,7 @@ export function File({ file, openFile }: FileProps) {
   const deleteThisFile = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     event.stopPropagation()
     event.preventDefault()
-    const isConfirmedDelete = confirm (`Permanently Delete File: ${file.name}`)
+    const isConfirmedDelete = confirm(`Permanently Delete File: ${file.name}`)
     if (isConfirmedDelete === false) return
     deleteFile()
   }
@@ -90,9 +122,9 @@ export function File({ file, openFile }: FileProps) {
           <span>{file.name}</span>
         </div>
         <div className={style.right}>
-          <DeleteOutlined title={`Delete File: ${file.name}`} onClick={deleteThisFile}/>
+          <DeleteOutlined title={`Delete File: ${file.name}`} onClick={deleteThisFile} />
           <FilePdfOutlined title={`Download ${file.name} as PDF`} />
-          <CloudDownloadOutlined title={`Download ${file.name}`} onClick={downloadThisFile}/>
+          <CloudDownloadOutlined title={`Download ${file.name}`} onClick={downloadThisFile} />
         </div>
       </div>
     </div>
@@ -110,7 +142,7 @@ export function Folder({ folder, openFile }: FolderProps) {
   const deleteThisFolder = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     event.stopPropagation()
     event.preventDefault()
-    const isConfirmedDelete = confirm (`Permanently Delete Folder: ${folder.name}`)
+    const isConfirmedDelete = confirm(`Permanently Delete Folder: ${folder.name}`)
     if (isConfirmedDelete === false) return
     deleteFolder()
   }
@@ -143,9 +175,9 @@ export function Folder({ folder, openFile }: FolderProps) {
           <span>{folder.name}</span>
         </div>
         <div className={style.right}>
-          <DeleteOutlined title={`Delete Folder: ${folder.name}`} onClick={deleteThisFolder}/>
-          <FolderAddOutlined title={`Create new folder in ${folder.name}`} onClick={createNewFolder}/>
-          <FileAddOutlined title={`Create new file in ${folder.name}`} onClick={createNewFile}/>
+          <DeleteOutlined title={`Delete Folder: ${folder.name}`} onClick={deleteThisFolder} />
+          <FolderAddOutlined title={`Create new folder in ${folder.name}`} onClick={createNewFolder} />
+          <FileAddOutlined title={`Create new file in ${folder.name}`} onClick={createNewFile} />
         </div>
       </div>
       <div className={style.child}>
