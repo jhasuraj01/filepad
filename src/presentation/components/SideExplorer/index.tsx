@@ -10,7 +10,7 @@ import { useEffect } from 'react'
 // import { useParams } from 'react-router-dom'
 import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
-import { CloudDownloadOutlined, DeleteOutlined, FileAddOutlined, FilePdfOutlined, FolderAddOutlined } from '@ant-design/icons'
+import { CloudDownloadOutlined, DeleteOutlined, FileAddOutlined, FolderAddOutlined } from '@ant-design/icons'
 import { Empty } from 'antd'
 
 interface FolderProps {
@@ -123,7 +123,7 @@ export function File({ file, openFile }: FileProps) {
         </div>
         <div className={style.right}>
           <DeleteOutlined title={`Delete File: ${file.name}`} onClick={deleteThisFile} />
-          <FilePdfOutlined title={`Download ${file.name} as PDF`} />
+          {/* <FilePdfOutlined title={`Download ${file.name} as PDF`} /> */}
           <CloudDownloadOutlined title={`Download ${file.name}`} onClick={downloadThisFile} />
         </div>
       </div>
