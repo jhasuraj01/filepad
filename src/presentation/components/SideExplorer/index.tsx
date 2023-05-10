@@ -63,7 +63,7 @@ export function FolderItems({ folder, openFile }: ExplorerItemsProps) {
 
 export function File({ file, openFile }: FileProps) {
 
-  const { deleteFile } = useFileAdapter(file)
+  const { deleteFile, downloadFile } = useFileAdapter(file)
 
   const deleteThisFile = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     event.stopPropagation()
@@ -71,6 +71,12 @@ export function File({ file, openFile }: FileProps) {
     const isConfirmedDelete = confirm (`Permanently Delete File: ${file.name}`)
     if (isConfirmedDelete === false) return
     deleteFile()
+  }
+
+  const downloadThisFile = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    downloadFile()
   }
 
   return (
@@ -86,7 +92,7 @@ export function File({ file, openFile }: FileProps) {
         <div className={style.right}>
           <DeleteOutlined title={`Delete File: ${file.name}`} onClick={deleteThisFile}/>
           <FilePdfOutlined title={`Download ${file.name} as PDF`} />
-          <CloudDownloadOutlined title={`Download ${file.name}`} />
+          <CloudDownloadOutlined title={`Download ${file.name}`} onClick={downloadThisFile}/>
         </div>
       </div>
     </div>

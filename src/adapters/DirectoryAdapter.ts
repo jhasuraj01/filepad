@@ -7,6 +7,7 @@ import * as Folder from '../domain/usecases/Folder'
 import { AppDispatch } from '../infrastructure/state/app/store'
 import { Directory } from '../domain/entities/Directory'
 import { useMemo } from 'react'
+import { useDownloadManager } from '../infrastructure/downloader'
 
 const databaseId = 'db1'
 
@@ -14,12 +15,11 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
   const dispatch: AppDispatch = useDispatch()
   const directoryState: DirectoryState = useReduxDirectoryState(dispatch)
   const localDirectoryDatabase = useLocalDirectoryDatabase(databaseId)
+  const downloader = useDownloadManager()
   
   const fileMetadata = useSelector(selectFileMetadata(metadata))
   const fileContent = useSelector(selectFileContent(metadata))
   const fileStatus = useSelector(selectFileStatus(metadata))
-
-  const file: Directory.FileType = {...fileContent, ...fileMetadata}
 
   const fetchFileMetadata = useMemo(() => () => {
     File.fetchFileMetadata(metadata, localDirectoryDatabase, directoryState)
@@ -39,9 +39,13 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
 
   const updateContent = useMemo(() => (newContent: Directory.FileContent['content']) => {
     File.saveFile({
-      ...file,
+      ...fileMetadata,
       content: newContent
     }, localDirectoryDatabase, directoryState)
+  }, [metadata.id])
+
+  const downloadFile = useMemo(() => () => {
+    File.downloadFile(metadata, localDirectoryDatabase, directoryState, downloader)
   }, [metadata.id])
 
   return {
@@ -50,6 +54,7 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
     fetchFile,
     deleteFile,
     updateContent,
+    downloadFile,
     fileMetadata,
     fileContent,
     fileStatus,

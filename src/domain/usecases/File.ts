@@ -1,6 +1,7 @@
 import { Directory } from '../entities/Directory'
 import { DirectoryDatabase } from '../repositories/DirectoryDatabase'
 import { DirectoryState, FileStatus } from '../repositories/DirectoryState'
+import { DownloadManager } from '../repositories/DownloadManager'
 
 export type createFileParams = {
   name: Directory.FileMetadata['name'],
@@ -120,4 +121,16 @@ export const saveFile = async (
   state.setFileContent(file)
   state.setFileMetadata(file)
   state.setFileStatus(file, FileStatus.Default)
+}
+
+
+export const downloadFile = async (
+  fileMetadataPartial: Pick<Directory.FileMetadata, 'id'>,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+  downloader: DownloadManager,
+): Promise<void> => {
+
+  const file = await fetchFile(fileMetadataPartial, database, state)
+  await downloader.downloadTextFile(file)
 }

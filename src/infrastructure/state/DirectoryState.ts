@@ -149,7 +149,7 @@ export const selectFileMetadata = (fileMetadata: Pick<Directory.FileMetadata, 'i
 }
 
 export const selectFileContent = (fileMetadata: Pick<Directory.FileMetadata, 'id'>) => {
-  return (state: RootState) => {
+  return (state: RootState): Directory.FileContent | undefined => {
     return state.directory.fileContent[fileMetadata.id]
   }
 }
