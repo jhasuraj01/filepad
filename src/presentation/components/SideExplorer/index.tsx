@@ -84,7 +84,7 @@ export function File({ file, openFile }: FileProps) {
           <span>{file.name}</span>
         </div>
         <div className={style.right}>
-          <DeleteOutlined title={`Permanently Delete ${file.name}`} onClick={deleteThisFile}/>
+          <DeleteOutlined title={`Delete File: ${file.name}`} onClick={deleteThisFile}/>
           <FilePdfOutlined title={`Download ${file.name} as PDF`} />
           <CloudDownloadOutlined title={`Download ${file.name}`} />
         </div>
