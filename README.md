@@ -8,9 +8,9 @@ File Explorer & Editor built with React, following the principles of clean archi
 - [x] Create New Folder and File
 - [x] Monaco Editor Supported
 - [x] Download File
+- [ ] Download Folder
 - [ ] Export File to PDF
 - [ ] Export Folder to PDF
-- [ ] Download Folder
 - [ ] Open Local File
 - [ ] Open Local Folder
 
