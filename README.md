@@ -5,14 +5,14 @@ File Explorer & Editor built with React, following the principles of clean archi
 
 ## Features
 
-- Create New Folder and File
-- Monaco Editor Supported
-- Export File to PDF [todo]
-- Download File [todo]
-- Export Folder to PDF [todo]
-- Download Folder [todo]
-- Open Local File [todo]
-- Open Local Folder [todo]
+- [x] Create New Folder and File
+- [x] Monaco Editor Supported
+- [x] Download File
+- [ ] Export File to PDF
+- [ ] Export Folder to PDF
+- [ ] Download Folder
+- [ ] Open Local File
+- [ ] Open Local Folder
 
 ## Authors
 
