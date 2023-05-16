@@ -4,7 +4,6 @@
   "private": true,
   "homepage": "/filepad",
   "dependencies": {
-    "@anorcle/dsa": "^1.0.0",
     "@ant-design/icons": "^5.0.1",
     "@monaco-editor/react": "^4.4.6",
     "@reduxjs/toolkit": "^1.8.6",

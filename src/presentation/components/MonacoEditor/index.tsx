@@ -1,12 +1,10 @@
 import style from './index.module.scss'
 import Editor, { OnChange, OnMount } from '@monaco-editor/react'
 import { useEffect } from 'react'
-// import { fileStorageInteractor } from '../../../adapters/FileStorageAdapter'
 import { Directory } from '../../../domain/entities/Directory'
 import ExtensionLanguageMap from '../../../constants/ExtensionLanguageMap'
 import { useFileAdapter } from '../../../adapters/DirectoryAdapter'
 import { FileStatus } from '../../../domain/repositories/DirectoryState'
-import {CloseOutlined} from '@ant-design/icons'
 
 export interface MonacoEditorProps {
   // files: Directory.FileMetadata[]
