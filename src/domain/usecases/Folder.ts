@@ -131,3 +131,16 @@ export const fetchFolderMetadata = async (
 
   return folderMetadata
 }
+
+// export const saveFolderMetadata = async (
+//   folder: Directory.FolderMetadata,
+//   database: DirectoryDatabase,
+//   state: DirectoryState,
+// ): Promise<void> => {
+
+//   state.setFolderStatus(folder, FolderStatus.Loading)
+//   folder.editedAt = Date.now()
+//   await database.updateFolderMetadata(folder)
+//   state.setFolderMetadata(folder)
+//   state.setFolderStatus(folder, FolderStatus.Default)
+// }

@@ -44,6 +44,13 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
     }, localDirectoryDatabase, directoryState)
   }, [metadata.id])
 
+  const renameFile = useMemo(() => (newName: Directory.FileMetadata['name']) => {
+    File.saveFileMetadata({
+      ...fileMetadata,
+      name: newName,
+    }, localDirectoryDatabase, directoryState)
+  }, [metadata.id])
+
   const downloadFile = useMemo(() => () => {
     File.downloadFile(metadata, localDirectoryDatabase, directoryState, downloader)
   }, [metadata.id])
@@ -55,6 +62,7 @@ export function useFileAdapter(metadata: Pick<Directory.FileContent, 'id'>) {
     deleteFile,
     updateContent,
     downloadFile,
+    renameFile,
     fileMetadata,
     fileContent,
     fileStatus,
@@ -99,6 +107,13 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
   const fetchFolderMetadata = useMemo(() => () => {
     Folder.fetchFolderMetadata(metadata, localDirectoryDatabase, directoryState)
   }, [metadata.id])
+
+  // const renameFolder = useMemo(() => (newName: Directory.FolderMetadata["name"]) => {
+  //   Folder.saveFolderMetadata({
+  //     ...metadata,
+  //     name: newName,
+  //   }, localDirectoryDatabase, directoryState)
+  // }, [metadata.id])
 
   const folderContent = useSelector(selectFolderContent(metadata))
   const folderMetadata = useSelector(selectFolderMetadata(metadata))

@@ -236,13 +236,22 @@ export function FolderItems({ folder, showContextMenu }: ExplorerItemsProps) {
 
 export function File({ folder, file, showContextMenu }: FileProps) {
 
-  const { deleteFile } = useFileAdapter(file)
+  const { deleteFile, renameFile, downloadFile } = useFileAdapter(file)
+
+  const renameThisFile = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    // commenting this line will hide context menu after button click
+    // event.stopPropagation()
+    event.preventDefault()
+    const newName = prompt(`Enter New Name for file: ${file.name}`)
+    if(newName) renameFile(newName)
+    return true
+  }
 
   const fileContextOptions: ContextMenuOptions = [
-    { icon: RenameIcon, text: 'Rename File' },
+    { icon: RenameIcon, text: 'Rename File', onClick: renameThisFile },
     { icon: TrashIcon, text: 'Delete File', onClick: deleteFile },
     null,
-    { icon: DesktopDownloadIcon, text: 'Download File' },
+    { icon: DesktopDownloadIcon, text: 'Download File', onClick: downloadFile},
   ]
 
   return (

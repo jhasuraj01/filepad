@@ -123,6 +123,18 @@ export const saveFile = async (
   state.setFileStatus(file, FileStatus.Default)
 }
 
+export const saveFileMetadata = async (
+  file: Directory.FileMetadata,
+  database: DirectoryDatabase,
+  state: DirectoryState,
+): Promise<void> => {
+
+  state.setFileStatus(file, FileStatus.ChangesSaving)
+  file.editedAt = Date.now()
+  await database.updateFileMetadata(file)
+  state.setFileMetadata(file)
+  state.setFileStatus(file, FileStatus.Default)
+}
 
 export const downloadFile = async (
   fileMetadataPartial: Pick<Directory.FileMetadata, 'id'>,
