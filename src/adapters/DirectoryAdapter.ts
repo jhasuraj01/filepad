@@ -67,7 +67,7 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
   const localDirectoryDatabase = useLocalDirectoryDatabase(databaseId)
 
   const createFile = useMemo(() => (params: Pick<File.createFileParams, 'name'>) => {
-    File.createFile({
+    return File.createFile({
       parentId: metadata.id,
       name: params.name,
     }, localDirectoryDatabase, directoryState)

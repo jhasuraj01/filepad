@@ -1,11 +1,46 @@
 .container {
   display: flex;
   flex-direction: row;
+  max-width: 100%;
 
   .sideNav {
     width: 300px;
   }
   .editorArea {
-    flex-grow: 1
+    flex-grow: 1;
+    width: calc(100vw - 348px);
+  }
+}
+
+.editorArea * {
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.editorArea :global(.ant-tabs-tab) {
+  border-top: 1px solid transparent !important;
+}
+
+.editorArea :global(.ant-tabs-tab-active) {
+  background: none !important;
+  border-top: 1px solid #1668dc !important;
+}
+
+.editorArea :global(.ant-tabs-nav-list) * {
+  color: inherit !important;
+  transition: all 150ms !important;
+}
+
+.editorArea :global(.ant-tabs-nav::before) {
+  border-bottom: none !important;
+}
+
+.editorArea :global(.ant-tabs-nav-add) {
+  padding: 8px 8px !important;
+}
+
+.editorArea {
+  :global(.ant-tabs-content), :global(.ant-tabs-tabpane) {
+    height: 100% !important;
   }
 }

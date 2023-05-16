@@ -8,19 +8,17 @@ import { useFileAdapter } from '../../../adapters/DirectoryAdapter'
 import { FileStatus } from '../../../domain/repositories/DirectoryState'
 import {CloseOutlined} from '@ant-design/icons'
 
-export interface EditorAreaProps {
-  files: Directory.FileMetadata[]
-  open: Directory.FileMetadata
-  openFile: (file: Directory.FileMetadata) => void
-  closeFile: (file: Directory.FileMetadata) => void
+export interface MonacoEditorProps {
+  // files: Directory.FileMetadata[]
+  fileMetadata: Directory.FileMetadata
   className?: string
 }
 
-export function EditorArea({ files, open, openFile, closeFile, className }: EditorAreaProps) {
+export function MonacoEditor({ fileMetadata, className }: MonacoEditorProps) {
 
-  const { fetchFile, updateContent, fileContent, fileMetadata, fileStatus } = useFileAdapter(open)
+  const { fetchFile, updateContent, fileContent, fileStatus } = useFileAdapter(fileMetadata)
 
-  useEffect(fetchFile, [open])
+  useEffect(fetchFile, [fileMetadata.id])
 
   const handleEditorDidMount: OnMount = (editor) => {
     editor.focus()
@@ -34,22 +32,9 @@ export function EditorArea({ files, open, openFile, closeFile, className }: Edit
   const extension = '.' + fileMetadata?.name?.split('.')?.reverse()[0] || ''
 
   return (
-    <div className={`${className} ${style.container}`}>
-      <div className={style.titleBar}>
-        {
-          files.map(file => (
-            <div
-              key={file.id}
-              className={`${style.title} ${file.id === open.id && style.selected}`}
-            >
-              <span onClick={() => openFile(file)}>{file.name}</span>
-              <span className={style.closeButton} onClick={() => closeFile(file)}><CloseOutlined /></span>
-            </div>
-          ))
-        }
-      </div>
+    <div className={`${className || ''} ${style.container}`}>
       {isFileReady && <Editor
-        key={open.id}
+        key={fileMetadata.id}
         defaultValue={fileContent.content}
         defaultLanguage={ExtensionLanguageMap[extension] || 'markdown'}
         onChange={handleChange}
