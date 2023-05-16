@@ -8,6 +8,8 @@ File Explorer & Editor built with React, following the principles of clean archi
 - [x] Create New Folder and File
 - [x] Monaco Editor Supported
 - [x] Download File
+- [ ] Lexical Editor Supported
+- [ ] Excalidraw Whiteboard Supported
 - [ ] Download Folder
 - [ ] Export File to PDF
 - [ ] Export Folder to PDF
