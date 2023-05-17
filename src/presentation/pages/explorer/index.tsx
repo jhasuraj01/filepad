@@ -14,14 +14,14 @@ export function ExplorerPage() {
     workspace = { parentId: parentId, id: folderId, }
   }
   
-  const { fetchFolderMetadata, folderStatus } = useFolderAdapter(workspace)
+  const { fetchFolderMetadata, folderStatus, folderMetadata } = useFolderAdapter(workspace)
   useEffect(fetchFolderMetadata, [])
 
-  if(folderStatus == FolderStatus.Loading) {
+  if(folderMetadata === undefined || folderStatus == FolderStatus.Loading) {
     return <p>Loading...</p>
   }
 
   return (
-    <Explorer workspace={workspace} />
+    <Explorer workspace={folderMetadata} />
   )
 }

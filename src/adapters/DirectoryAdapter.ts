@@ -74,6 +74,11 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
   const directoryState: DirectoryState = useReduxDirectoryState(dispatch)
   const localDirectoryDatabase = useLocalDirectoryDatabase(databaseId)
 
+  const folderContent = useSelector(selectFolderContent(metadata))
+  const folderMetadata = useSelector(selectFolderMetadata(metadata))
+  const folderStatus = useSelector(selectFolderStatus(metadata))
+  const ansestors = useSelector(selectAnsestors(metadata))
+
   const createFile = useMemo(() => (params: Pick<File.createFileParams, 'name'>) => {
     return File.createFile({
       parentId: metadata.id,
@@ -108,17 +113,13 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
     Folder.fetchFolderMetadata(metadata, localDirectoryDatabase, directoryState)
   }, [metadata.id])
 
-  // const renameFolder = useMemo(() => (newName: Directory.FolderMetadata["name"]) => {
-  //   Folder.saveFolderMetadata({
-  //     ...metadata,
-  //     name: newName,
-  //   }, localDirectoryDatabase, directoryState)
-  // }, [metadata.id])
-
-  const folderContent = useSelector(selectFolderContent(metadata))
-  const folderMetadata = useSelector(selectFolderMetadata(metadata))
-  const folderStatus = useSelector(selectFolderStatus(metadata))
-  const ansestors = useSelector(selectAnsestors(metadata))
+  const renameFolder = useMemo(() => (newName: Directory.FolderMetadata['name']) => {
+    if (folderMetadata === undefined) return
+    Folder.saveFolderMetadata({
+      ...folderMetadata,
+      name: newName,
+    }, localDirectoryDatabase, directoryState)
+  }, [metadata.id, folderMetadata])
 
   return {
     createFile,
@@ -128,6 +129,7 @@ export function useFolderAdapter(metadata: Pick<Directory.FolderMetadata, 'id' |
     fetchParentMetadata,
     fetchAnsestors,
     fetchFolderMetadata,
+    renameFolder,
     folderContent,
     folderMetadata,
     folderStatus,

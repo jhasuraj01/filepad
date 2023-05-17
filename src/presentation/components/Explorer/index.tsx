@@ -21,7 +21,7 @@ import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAda
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 
 export interface ExplorerProps {
-  workspace: Pick<Directory.FolderMetadata, 'parentId' | 'id'>
+  workspace: Directory.FolderMetadata
 }
 
 interface FolderProps {
@@ -30,13 +30,13 @@ interface FolderProps {
 }
 
 interface FileProps {
-  folder: Pick<Directory.FolderMetadata, 'parentId' | 'id'>
+  folder: Directory.FolderMetadata
   file: Directory.FileMetadata
   showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
 interface ExplorerItemsProps {
-  folder: Pick<Directory.FolderMetadata, 'parentId' | 'id'>
+  folder: Directory.FolderMetadata
   showContextMenu: (event: React.MouseEvent<Element, MouseEvent>, item: string | ContextMenuOptions) => void
 }
 
@@ -268,10 +268,19 @@ export function File({ folder, file, showContextMenu }: FileProps) {
 
 export function Folder({ folder, showContextMenu }: FolderProps) {
 
-  const { deleteFolder } = useFolderAdapter(folder)
+  const { deleteFolder, renameFolder } = useFolderAdapter(folder)
+
+  const renameThisFolder = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    // commenting this line will hide context menu after button click
+    // event.stopPropagation()
+    event.preventDefault()
+    const newName = prompt(`Enter New Name for file: ${folder.name}`, folder.name)
+    if(newName) renameFolder(newName)
+    return true
+  }
 
   const folderContextOptions: ContextMenuOptions = [
-    { icon: RenameIcon, text: 'Rename Folder' },
+    { icon: RenameIcon, text: 'Rename Folder', onClick: renameThisFolder },
     { icon: TrashIcon, text: 'Delete Folder', onClick: deleteFolder },
     null,
     { icon: LinkExternalIcon, text: 'Open Folder in Editor' },
