@@ -19,6 +19,7 @@ import { NavLinkPersist } from '../../supports/Persistence'
 import { Directory } from '../../../domain/entities/Directory'
 import { useFileAdapter, useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { FolderStatus } from '../../../domain/repositories/DirectoryState'
+import { useNavigate } from 'react-router-dom'
 
 export interface ExplorerProps {
   workspace: Directory.FolderMetadata
@@ -269,6 +270,7 @@ export function File({ folder, file, showContextMenu }: FileProps) {
 export function Folder({ folder, showContextMenu }: FolderProps) {
 
   const { deleteFolder, renameFolder } = useFolderAdapter(folder)
+  const navigate = useNavigate()
 
   const renameThisFolder = async (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     // commenting this line will hide context menu after button click
@@ -279,11 +281,15 @@ export function Folder({ folder, showContextMenu }: FolderProps) {
     return true
   }
 
+  const openFolderInEditor = async () => {
+    navigate(`/editor/${folder.parentId}/${folder.id}`)
+  }
+
   const folderContextOptions: ContextMenuOptions = [
     { icon: RenameIcon, text: 'Rename Folder', onClick: renameThisFolder },
     { icon: TrashIcon, text: 'Delete Folder', onClick: deleteFolder },
     null,
-    { icon: LinkExternalIcon, text: 'Open Folder in Editor' },
+    { icon: LinkExternalIcon, text: 'Open Folder in Editor', onClick: openFolderInEditor},
   ]
 
   return (<>
