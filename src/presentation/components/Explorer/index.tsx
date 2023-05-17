@@ -242,7 +242,7 @@ export function File({ folder, file, showContextMenu }: FileProps) {
     // commenting this line will hide context menu after button click
     // event.stopPropagation()
     event.preventDefault()
-    const newName = prompt(`Enter New Name for file: ${file.name}`)
+    const newName = prompt(`Enter New Name for file: ${file.name}`, file.name)
     if(newName) renameFile(newName)
     return true
   }
