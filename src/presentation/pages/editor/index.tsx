@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { Directory } from '../../../domain/entities/Directory'
-import { MonacoEditor } from '../../components/MonacoEditor'
+import { MonacoEditorWrapper } from '../../components/MonacoEditorWrapper'
 import { SideExplorer } from '../../components/SideExplorer'
 import { useFolderAdapter } from '../../../adapters/DirectoryAdapter'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -10,6 +10,8 @@ import { Tabs, TabsProps } from 'antd'
 import { useWindowSize } from 'react-use'
 import { SubNav } from '../../components/SubNav'
 import style from './index.module.scss'
+// import { LexicalEditorWrapper } from '../../components/LexicalEditorWrapper'
+import { AboutAppWrapper } from '../../components/AboutAppWrapper'
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
@@ -22,7 +24,18 @@ export function EditorPage() {
     workspace = { parentId: parentId, id: folderId, }
   }
 
-  const [files, setFiles] = useState<NonNullable<TabsProps['items']>>([])
+  const [files, setFiles] = useState<NonNullable<TabsProps['items']>>([
+    {
+      key: '-1',
+      label: 'About',
+      children: <AboutAppWrapper />
+    },
+    // {
+    //   key: '0',
+    //   label: 'NotePad',
+    //   children: <LexicalEditorWrapper />,
+    // }
+  ])
   const [activeFileKey, setActiveFileKey] = useState<string>()
 
   const { fetchFolderMetadata, fetchFolderContent, folderStatus, folderMetadata, folderContent, createFile } = useFolderAdapter(workspace)
@@ -42,7 +55,7 @@ export function EditorPage() {
         {
           key: file.id,
           label: file.name,
-          children: <MonacoEditor fileMetadata={file} />,
+          children: <MonacoEditorWrapper fileMetadata={file} />,
         },
         ...files.slice(activeIndex + 1),
       ])

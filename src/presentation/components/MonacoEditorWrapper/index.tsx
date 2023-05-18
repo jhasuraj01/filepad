@@ -12,7 +12,7 @@ export interface MonacoEditorProps {
   className?: string
 }
 
-export function MonacoEditor({ fileMetadata, className }: MonacoEditorProps) {
+export function MonacoEditorWrapper({ fileMetadata, className }: MonacoEditorProps) {
 
   const { fetchFile, updateContent, fileContent, fileStatus } = useFileAdapter(fileMetadata)
 

@@ -1,0 +1,35 @@
+.container {
+  background-color: #1e1e1e;
+  color: hsl(0, 0%, 85%);
+  outline: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.editorInput {
+  min-height: 100%;
+  resize: none;
+  font-size: 15px;
+  position: relative;
+  tab-size: 1;
+  outline: 0;
+  padding: 0 16px 15px 16px;
+  color: hsl(0, 0%, 85%);
+}
+
+.editorPlaceholder {
+  color: hsl(0, 0%, 50%);
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 0;
+  left: 16px;
+  font-size: 1em;
+  user-select: none;
+  display: inline-block;
+  pointer-events: none;
+}
