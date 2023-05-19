@@ -1,4 +1,5 @@
 import style from './index.module.scss'
+import { ReactComponent as FilePadIcon } from '../../assets/filepad.svg'
 
 export interface AboutAppWrapperProps {
   className?: string
@@ -7,7 +8,10 @@ export interface AboutAppWrapperProps {
 export function AboutAppWrapper({ className }: AboutAppWrapperProps) {
   return (
     <div className={`${className || ''} ${style.container}`}>
-      <h1>FilePad: File Explorer & Editor</h1>
+      <h1>
+        <FilePadIcon width={44} height={44} style={{ float: 'left', marginRight: '8px'}}/>
+        <span>FilePad: File Explorer & Editor</span>
+      </h1>
       <div className={style.badges}>
         <img src='https://img.shields.io/github/license/jhasuraj01/filepad?color=blue' alt='license' />
         <img src='https://img.shields.io/github/stars/jhasuraj01/filepad' alt='stars' />

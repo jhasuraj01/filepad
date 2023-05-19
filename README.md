@@ -1,3 +1,4 @@
+<img src="./public/filepad.svg" width="100" height="100"/>
 
 # React FilePad: A Simple File Explorer with Clean Architecture Principles
 
