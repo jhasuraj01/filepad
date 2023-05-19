@@ -11,7 +11,7 @@ function App() {
     <div className={style.container}>
       <Nav />
       <Routes>
-        <Route path='/' element={<NavigatePersist to="/editor" />} />
+        <Route path='/' element={<NavigatePersist to='/editor' />} />
         <Route path='/editor' element={<EditorPage />} />
         <Route path='/editor/:parentId/:folderId' element={<EditorPage />} />
         <Route path='/editor/:parentId/:folderId/:fileId' element={<EditorPage />} />

@@ -7,7 +7,7 @@ export interface AboutAppWrapperProps {
 export function AboutAppWrapper({ className }: AboutAppWrapperProps) {
   return (
     <div className={`${className || ''} ${style.container}`}>
-      <h1>FilePad</h1>
+      <h1>FilePad: File Explorer & Editor</h1>
       <div className={style.badges}>
         <img src='https://img.shields.io/github/license/jhasuraj01/filepad?color=blue' alt='license' />
         <img src='https://img.shields.io/github/stars/jhasuraj01/filepad' alt='stars' />
@@ -17,7 +17,7 @@ export function AboutAppWrapper({ className }: AboutAppWrapperProps) {
         <img src='https://img.shields.io/tokei/lines/github/jhasuraj01/filepad' alt='repo-size' />
       </div>
       <p>Github Repo: <a href="https://github.com/jhasuraj01/filepad" target="_blank" rel="noopener noreferrer">github.com/jhasuraj01/filepad</a></p>
-      <p>File Explorer & Editor built with React, following the principles of clean architecture.</p>
+      <p>A simple File Explorer & Editor built with React, following the principles of clean architecture.</p>
       <h3>Features:</h3>
       <ul style={{ listStyle: 'none' }}>
         <li><span style={{ userSelect: 'none' }}>☑️ </span>Create New Folder and File</li>
