@@ -1,4 +1,4 @@
-<img src="./public/filepad.svg" width="100" height="100"/>
+![bg-13](https://github.com/jhasuraj01/filepad/assets/44930179/c18f625e-5c26-496e-b7fa-5615d79ac96e)
 
 # React FilePad: A Simple File Explorer with Clean Architecture Principles
 
