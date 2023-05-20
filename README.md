@@ -1,8 +1,8 @@
 ![bg-13](https://github.com/jhasuraj01/filepad/assets/44930179/c18f625e-5c26-496e-b7fa-5615d79ac96e)
 
-# React FilePad: A Simple File Explorer with Clean Architecture Principles
+# React FilePad: File Explorer & Editor built with Clean Architecture Principles
 
-File Explorer & Editor built with React, following the principles of clean architecture.
+This project showcases a File Explorer & Editor developed using React, adhering to the principles of clean architecture. By employing a layered code structure, the application becomes more manageable and facilitates effective testing. Leveraging Redux Toolkit for state management enhances performance and simplifies implementation. This example serves as a valuable reference for structuring React applications in accordance with Clean Architecture principles, empowering developers to build robust and scalable software solutions.
 
 ## Features
 
