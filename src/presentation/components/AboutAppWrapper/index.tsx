@@ -18,7 +18,6 @@ export function AboutAppWrapper({ className }: AboutAppWrapperProps) {
         <img src='https://img.shields.io/github/last-commit/jhasuraj01/filepad?color=blue' alt='last-commit' />
         <img src='https://img.shields.io/github/languages/top/jhasuraj01/filepad' alt='languages' />
         <img src='https://img.shields.io/github/repo-size/jhasuraj01/filepad' alt='repo-size' />
-        <img src='https://img.shields.io/tokei/lines/github/jhasuraj01/filepad' alt='repo-size' />
       </div>
       <p>Github Repo: <a href="https://github.com/jhasuraj01/filepad" target="_blank" rel="noopener noreferrer">github.com/jhasuraj01/filepad</a></p>
       <p>A simple File Explorer & Editor built with React, following the principles of clean architecture.</p>
