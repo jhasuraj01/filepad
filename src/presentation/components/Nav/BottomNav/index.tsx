@@ -2,7 +2,6 @@ import styles from './index.module.scss'
 import { TabBar } from 'antd-mobile'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FolderOutline, ContentOutline } from 'antd-mobile-icons'
-import { useState } from 'react'
 
 export interface BottomNavProps {
   className?: string;

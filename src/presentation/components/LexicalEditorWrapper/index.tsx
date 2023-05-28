@@ -1,7 +1,6 @@
 import style from './index.module.scss'
 
-import { $getRoot, $getSelection, EditorState, LexicalEditor } from 'lexical'
-import { useEffect } from 'react'
+import { $getRoot, $getSelection, EditorState } from 'lexical'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
@@ -25,7 +24,7 @@ export function LexicalEditorWrapper({ className }: LexicalEditorWrapperProps) {
     onError: console.error,
   }
 
-  function onChange(editorState: EditorState, editor: LexicalEditor, tags: Set<string>): void {
+  function onChange(editorState: EditorState): void {
     editorState.read(() => {
       // Read the contents of the EditorState here.
       const root = $getRoot()
