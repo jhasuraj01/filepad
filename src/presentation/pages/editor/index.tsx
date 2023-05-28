@@ -8,7 +8,7 @@ import { FolderStatus } from '../../../domain/repositories/DirectoryState'
 import { FloatingPanel, FloatingPanelRef } from 'antd-mobile'
 import { Tabs, TabsProps } from 'antd'
 import { useWindowSize } from 'react-use'
-import { SubNav } from '../../components/SubNav'
+import { SubNav } from '../../components/Nav/SubNav'
 import style from './index.module.scss'
 // import { LexicalEditorWrapper } from '../../components/LexicalEditorWrapper'
 import { AboutAppWrapper } from '../../components/AboutAppWrapper'
@@ -116,7 +116,7 @@ export function EditorPage() {
     })
   }, [folderContent.length])
 
-  const anchors = [72, window.innerHeight * 0.7]
+  const anchors = [100, window.innerHeight * 0.6]
   const ref = useRef<FloatingPanelRef>(null)
   const { width: windowWidth } = useWindowSize()
 

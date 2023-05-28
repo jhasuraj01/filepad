@@ -2,7 +2,7 @@
 // import { SubNav, SubNavProps } from '../../components/SubNav'
 // import { NavigatePersist } from '../../supports/Persistence'
 
-import { SubNav } from '../SubNav'
+import { SubNav } from '../Nav/SubNav'
 import style from './index.module.scss'
 
 interface AppSectionProps {
