@@ -8,6 +8,8 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+    }
+    .left {
       gap: 8px;
     }
 
@@ -85,10 +87,24 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+  .left {
     gap: 8px;
   }
 }
 
 .empty {
   margin-top: min(64px, 10%);
+}
+
+.iconButton {
+  padding: 8px;
+  border-radius: 4px;
+  &:hover {
+    background: hsl(0, 0%, 25%);
+  }
+
+  @media (any-pointer: coarse) {
+    padding: 16px;
+  }
 }

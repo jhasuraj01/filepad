@@ -57,8 +57,8 @@ export function SideExplorer({ workspace, openFile }: SideExplorerProps) {
         <span>{workspace.name}</span>
       </div>
       <div className={style.right}>
-        <FolderAddOutlined title={`Create new folder in ${workspace.name}`} onClick={createNewFolder} />
-        <FileAddOutlined title={`Create new file in ${workspace.name}`} onClick={createNewFile} />
+        <FolderAddOutlined className={style.iconButton} title={`Create new folder in ${workspace.name}`} onClick={createNewFolder} />
+        <FileAddOutlined className={style.iconButton} title={`Create new file in ${workspace.name}`} onClick={createNewFile} />
       </div>
     </div>
 
@@ -122,9 +122,9 @@ export function File({ file, openFile }: FileProps) {
           <span>{file.name}</span>
         </div>
         <div className={style.right}>
-          <DeleteOutlined title={`Delete File: ${file.name}`} onClick={deleteThisFile} />
-          {/* <FilePdfOutlined title={`Download ${file.name} as PDF`} /> */}
-          <CloudDownloadOutlined title={`Download ${file.name}`} onClick={downloadThisFile} />
+          <DeleteOutlined className={style.iconButton} title={`Delete File: ${file.name}`} onClick={deleteThisFile} />
+          {/* <FilePdfOutlined className={style.iconButton} title={`Download ${file.name} as PDF`} /> */}
+          <CloudDownloadOutlined className={style.iconButton} title={`Download ${file.name}`} onClick={downloadThisFile} />
         </div>
       </div>
     </div>
@@ -175,9 +175,9 @@ export function Folder({ folder, openFile }: FolderProps) {
           <span>{folder.name}</span>
         </div>
         <div className={style.right}>
-          <DeleteOutlined title={`Delete Folder: ${folder.name}`} onClick={deleteThisFolder} />
-          <FolderAddOutlined title={`Create new folder in ${folder.name}`} onClick={createNewFolder} />
-          <FileAddOutlined title={`Create new file in ${folder.name}`} onClick={createNewFile} />
+          <DeleteOutlined className={style.iconButton} title={`Delete Folder: ${folder.name}`} onClick={deleteThisFolder} />
+          <FolderAddOutlined className={style.iconButton} title={`Create new folder in ${folder.name}`} onClick={createNewFolder} />
+          <FileAddOutlined className={style.iconButton} title={`Create new file in ${folder.name}`} onClick={createNewFile} />
         </div>
       </div>
       <div className={style.child}>
